@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Tauri build artifacts
+src-tauri/target/
+src-tauri/gen/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Temp files
+tsc_output.txt
+tsc_out.txt
+nul
+*.log
+
+# Lock files (using bun)
+package-lock.json
+
+# TypeScript build info
+tsconfig.tsbuildinfo
