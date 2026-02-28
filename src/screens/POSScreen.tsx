@@ -243,7 +243,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
                 <label style={{ fontSize: 12, color: "var(--subtext)" }}>Cash Tendered ({shop.currency})</label>
                 <input type="number" value={cashTendered} onChange={(e) => setCashTendered(e.target.value)} className="input" placeholder="0" style={{ fontSize: 20, fontWeight: 700 }} />
                 <div style={{ display: "flex", gap: 6, marginTop: 8, flexWrap: "wrap" }}>
-                  {shop.cashDenominations.map((d) => (
+                  {(shop.cashDenominations || [100, 200, 500, 1000]).map((d) => (
                     <button key={d} onClick={() => setCashTendered(String(d))}
                       style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid var(--border-dark)", background: parseFloat(cashTendered) === d ? "var(--border-dark)" : "transparent", color: "var(--subtext)", cursor: "pointer", fontSize: 13, fontWeight: 600 }}>
                       {shop.currency}{d.toLocaleString()}

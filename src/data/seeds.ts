@@ -1,4 +1,4 @@
-import type { Shop, PayMethod, Service, Stage, SmsTemplates, Staff, Customer, InventoryItem, SupplyRule, ThemePreset } from "../lib/types";
+import type { Shop, PayMethod, Service, Stage, SmsTemplates, Staff, Customer, InventoryItem, SupplyRule, ThemePreset, EmailConfig, EmailProvider } from "../lib/types";
 
 export const SEED_SHOP: Shop = {
   name: "Malinis Laundry Shop",
@@ -100,3 +100,26 @@ export const THEME_PRESETS: ThemePreset[] = [
 ];
 
 export const DEFAULT_THEME = THEME_PRESETS[0];
+
+// ─── Email ───────────────────────────────────────────────────────────────────
+
+export const EMAIL_PROVIDERS: { id: EmailProvider; label: string; smtpHost: string; smtpPort: number; help: string }[] = [
+  { id: "gmail",     label: "Gmail (Personal)",      smtpHost: "smtp.gmail.com",           smtpPort: 587, help: "Use an App Password: myaccount.google.com > Security > 2-Step Verification > App Passwords" },
+  { id: "workspace", label: "Google Workspace",       smtpHost: "smtp.gmail.com",           smtpPort: 587, help: "Use an App Password or enable SMTP relay in Google Admin console" },
+  { id: "outlook",   label: "Outlook / Hotmail",      smtpHost: "smtp-mail.outlook.com",    smtpPort: 587, help: "Use your regular Outlook password. Enable SMTP in Outlook settings if needed" },
+  { id: "yahoo",     label: "Yahoo Mail",             smtpHost: "smtp.mail.yahoo.com",      smtpPort: 587, help: "Generate an App Password: login.yahoo.com > Account Security > App Passwords" },
+  { id: "custom",    label: "Custom SMTP",            smtpHost: "",                          smtpPort: 587, help: "Enter your SMTP server details manually" },
+];
+
+export const SEED_EMAIL_CONFIG: EmailConfig = {
+  enabled: false,
+  provider: "gmail",
+  email: "",
+  password: "",
+  smtpUser: "",
+  smtpHost: "smtp.gmail.com",
+  smtpPort: 587,
+  fromName: "",
+  reportTo: "",
+  testVerified: false,
+};

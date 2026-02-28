@@ -157,11 +157,29 @@ export function buildReceiptHTML(order: Order, shop: Shop): string {
 }
 
 export function openReceiptWindow(order: Order, shop: Shop): void {
-  const win = window.open("", "_blank", "width=420,height=700,toolbar=0,menubar=0");
-  if (!win) {
-    alert("Please allow popups to print receipts.");
-    return;
-  }
-  win.document.write(buildReceiptHTML(order, shop));
-  win.document.close();
+  const html = buildReceiptHTML(order, shop);
+
+  // Use a hidden iframe to print — avoids popup blockers in both browsers and Tauri webview
+  const iframe = document.createElement("iframe");
+  iframe.style.cssText = "position:fixed;top:0;left:0;width:0;height:0;border:none;visibility:hidden;";
+  document.body.appendChild(iframe);
+
+  const doc = iframe.contentDocument || iframe.contentWindow?.document;
+  if (!doc) return;
+  doc.open();
+  doc.write(html);
+  doc.close();
+
+  // Wait for content to render, then trigger print
+  iframe.onload = () => {
+    try {
+      iframe.contentWindow?.print();
+    } catch (_) {
+      // Fallback: open in new window if iframe print fails
+      const win = window.open("", "_blank", "width=420,height=700,toolbar=0,menubar=0");
+      if (win) { win.document.write(html); win.document.close(); }
+    }
+    // Clean up iframe after a delay
+    setTimeout(() => document.body.removeChild(iframe), 5000);
+  };
 }

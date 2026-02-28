@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { ThemeCustomizer } from "../components/ThemeCustomizer";
-import type { Service, Staff, SupplyRule, SmsTemplates } from "../lib/types";
+import { EMAIL_PROVIDERS } from "../data/seeds";
+import type { Service, Staff, SupplyRule, SmsTemplates, EmailProvider } from "../lib/types";
 
-type TabId = "shop" | "theme" | "services" | "workflow" | "sms" | "staff" | "inventory" | "supplies" | "logs" | "smslog";
+type TabId = "shop" | "theme" | "services" | "workflow" | "sms" | "email" | "staff" | "inventory" | "supplies" | "logs" | "smslog";
 
 const TABS: { id: TabId; icon: string; label: string }[] = [
   { id: "shop",      icon: "\uD83C\uDFEA", label: "Shop" },
@@ -11,6 +12,7 @@ const TABS: { id: TabId; icon: string; label: string }[] = [
   { id: "services",  icon: "\uD83E\uDDFA", label: "Services" },
   { id: "workflow",  icon: "\uD83D\uDD04", label: "Workflow" },
   { id: "sms",       icon: "\uD83D\uDCAC", label: "SMS" },
+  { id: "email",     icon: "\uD83D\uDCE7", label: "Email" },
   { id: "staff",     icon: "\uD83D\uDC64", label: "Staff" },
   { id: "inventory", icon: "\uD83D\uDCE6", label: "Inventory" },
   { id: "supplies",  icon: "\uD83E\uDDF4", label: "Supplies" },
@@ -54,6 +56,7 @@ export function SettingsScreen() {
     smsTemplates, setSmsTemplates, staff, setStaff,
     customers, orders, inventory, setInventory,
     supplyRules, setSupplyRules, payMethods, setPayMethods,
+    emailConfig, setEmailConfig,
     smsLog, auditLog, currentStaff, notify, addAudit, fmt, genId, theme,
   } = useApp();
 
@@ -63,6 +66,9 @@ export function SettingsScreen() {
   const [editId, setEditId] = useState<string | null>(null);
   const [svcForm, setSvcForm] = useState(EMPTY_SERVICE_FORM);
   const [showAddService, setShowAddService] = useState(false);
+
+  // Email state
+  const [emailTesting, setEmailTesting] = useState(false);
 
   // Staff CRUD state
   const [staffEditId, setStaffEditId] = useState<string | null>(null);
@@ -171,6 +177,64 @@ export function SettingsScreen() {
   const toggleStaffActive = (id: string) => {
     setStaff((prev) => prev.map((s) => (s.id === id ? { ...s, active: !s.active } : s)));
     notify("Staff status updated");
+  };
+
+  // ── Email helpers ──
+  const handleProviderChange = (providerId: EmailProvider) => {
+    const provider = EMAIL_PROVIDERS.find((p) => p.id === providerId);
+    if (provider) {
+      setEmailConfig((prev) => ({
+        ...prev,
+        provider: providerId,
+        smtpHost: provider.smtpHost || prev.smtpHost,
+        smtpPort: provider.smtpPort || prev.smtpPort,
+        testVerified: false,
+      }));
+    }
+  };
+
+  const handleTestEmail = async () => {
+    if (!emailConfig.email || !emailConfig.password) {
+      notify("Please enter your email and password first", "error");
+      return;
+    }
+    const sendTo = emailConfig.reportTo || emailConfig.email;
+    setEmailTesting(true);
+    try {
+      // Check if Tauri is available
+      if ((window as any).__TAURI_INTERNALS__) {
+        const { invoke } = await import("@tauri-apps/api/core");
+        await invoke("send_email", {
+          payload: {
+            smtp_host: emailConfig.smtpHost,
+            smtp_port: emailConfig.smtpPort,
+            smtp_user: emailConfig.smtpUser || emailConfig.email,
+            smtp_pass: emailConfig.password,
+            from_name: emailConfig.fromName || shop.name,
+            from_email: emailConfig.email,
+            to_email: sendTo,
+            subject: `WashTrack POS - Test Email from ${shop.name}`,
+            body_html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px">
+              <h2 style="color:#38BDF8">WashTrack POS</h2>
+              <p>This is a test email from <strong>${shop.name}</strong>.</p>
+              <p>If you received this, your email configuration is working correctly.</p>
+              <hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0">
+              <p style="color:#94a3b8;font-size:12px">Sent via WashTrack POS email system</p>
+            </div>`,
+          },
+        });
+        setEmailConfig((prev) => ({ ...prev, testVerified: true }));
+        notify("Test email sent successfully!");
+        addAudit("EMAIL_TEST", `Test email sent to ${sendTo}`);
+      } else {
+        notify("Email sending requires Tauri (not available in browser dev mode)", "error");
+      }
+    } catch (err: any) {
+      notify(`Email failed: ${err?.message || err}`, "error");
+      setEmailConfig((prev) => ({ ...prev, testVerified: false }));
+    } finally {
+      setEmailTesting(false);
+    }
   };
 
   // ── Render helpers ──
@@ -573,7 +637,203 @@ export function SettingsScreen() {
           </div>
         )}
 
-        {/* 6. STAFF */}
+        {/* 6. EMAIL */}
+        {tab === "email" && (
+          <div>
+            <h3 style={{ margin: "0 0 20px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
+              {"\uD83D\uDCE7"} Email Configuration
+            </h3>
+
+            {/* Enable toggle */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", borderRadius: 10, background: "var(--card)", border: "1px solid var(--border)", marginBottom: 20 }}>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)" }}>Enable Email</div>
+                <div style={{ fontSize: 12, color: "var(--subtext)" }}>Send shift-end reports and receipt emails from this device</div>
+              </div>
+              <div
+                onClick={() => setEmailConfig((p) => ({ ...p, enabled: !p.enabled, testVerified: false }))}
+                style={{
+                  width: 44, height: 24, borderRadius: 12, cursor: "pointer", position: "relative",
+                  background: emailConfig.enabled ? "var(--accent)" : "var(--border-dark)",
+                  transition: "background 0.2s",
+                }}
+              >
+                <div style={{ position: "absolute", top: 3, left: emailConfig.enabled ? 23 : 3, width: 18, height: 18, borderRadius: "50%", background: "var(--white)", transition: "left 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }} />
+              </div>
+            </div>
+
+            {emailConfig.enabled && (
+              <>
+                {/* Provider selection */}
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>Email Provider</label>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 8 }}>
+                    {EMAIL_PROVIDERS.map((prov) => {
+                      const selected = emailConfig.provider === prov.id;
+                      return (
+                        <button
+                          key={prov.id}
+                          onClick={() => handleProviderChange(prov.id)}
+                          style={{
+                            padding: "10px 14px", borderRadius: 8, textAlign: "left", cursor: "pointer",
+                            border: `1.5px solid ${selected ? "var(--accent)" : "var(--border)"}`,
+                            background: selected ? "color-mix(in srgb, var(--accent) 10%, var(--card))" : "var(--card)",
+                            color: selected ? "var(--accent)" : "var(--text)",
+                            fontWeight: selected ? 700 : 500, fontSize: 13,
+                          }}
+                        >
+                          {prov.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Help text for selected provider */}
+                {(() => {
+                  const prov = EMAIL_PROVIDERS.find((p) => p.id === emailConfig.provider);
+                  return prov ? (
+                    <div style={{ padding: "12px 16px", borderRadius: 8, background: "color-mix(in srgb, var(--accent) 6%, var(--bg))", border: "1px solid color-mix(in srgb, var(--accent) 20%, var(--border))", marginBottom: 16, fontSize: 12, color: "var(--subtext)", lineHeight: 1.6 }}>
+                      <strong style={{ color: "var(--accent)" }}>{"\u2139\uFE0F"} Setup:</strong> {prov.help}
+                    </div>
+                  ) : null;
+                })()}
+
+                {/* Credentials */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 16 }}>
+                  <div>
+                    <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>Email Address *</label>
+                    <input
+                      type="email"
+                      value={emailConfig.email}
+                      onChange={(e) => setEmailConfig((p) => ({ ...p, email: e.target.value, testVerified: false }))}
+                      placeholder="you@gmail.com"
+                      className="input"
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>
+                      {emailConfig.provider === "custom" ? "SMTP Password *" : "App Password *"}
+                    </label>
+                    <input
+                      type="password"
+                      value={emailConfig.password}
+                      onChange={(e) => setEmailConfig((p) => ({ ...p, password: e.target.value, testVerified: false }))}
+                      placeholder={emailConfig.provider === "custom" ? "SMTP password" : "xxxx xxxx xxxx xxxx"}
+                      className="input"
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 16 }}>
+                  <div>
+                    <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>From Name</label>
+                    <input
+                      value={emailConfig.fromName}
+                      onChange={(e) => setEmailConfig((p) => ({ ...p, fromName: e.target.value }))}
+                      placeholder={shop.name || "WashTrack POS"}
+                      className="input"
+                    />
+                    <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 3 }}>
+                      Defaults to shop name if empty
+                    </div>
+                  </div>
+                  <div>
+                    <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>Send Reports To</label>
+                    <input
+                      type="email"
+                      value={emailConfig.reportTo}
+                      onChange={(e) => setEmailConfig((p) => ({ ...p, reportTo: e.target.value }))}
+                      placeholder={emailConfig.email || "owner@example.com"}
+                      className="input"
+                    />
+                    <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 3 }}>
+                      Defaults to sender email if empty
+                    </div>
+                  </div>
+                </div>
+
+                {/* Custom SMTP settings — only shown for custom provider */}
+                {emailConfig.provider === "custom" && (
+                  <div style={{ padding: 16, borderRadius: 10, background: "var(--card)", border: "1px solid var(--border)", marginBottom: 20 }}>
+                    <h4 style={{ margin: "0 0 14px", fontSize: 14, fontWeight: 700, color: "var(--text)" }}>
+                      SMTP Server Settings
+                    </h4>
+                    <div style={{ marginBottom: 14 }}>
+                      <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>SMTP Username</label>
+                      <input
+                        value={emailConfig.smtpUser}
+                        onChange={(e) => setEmailConfig((p) => ({ ...p, smtpUser: e.target.value, testVerified: false }))}
+                        placeholder={emailConfig.email || "Leave empty to use From email address"}
+                        className="input"
+                      />
+                      <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 3 }}>
+                        The login username for your SMTP server. Leave empty if same as the From email address above.
+                      </div>
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 14 }}>
+                      <div>
+                        <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>SMTP Host *</label>
+                        <input
+                          value={emailConfig.smtpHost}
+                          onChange={(e) => setEmailConfig((p) => ({ ...p, smtpHost: e.target.value, testVerified: false }))}
+                          placeholder="mail.yourdomain.com"
+                          className="input"
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>SMTP Port *</label>
+                        <input
+                          type="number"
+                          value={emailConfig.smtpPort}
+                          onChange={(e) => setEmailConfig((p) => ({ ...p, smtpPort: Number(e.target.value) || 587, testVerified: false }))}
+                          className="input"
+                        />
+                      </div>
+                    </div>
+                    <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 8 }}>
+                      Port 587 = STARTTLS (recommended), Port 465 = implicit TLS/SSL
+                    </div>
+                  </div>
+                )}
+
+                {/* Test button + status */}
+                <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "16px 18px", borderRadius: 10, background: "var(--card)", border: "1px solid var(--border)" }}>
+                  <button
+                    onClick={handleTestEmail}
+                    disabled={emailTesting || !emailConfig.email || !emailConfig.password}
+                    className="btn-primary"
+                    style={{
+                      padding: "10px 24px", fontSize: 14, fontWeight: 700,
+                      opacity: (emailTesting || !emailConfig.email || !emailConfig.password) ? 0.5 : 1,
+                      cursor: (emailTesting || !emailConfig.email || !emailConfig.password) ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    {emailTesting ? "Sending..." : "\uD83D\uDCE8 Send Test Email"}
+                  </button>
+                  <div style={{ flex: 1 }}>
+                    {emailConfig.testVerified ? (
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ color: "var(--success)", fontSize: 18 }}>{"\u2705"}</span>
+                        <span style={{ color: "var(--success)", fontSize: 13, fontWeight: 700 }}>Verified</span>
+                      </div>
+                    ) : emailConfig.email && emailConfig.password ? (
+                      <div style={{ color: "var(--warning)", fontSize: 12 }}>
+                        {"\u26A0\uFE0F"} Not yet verified. Send a test email to confirm your settings work.
+                      </div>
+                    ) : (
+                      <div style={{ color: "var(--muted)", fontSize: 12 }}>
+                        Enter credentials above, then send a test email.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {/* 7. STAFF */}
         {tab === "staff" && (
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>

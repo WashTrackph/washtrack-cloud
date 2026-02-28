@@ -4,11 +4,11 @@ import { genId, applyTheme, calcPrice, genOrderNum, formatCurrency } from "../li
 import {
   SEED_SHOP, SEED_SERVICES, SEED_STAGES, SEED_SMS_TEMPLATES, SEED_STAFF,
   SEED_CUSTOMERS, SEED_INVENTORY, SEED_SUPPLY_RULES, SEED_PAYMETHODS,
-  DEFAULT_THEME,
+  DEFAULT_THEME, SEED_EMAIL_CONFIG,
 } from "../data/seeds";
 import type {
   Shop, Service, Stage, SmsTemplates, Staff, Customer, Order,
-  InventoryItem, SupplyRule, PayMethod, SmsLogEntry, AuditLogEntry, ThemePreset,
+  InventoryItem, SupplyRule, PayMethod, SmsLogEntry, AuditLogEntry, ThemePreset, EmailConfig,
 } from "../lib/types";
 
 interface AppContextValue {
@@ -38,6 +38,8 @@ interface AppContextValue {
   setPayMethods: React.Dispatch<React.SetStateAction<PayMethod[]>>;
   supplyRules: SupplyRule[];
   setSupplyRules: React.Dispatch<React.SetStateAction<SupplyRule[]>>;
+  emailConfig: EmailConfig;
+  setEmailConfig: React.Dispatch<React.SetStateAction<EmailConfig>>;
   currentStaff: Staff | null;
   notify: (msg: string, type?: string) => void;
   addAudit: (type: string, desc: string, staffId?: string) => void;
@@ -85,6 +87,7 @@ export function AppProvider({ children, currentStaff, onPinModal }: AppProviderP
   const [inventory, setInventory] = useState<InventoryItem[]>(SEED_INVENTORY);
   const [supplyRules, setSupplyRules] = useState<SupplyRule[]>(SEED_SUPPLY_RULES);
   const [payMethods, setPayMethods] = useState<PayMethod[]>(SEED_PAYMETHODS);
+  const [emailConfig, setEmailConfig] = useState<EmailConfig>(SEED_EMAIL_CONFIG);
 
   // UI State
   const [notification, setNotification] = useState<{ msg: string; type: string; id: number } | null>(null);
@@ -117,10 +120,11 @@ export function AppProvider({ children, currentStaff, onPinModal }: AppProviderP
       const savedInventory = await DB.get("wt:inventory");
       const savedPayMethods = await DB.get("wt:paymethods");
       const savedSupplyRules = await DB.get("wt:supplyrules");
+      const savedEmailConfig = await DB.get("wt:emailconfig");
 
       if (savedOrders) setOrders(savedOrders);
       if (savedCustomers) setCustomers(savedCustomers);
-      if (savedShop) setShop(savedShop);
+      if (savedShop) setShop({ ...SEED_SHOP, ...savedShop });
       if (savedServices) setServices(savedServices);
       if (savedStages) setStages(savedStages);
       if (savedSmsTemplates) setSmsTemplates(savedSmsTemplates);
@@ -131,6 +135,7 @@ export function AppProvider({ children, currentStaff, onPinModal }: AppProviderP
       if (savedInventory) setInventory(savedInventory);
       if (savedPayMethods) setPayMethods(savedPayMethods);
       if (savedSupplyRules) setSupplyRules(savedSupplyRules);
+      if (savedEmailConfig) setEmailConfig({ ...SEED_EMAIL_CONFIG, ...savedEmailConfig });
       const savedTheme = await DB.get("wt:theme");
       if (savedTheme) { setThemeRaw(savedTheme); applyTheme(savedTheme); }
       else { applyTheme(DEFAULT_THEME); }
@@ -153,6 +158,7 @@ export function AppProvider({ children, currentStaff, onPinModal }: AppProviderP
   useEffect(() => { if (initialized) DB.set("wt:inventory", inventory); }, [inventory, initialized]);
   useEffect(() => { if (initialized) DB.set("wt:paymethods", payMethods); }, [payMethods, initialized]);
   useEffect(() => { if (initialized) DB.set("wt:supplyrules", supplyRules); }, [supplyRules, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:emailconfig", emailConfig); }, [emailConfig, initialized]);
 
   // ── Helpers ──
   const notify = useCallback((msg: string, type = "success") => {
@@ -183,6 +189,7 @@ export function AppProvider({ children, currentStaff, onPinModal }: AppProviderP
     customers, setCustomers, orders, setOrders,
     smsLog, setSmsLog, auditLog, setAuditLog, orderCounter, setOrderCounter,
     inventory, setInventory, payMethods, setPayMethods, supplyRules, setSupplyRules,
+    emailConfig, setEmailConfig,
     currentStaff, notify, addAudit, sendSms, requirePin,
     modal, setModal, calcPrice, genId, genOrderNum, fmt, theme, setTheme,
   };

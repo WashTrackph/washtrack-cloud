@@ -176,6 +176,21 @@ export interface ThemePreset {
   mode: "dark" | "light";
 }
 
+export type EmailProvider = "gmail" | "workspace" | "outlook" | "yahoo" | "custom";
+
+export interface EmailConfig {
+  enabled: boolean;
+  provider: EmailProvider;
+  email: string;
+  password: string;
+  smtpUser: string;
+  smtpHost: string;
+  smtpPort: number;
+  fromName: string;
+  reportTo: string;
+  testVerified: boolean;
+}
+
 export interface Overstay {
   hrs: number;
   level: "warn" | "alert" | "critical";
