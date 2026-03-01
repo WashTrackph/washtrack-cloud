@@ -63,7 +63,18 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_sql::Builder::default().build())
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![send_email])
+        .invoke_handler(tauri::generate_handler![
+            send_email,
+            semaphore_sms::tauri_commands::send_sms,
+            semaphore_sms::tauri_commands::send_priority_sms,
+            semaphore_sms::tauri_commands::send_otp_sms,
+            semaphore_sms::tauri_commands::get_sms_messages,
+            semaphore_sms::tauri_commands::get_sms_message_by_id,
+            semaphore_sms::tauri_commands::get_sms_account,
+            semaphore_sms::tauri_commands::get_sms_transactions,
+            semaphore_sms::tauri_commands::get_sms_sender_names,
+            semaphore_sms::tauri_commands::get_sms_users,
+        ])
         .setup(|app| {
             if cfg!(debug_assertions) {
                 app.handle().plugin(

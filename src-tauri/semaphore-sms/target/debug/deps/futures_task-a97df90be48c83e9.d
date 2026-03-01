@@ -1,0 +1,11 @@
+D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\deps\futures_task-a97df90be48c83e9.d: C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\lib.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\spawn.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\arc_wake.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\waker.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\waker_ref.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\future_obj.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\noop_waker.rs
+
+D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\deps\libfutures_task-a97df90be48c83e9.rmeta: C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\lib.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\spawn.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\arc_wake.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\waker.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\waker_ref.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\future_obj.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\noop_waker.rs
+
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\lib.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\spawn.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\arc_wake.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\waker.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\waker_ref.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\future_obj.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\futures-task-0.3.32\src\noop_waker.rs:

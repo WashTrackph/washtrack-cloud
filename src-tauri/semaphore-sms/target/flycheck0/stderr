@@ -1,0 +1,3061 @@
+    Updating `rks-cratesio` index
+     Locking 494 packages to latest compatible versions
+      Adding generic-array v0.14.7 (available: v0.14.9)
+      Adding reqwest v0.12.28 (available: v0.13.2)
+      Adding toml v0.8.2 (available: v0.8.23)
+      Adding toml_datetime v0.6.3 (available: v0.6.11)
+      Adding toml_edit v0.20.2 (available: v0.20.7)
+   1.070251000s  INFO prepare_target{force=false package_id=semaphore-sms v0.1.0 (D:\SC\Work\Washtrack\src-tauri\semaphore-sms) target="semaphore_sms"}: cargo::core::compiler::fingerprint: fingerprint error for semaphore-sms v0.1.0 (D:\SC\Work\Washtrack\src-tauri\semaphore-sms)/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("semaphore_sms", ["lib"], "D:\\SC\\Work\\Washtrack\\src-tauri\\semaphore-sms\\src\\lib.rs", Edition2021) }
+   1.070299200s  INFO prepare_target{force=false package_id=semaphore-sms v0.1.0 (D:\SC\Work\Washtrack\src-tauri\semaphore-sms) target="semaphore_sms"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\semaphore-sms-6d41c64352847326\lib-semaphore_sms`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_libgit2_prerelease
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: git_midx_writer_dump
+  17: git_filter_source_repo
+  18: git_midx_writer_dump
+  19: BaseThreadInitThunk
+  20: RtlUserThreadStart
+   1.076776900s  INFO prepare_target{force=false package_id=reqwest v0.12.28 target="reqwest"}: cargo::core::compiler::fingerprint: fingerprint error for reqwest v0.12.28/Check { test: false }/TargetInner { ..: lib_target("reqwest", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\reqwest-0.12.28\\src\\lib.rs", Edition2021) }
+   1.076794300s  INFO prepare_target{force=false package_id=reqwest v0.12.28 target="reqwest"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\reqwest-69aa469b253543c0\lib-reqwest`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_libgit2_prerelease
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: git_midx_writer_dump
+  18: git_filter_source_repo
+  19: git_midx_writer_dump
+  20: BaseThreadInitThunk
+  21: RtlUserThreadStart
+   1.077345400s  INFO prepare_target{force=false package_id=base64 v0.22.1 target="base64"}: cargo::core::compiler::fingerprint: fingerprint error for base64 v0.22.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("base64", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\base64-0.22.1\\src\\lib.rs", Edition2018) }
+   1.077357000s  INFO prepare_target{force=false package_id=base64 v0.22.1 target="base64"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\base64-3a49147d849773fa\lib-base64`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.077655700s  INFO prepare_target{force=false package_id=bytes v1.11.1 target="bytes"}: cargo::core::compiler::fingerprint: fingerprint error for bytes v1.11.1/Check { test: false }/TargetInner { ..: lib_target("bytes", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\bytes-1.11.1\\src\\lib.rs", Edition2021) }
+   1.077665200s  INFO prepare_target{force=false package_id=bytes v1.11.1 target="bytes"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\bytes-d1b03353c603f31d\lib-bytes`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.078032700s  INFO prepare_target{force=false package_id=encoding_rs v0.8.35 target="encoding_rs"}: cargo::core::compiler::fingerprint: fingerprint error for encoding_rs v0.8.35/Check { test: false }/TargetInner { ..: lib_target("encoding_rs", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\encoding_rs-0.8.35\\src\\lib.rs", Edition2018) }
+   1.078046500s  INFO prepare_target{force=false package_id=encoding_rs v0.8.35 target="encoding_rs"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\encoding_rs-347ccd17707312c5\lib-encoding_rs`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.078379800s  INFO prepare_target{force=false package_id=cfg-if v1.0.4 target="cfg_if"}: cargo::core::compiler::fingerprint: fingerprint error for cfg-if v1.0.4/Check { test: false }/TargetInner { ..: lib_target("cfg_if", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\cfg-if-1.0.4\\src\\lib.rs", Edition2018) }
+   1.078390500s  INFO prepare_target{force=false package_id=cfg-if v1.0.4 target="cfg_if"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\cfg-if-f8bf42d2fc0c3243\lib-cfg_if`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.078670700s  INFO prepare_target{force=false package_id=futures-core v0.3.32 target="futures_core"}: cargo::core::compiler::fingerprint: fingerprint error for futures-core v0.3.32/Check { test: false }/TargetInner { ..: lib_target("futures_core", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\futures-core-0.3.32\\src\\lib.rs", Edition2018) }
+   1.078680000s  INFO prepare_target{force=false package_id=futures-core v0.3.32 target="futures_core"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\futures-core-cc2616aefd3bf110\lib-futures_core`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.078963500s  INFO prepare_target{force=false package_id=h2 v0.4.13 target="h2"}: cargo::core::compiler::fingerprint: fingerprint error for h2 v0.4.13/Check { test: false }/TargetInner { ..: lib_target("h2", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\h2-0.4.13\\src\\lib.rs", Edition2021) }
+   1.078972300s  INFO prepare_target{force=false package_id=h2 v0.4.13 target="h2"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\h2-bd260d1d59adf2b9\lib-h2`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.079363700s  INFO prepare_target{force=false package_id=atomic-waker v1.1.2 target="atomic_waker"}: cargo::core::compiler::fingerprint: fingerprint error for atomic-waker v1.1.2/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("atomic_waker", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\atomic-waker-1.1.2\\src\\lib.rs", Edition2018) }
+   1.079374600s  INFO prepare_target{force=false package_id=atomic-waker v1.1.2 target="atomic_waker"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\atomic-waker-37dc9b4ba20b5be1\lib-atomic_waker`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.079670200s  INFO prepare_target{force=false package_id=fnv v1.0.7 target="fnv"}: cargo::core::compiler::fingerprint: fingerprint error for fnv v1.0.7/Check { test: false }/TargetInner { ..: lib_target("fnv", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\fnv-1.0.7\\lib.rs", Edition2015) }
+   1.079679200s  INFO prepare_target{force=false package_id=fnv v1.0.7 target="fnv"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\fnv-dba39155a26cac67\lib-fnv`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.079961300s  INFO prepare_target{force=false package_id=futures-sink v0.3.32 target="futures_sink"}: cargo::core::compiler::fingerprint: fingerprint error for futures-sink v0.3.32/Check { test: false }/TargetInner { ..: lib_target("futures_sink", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\futures-sink-0.3.32\\src\\lib.rs", Edition2018) }
+   1.079969700s  INFO prepare_target{force=false package_id=futures-sink v0.3.32 target="futures_sink"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\futures-sink-5ba79746f4d7cfeb\lib-futures_sink`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.080462600s  INFO prepare_target{force=false package_id=http v1.4.0 target="http"}: cargo::core::compiler::fingerprint: fingerprint error for http v1.4.0/Check { test: false }/TargetInner { ..: lib_target("http", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\http-1.4.0\\src\\lib.rs", Edition2021) }
+   1.080475100s  INFO prepare_target{force=false package_id=http v1.4.0 target="http"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\http-97ab746806e36426\lib-http`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.080803400s  INFO prepare_target{force=false package_id=itoa v1.0.17 target="itoa"}: cargo::core::compiler::fingerprint: fingerprint error for itoa v1.0.17/Check { test: false }/TargetInner { ..: lib_target("itoa", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\itoa-1.0.17\\src\\lib.rs", Edition2021) }
+   1.080812900s  INFO prepare_target{force=false package_id=itoa v1.0.17 target="itoa"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\itoa-380221fc244fa74f\lib-itoa`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.081167300s  INFO prepare_target{force=false package_id=indexmap v2.13.0 target="indexmap"}: cargo::core::compiler::fingerprint: fingerprint error for indexmap v2.13.0/Check { test: false }/TargetInner { benched: false, ..: lib_target("indexmap", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\indexmap-2.13.0\\src\\lib.rs", Edition2021) }
+   1.081180600s  INFO prepare_target{force=false package_id=indexmap v2.13.0 target="indexmap"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\indexmap-132c00e4ad411ea7\lib-indexmap`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.081522200s  INFO prepare_target{force=false package_id=equivalent v1.0.2 target="equivalent"}: cargo::core::compiler::fingerprint: fingerprint error for equivalent v1.0.2/Check { test: false }/TargetInner { ..: lib_target("equivalent", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\equivalent-1.0.2\\src\\lib.rs", Edition2015) }
+   1.081532500s  INFO prepare_target{force=false package_id=equivalent v1.0.2 target="equivalent"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\equivalent-e113575d355eefe7\lib-equivalent`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.081838200s  INFO prepare_target{force=false package_id=hashbrown v0.16.1 target="hashbrown"}: cargo::core::compiler::fingerprint: fingerprint error for hashbrown v0.16.1/Check { test: false }/TargetInner { ..: lib_target("hashbrown", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\hashbrown-0.16.1\\src\\lib.rs", Edition2021) }
+   1.081847800s  INFO prepare_target{force=false package_id=hashbrown v0.16.1 target="hashbrown"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\hashbrown-a810bcad5b441f5a\lib-hashbrown`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.082165500s  INFO prepare_target{force=false package_id=slab v0.4.12 target="slab"}: cargo::core::compiler::fingerprint: fingerprint error for slab v0.4.12/Check { test: false }/TargetInner { ..: lib_target("slab", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\slab-0.4.12\\src\\lib.rs", Edition2018) }
+   1.082175300s  INFO prepare_target{force=false package_id=slab v0.4.12 target="slab"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\slab-73ba59f0a4e9bb3d\lib-slab`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.082477900s  INFO prepare_target{force=false package_id=tokio v1.49.0 target="tokio"}: cargo::core::compiler::fingerprint: fingerprint error for tokio v1.49.0/Check { test: false }/TargetInner { ..: lib_target("tokio", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\tokio-1.49.0\\src\\lib.rs", Edition2021) }
+   1.082488500s  INFO prepare_target{force=false package_id=tokio v1.49.0 target="tokio"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\tokio-b03b5dc20088d43a\lib-tokio`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.082936500s  INFO prepare_target{force=false package_id=mio v1.1.1 target="mio"}: cargo::core::compiler::fingerprint: fingerprint error for mio v1.1.1/Check { test: false }/TargetInner { ..: lib_target("mio", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\mio-1.1.1\\src\\lib.rs", Edition2021) }
+   1.082947900s  INFO prepare_target{force=false package_id=mio v1.1.1 target="mio"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\mio-7db17cc9189dc67d\lib-mio`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.083283200s  INFO prepare_target{force=false package_id=windows-sys v0.61.2 target="windows_sys"}: cargo::core::compiler::fingerprint: fingerprint error for windows-sys v0.61.2/Check { test: false }/TargetInner { tested: false, doctest: false, ..: lib_target("windows_sys", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\windows-sys-0.61.2\\src\\lib.rs", Edition2021) }
+   1.083293000s  INFO prepare_target{force=false package_id=windows-sys v0.61.2 target="windows_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\windows-sys-9f557c1719032548\lib-windows_sys`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.083653400s  INFO prepare_target{force=false package_id=windows-link v0.2.1 target="windows_link"}: cargo::core::compiler::fingerprint: fingerprint error for windows-link v0.2.1/Check { test: false }/TargetInner { ..: lib_target("windows_link", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\windows-link-0.2.1\\src\\lib.rs", Edition2021) }
+   1.083662600s  INFO prepare_target{force=false package_id=windows-link v0.2.1 target="windows_link"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\windows-link-a2622e52308cdcaa\lib-windows_link`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   1.084035400s  INFO prepare_target{force=false package_id=pin-project-lite v0.2.17 target="pin_project_lite"}: cargo::core::compiler::fingerprint: fingerprint error for pin-project-lite v0.2.17/Check { test: false }/TargetInner { doc_scrape_examples: Disabled, ..: lib_target("pin_project_lite", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\pin-project-lite-0.2.17\\src\\lib.rs", Edition2018) }
+   1.084045800s  INFO prepare_target{force=false package_id=pin-project-lite v0.2.17 target="pin_project_lite"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\pin-project-lite-8e269f70c50e6f50\lib-pin_project_lite`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.084429600s  INFO prepare_target{force=false package_id=socket2 v0.6.2 target="socket2"}: cargo::core::compiler::fingerprint: fingerprint error for socket2 v0.6.2/Check { test: false }/TargetInner { ..: lib_target("socket2", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\socket2-0.6.2\\src\\lib.rs", Edition2021) }
+   1.084438900s  INFO prepare_target{force=false package_id=socket2 v0.6.2 target="socket2"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\socket2-c9b20836586b10d6\lib-socket2`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.084827400s  INFO prepare_target{force=false package_id=windows-sys v0.60.2 target="windows_sys"}: cargo::core::compiler::fingerprint: fingerprint error for windows-sys v0.60.2/Check { test: false }/TargetInner { tested: false, doctest: false, ..: lib_target("windows_sys", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\windows-sys-0.60.2\\src\\lib.rs", Edition2021) }
+   1.084841500s  INFO prepare_target{force=false package_id=windows-sys v0.60.2 target="windows_sys"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\windows-sys-1313cb749c1a636b\lib-windows_sys`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.085289700s  INFO prepare_target{force=false package_id=windows-targets v0.53.5 target="windows_targets"}: cargo::core::compiler::fingerprint: fingerprint error for windows-targets v0.53.5/Check { test: false }/TargetInner { ..: lib_target("windows_targets", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\windows-targets-0.53.5\\src\\lib.rs", Edition2021) }
+   1.085302500s  INFO prepare_target{force=false package_id=windows-targets v0.53.5 target="windows_targets"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\windows-targets-ffe666aaed9e1f5c\lib-windows_targets`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   1.085646200s  INFO prepare_target{force=false package_id=windows_x86_64_msvc v0.53.1 target="windows_x86_64_msvc"}: cargo::core::compiler::fingerprint: fingerprint error for windows_x86_64_msvc v0.53.1/Check { test: false }/TargetInner { ..: lib_target("windows_x86_64_msvc", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\windows_x86_64_msvc-0.53.1\\src\\lib.rs", Edition2021) }
+   1.085657400s  INFO prepare_target{force=false package_id=windows_x86_64_msvc v0.53.1 target="windows_x86_64_msvc"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\windows_x86_64_msvc-2627c42108f1f458\lib-windows_x86_64_msvc`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_libgit2_prerelease
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: git_midx_writer_dump
+  24: git_filter_source_repo
+  25: git_midx_writer_dump
+  26: BaseThreadInitThunk
+  27: RtlUserThreadStart
+   1.088848800s  INFO prepare_target{force=false package_id=tokio-util v0.7.18 target="tokio_util"}: cargo::core::compiler::fingerprint: fingerprint error for tokio-util v0.7.18/Check { test: false }/TargetInner { ..: lib_target("tokio_util", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\tokio-util-0.7.18\\src\\lib.rs", Edition2021) }
+   1.088868300s  INFO prepare_target{force=false package_id=tokio-util v0.7.18 target="tokio_util"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\tokio-util-5a483b0a3c65695e\lib-tokio_util`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.089379300s  INFO prepare_target{force=false package_id=tracing v0.1.44 target="tracing"}: cargo::core::compiler::fingerprint: fingerprint error for tracing v0.1.44/Check { test: false }/TargetInner { ..: lib_target("tracing", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\tracing-0.1.44\\src\\lib.rs", Edition2018) }
+   1.089394900s  INFO prepare_target{force=false package_id=tracing v0.1.44 target="tracing"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\tracing-575ad8b9e6185738\lib-tracing`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.090090000s  INFO prepare_target{force=false package_id=tracing-core v0.1.36 target="tracing_core"}: cargo::core::compiler::fingerprint: fingerprint error for tracing-core v0.1.36/Check { test: false }/TargetInner { ..: lib_target("tracing_core", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\tracing-core-0.1.36\\src\\lib.rs", Edition2018) }
+   1.090102500s  INFO prepare_target{force=false package_id=tracing-core v0.1.36 target="tracing_core"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\tracing-core-e1df2eac5df95e9f\lib-tracing_core`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.090612500s  INFO prepare_target{force=false package_id=once_cell v1.21.3 target="once_cell"}: cargo::core::compiler::fingerprint: fingerprint error for once_cell v1.21.3/Check { test: false }/TargetInner { ..: lib_target("once_cell", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\once_cell-1.21.3\\src\\lib.rs", Edition2021) }
+   1.090624100s  INFO prepare_target{force=false package_id=once_cell v1.21.3 target="once_cell"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\once_cell-6a3d5bcfe51c431b\lib-once_cell`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.090932300s  INFO prepare_target{force=false package_id=http-body v1.0.1 target="http_body"}: cargo::core::compiler::fingerprint: fingerprint error for http-body v1.0.1/Check { test: false }/TargetInner { ..: lib_target("http_body", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\http-body-1.0.1\\src\\lib.rs", Edition2018) }
+   1.090942000s  INFO prepare_target{force=false package_id=http-body v1.0.1 target="http_body"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\http-body-e5867e160ee604d5\lib-http_body`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.091250200s  INFO prepare_target{force=false package_id=http-body-util v0.1.3 target="http_body_util"}: cargo::core::compiler::fingerprint: fingerprint error for http-body-util v0.1.3/Check { test: false }/TargetInner { ..: lib_target("http_body_util", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\http-body-util-0.1.3\\src\\lib.rs", Edition2018) }
+   1.091260800s  INFO prepare_target{force=false package_id=http-body-util v0.1.3 target="http_body_util"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\http-body-util-baf37d6aeaec86e8\lib-http_body_util`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.091571100s  INFO prepare_target{force=false package_id=hyper v1.8.1 target="hyper"}: cargo::core::compiler::fingerprint: fingerprint error for hyper v1.8.1/Check { test: false }/TargetInner { ..: lib_target("hyper", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\hyper-1.8.1\\src\\lib.rs", Edition2021) }
+   1.091580100s  INFO prepare_target{force=false package_id=hyper v1.8.1 target="hyper"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\hyper-e7da1ee99f54638a\lib-hyper`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.091979100s  INFO prepare_target{force=false package_id=futures-channel v0.3.32 target="futures_channel"}: cargo::core::compiler::fingerprint: fingerprint error for futures-channel v0.3.32/Check { test: false }/TargetInner { ..: lib_target("futures_channel", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\futures-channel-0.3.32\\src\\lib.rs", Edition2018) }
+   1.091989700s  INFO prepare_target{force=false package_id=futures-channel v0.3.32 target="futures_channel"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\futures-channel-9144777bad2088d8\lib-futures_channel`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.092330200s  INFO prepare_target{force=false package_id=httparse v1.10.1 target="httparse"}: cargo::core::compiler::fingerprint: fingerprint error for httparse v1.10.1/Check { test: false }/TargetInner { benched: false, ..: lib_target("httparse", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\httparse-1.10.1\\src\\lib.rs", Edition2018) }
+   1.092340100s  INFO prepare_target{force=false package_id=httparse v1.10.1 target="httparse"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\httparse-353e32245d75214c\lib-httparse`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.093211400s  INFO prepare_target{force=false package_id=pin-utils v0.1.0 target="pin_utils"}: cargo::core::compiler::fingerprint: fingerprint error for pin-utils v0.1.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("pin_utils", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\pin-utils-0.1.0\\src\\lib.rs", Edition2018) }
+   1.093223800s  INFO prepare_target{force=false package_id=pin-utils v0.1.0 target="pin_utils"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\pin-utils-0a29d453a1ef8632\lib-pin_utils`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.093544200s  INFO prepare_target{force=false package_id=smallvec v1.15.1 target="smallvec"}: cargo::core::compiler::fingerprint: fingerprint error for smallvec v1.15.1/Check { test: false }/TargetInner { ..: lib_target("smallvec", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\smallvec-1.15.1\\src\\lib.rs", Edition2018) }
+   1.093554400s  INFO prepare_target{force=false package_id=smallvec v1.15.1 target="smallvec"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\smallvec-636b91b246773718\lib-smallvec`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.093919500s  INFO prepare_target{force=false package_id=want v0.3.1 target="want"}: cargo::core::compiler::fingerprint: fingerprint error for want v0.3.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("want", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\want-0.3.1\\src\\lib.rs", Edition2018) }
+   1.093934100s  INFO prepare_target{force=false package_id=want v0.3.1 target="want"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\want-f48e15a7b88fe210\lib-want`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.094265800s  INFO prepare_target{force=false package_id=try-lock v0.2.5 target="try_lock"}: cargo::core::compiler::fingerprint: fingerprint error for try-lock v0.2.5/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("try_lock", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\try-lock-0.2.5\\src\\lib.rs", Edition2015) }
+   1.094276900s  INFO prepare_target{force=false package_id=try-lock v0.2.5 target="try_lock"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\try-lock-656131bcec94598b\lib-try_lock`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.094628400s  INFO prepare_target{force=false package_id=hyper-tls v0.6.0 target="hyper_tls"}: cargo::core::compiler::fingerprint: fingerprint error for hyper-tls v0.6.0/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("hyper_tls", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\hyper-tls-0.6.0\\src\\lib.rs", Edition2018) }
+   1.094639200s  INFO prepare_target{force=false package_id=hyper-tls v0.6.0 target="hyper_tls"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\hyper-tls-477181e17014bca3\lib-hyper_tls`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.095050800s  INFO prepare_target{force=false package_id=hyper-util v0.1.20 target="hyper_util"}: cargo::core::compiler::fingerprint: fingerprint error for hyper-util v0.1.20/Check { test: false }/TargetInner { ..: lib_target("hyper_util", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\hyper-util-0.1.20\\src\\lib.rs", Edition2021) }
+   1.095061100s  INFO prepare_target{force=false package_id=hyper-util v0.1.20 target="hyper_util"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\hyper-util-7176be9d772ab1fd\lib-hyper_util`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.095592700s  INFO prepare_target{force=false package_id=futures-util v0.3.32 target="futures_util"}: cargo::core::compiler::fingerprint: fingerprint error for futures-util v0.3.32/Check { test: false }/TargetInner { ..: lib_target("futures_util", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\futures-util-0.3.32\\src\\lib.rs", Edition2018) }
+   1.095604000s  INFO prepare_target{force=false package_id=futures-util v0.3.32 target="futures_util"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\futures-util-26070d29b3132515\lib-futures_util`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.095987300s  INFO prepare_target{force=false package_id=futures-task v0.3.32 target="futures_task"}: cargo::core::compiler::fingerprint: fingerprint error for futures-task v0.3.32/Check { test: false }/TargetInner { ..: lib_target("futures_task", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\futures-task-0.3.32\\src\\lib.rs", Edition2018) }
+   1.095997100s  INFO prepare_target{force=false package_id=futures-task v0.3.32 target="futures_task"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\futures-task-a97df90be48c83e9\lib-futures_task`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.096281500s  INFO prepare_target{force=false package_id=ipnet v2.11.0 target="ipnet"}: cargo::core::compiler::fingerprint: fingerprint error for ipnet v2.11.0/Check { test: false }/TargetInner { ..: lib_target("ipnet", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\ipnet-2.11.0\\src\\lib.rs", Edition2018) }
+   1.096290500s  INFO prepare_target{force=false package_id=ipnet v2.11.0 target="ipnet"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\ipnet-4c96af7325a5dbf0\lib-ipnet`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.096598800s  INFO prepare_target{force=false package_id=libc v0.2.182 target="libc"}: cargo::core::compiler::fingerprint: fingerprint error for libc v0.2.182/Check { test: false }/TargetInner { ..: lib_target("libc", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\libc-0.2.182\\src\\lib.rs", Edition2021) }
+   1.096607500s  INFO prepare_target{force=false package_id=libc v0.2.182 target="libc"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\libc-430d60eb6732fc14\lib-libc`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.097471900s  INFO prepare_target{force=false package_id=percent-encoding v2.3.2 target="percent_encoding"}: cargo::core::compiler::fingerprint: fingerprint error for percent-encoding v2.3.2/Check { test: false }/TargetInner { ..: lib_target("percent_encoding", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\percent-encoding-2.3.2\\src\\lib.rs", Edition2018) }
+   1.097483700s  INFO prepare_target{force=false package_id=percent-encoding v2.3.2 target="percent_encoding"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\percent-encoding-7a609891a6b909f6\lib-percent_encoding`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.097801000s  INFO prepare_target{force=false package_id=tower-service v0.3.3 target="tower_service"}: cargo::core::compiler::fingerprint: fingerprint error for tower-service v0.3.3/Check { test: false }/TargetInner { ..: lib_target("tower_service", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\tower-service-0.3.3\\src\\lib.rs", Edition2018) }
+   1.097811600s  INFO prepare_target{force=false package_id=tower-service v0.3.3 target="tower_service"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\tower-service-621ee16da2f32728\lib-tower_service`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.098108500s  INFO prepare_target{force=false package_id=windows-registry v0.6.1 target="windows_registry"}: cargo::core::compiler::fingerprint: fingerprint error for windows-registry v0.6.1/Check { test: false }/TargetInner { ..: lib_target("windows_registry", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\windows-registry-0.6.1\\src\\lib.rs", Edition2021) }
+   1.098117700s  INFO prepare_target{force=false package_id=windows-registry v0.6.1 target="windows_registry"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\windows-registry-59c94b917d2c7a25\lib-windows_registry`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.098450500s  INFO prepare_target{force=false package_id=windows-result v0.4.1 target="windows_result"}: cargo::core::compiler::fingerprint: fingerprint error for windows-result v0.4.1/Check { test: false }/TargetInner { ..: lib_target("windows_result", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\windows-result-0.4.1\\src\\lib.rs", Edition2021) }
+   1.098460800s  INFO prepare_target{force=false package_id=windows-result v0.4.1 target="windows_result"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\windows-result-2f6082a48c23da9c\lib-windows_result`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.098834900s  INFO prepare_target{force=false package_id=windows-strings v0.5.1 target="windows_strings"}: cargo::core::compiler::fingerprint: fingerprint error for windows-strings v0.5.1/Check { test: false }/TargetInner { ..: lib_target("windows_strings", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\windows-strings-0.5.1\\src\\lib.rs", Edition2021) }
+   1.098848600s  INFO prepare_target{force=false package_id=windows-strings v0.5.1 target="windows_strings"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\windows-strings-8c8ff1fd9365a0a7\lib-windows_strings`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.099281800s  INFO prepare_target{force=false package_id=native-tls v0.2.18 target="native_tls"}: cargo::core::compiler::fingerprint: fingerprint error for native-tls v0.2.18/Check { test: false }/TargetInner { ..: lib_target("native_tls", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\native-tls-0.2.18\\src\\lib.rs", Edition2021) }
+   1.099294200s  INFO prepare_target{force=false package_id=native-tls v0.2.18 target="native_tls"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\native-tls-8fea0c051d881742\lib-native_tls`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.100166100s  INFO prepare_target{force=false package_id=schannel v0.1.28 target="schannel"}: cargo::core::compiler::fingerprint: fingerprint error for schannel v0.1.28/Check { test: false }/TargetInner { ..: lib_target("schannel", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\schannel-0.1.28\\src\\lib.rs", Edition2018) }
+   1.100178700s  INFO prepare_target{force=false package_id=schannel v0.1.28 target="schannel"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\schannel-95899736085920f4\lib-schannel`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.100539300s  INFO prepare_target{force=false package_id=tokio-native-tls v0.3.1 target="tokio_native_tls"}: cargo::core::compiler::fingerprint: fingerprint error for tokio-native-tls v0.3.1/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("tokio_native_tls", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\tokio-native-tls-0.3.1\\src\\lib.rs", Edition2018) }
+   1.100550400s  INFO prepare_target{force=false package_id=tokio-native-tls v0.3.1 target="tokio_native_tls"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\tokio-native-tls-fbf3b378838fd9b6\lib-tokio_native_tls`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.100876900s  INFO prepare_target{force=false package_id=log v0.4.29 target="log"}: cargo::core::compiler::fingerprint: fingerprint error for log v0.4.29/Check { test: false }/TargetInner { ..: lib_target("log", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\log-0.4.29\\src\\lib.rs", Edition2021) }
+   1.100886500s  INFO prepare_target{force=false package_id=log v0.4.29 target="log"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\log-5a9119114236f0fa\lib-log`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.101196300s  INFO prepare_target{force=false package_id=mime v0.3.17 target="mime"}: cargo::core::compiler::fingerprint: fingerprint error for mime v0.3.17/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("mime", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\mime-0.3.17\\src\\lib.rs", Edition2015) }
+   1.101205700s  INFO prepare_target{force=false package_id=mime v0.3.17 target="mime"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\mime-518a52c51f0488c0\lib-mime`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.101497200s  INFO prepare_target{force=false package_id=rustls-pki-types v1.14.0 target="rustls_pki_types"}: cargo::core::compiler::fingerprint: fingerprint error for rustls-pki-types v1.14.0/Check { test: false }/TargetInner { ..: lib_target("rustls_pki_types", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\rustls-pki-types-1.14.0\\src\\lib.rs", Edition2021) }
+   1.101506300s  INFO prepare_target{force=false package_id=rustls-pki-types v1.14.0 target="rustls_pki_types"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\rustls-pki-types-00338b43e9b2bd3b\lib-rustls_pki_types`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.101818500s  INFO prepare_target{force=false package_id=zeroize v1.8.2 target="zeroize"}: cargo::core::compiler::fingerprint: fingerprint error for zeroize v1.8.2/Check { test: false }/TargetInner { ..: lib_target("zeroize", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\zeroize-1.8.2\\src\\lib.rs", Edition2021) }
+   1.101829100s  INFO prepare_target{force=false package_id=zeroize v1.8.2 target="zeroize"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\zeroize-54daabafd6b605e0\lib-zeroize`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.102154800s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint: fingerprint error for serde v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\serde-1.0.228\\src\\lib.rs", Edition2021) }
+   1.102164600s  INFO prepare_target{force=false package_id=serde v1.0.228 target="serde"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\serde-7a97de6161ead265\lib-serde`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.103024300s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint: fingerprint error for serde_core v1.0.228/Check { test: false }/TargetInner { ..: lib_target("serde_core", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\serde_core-1.0.228\\src\\lib.rs", Edition2021) }
+   1.103036900s  INFO prepare_target{force=false package_id=serde_core v1.0.228 target="serde_core"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\serde_core-e4ff65c866a9c6f3\lib-serde_core`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.105769300s  INFO prepare_target{force=false package_id=serde_json v1.0.149 target="serde_json"}: cargo::core::compiler::fingerprint: fingerprint error for serde_json v1.0.149/Check { test: false }/TargetInner { ..: lib_target("serde_json", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\serde_json-1.0.149\\src\\lib.rs", Edition2021) }
+   1.105788100s  INFO prepare_target{force=false package_id=serde_json v1.0.149 target="serde_json"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\serde_json-0628876707f65291\lib-serde_json`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.106397700s  INFO prepare_target{force=false package_id=memchr v2.8.0 target="memchr"}: cargo::core::compiler::fingerprint: fingerprint error for memchr v2.8.0/Check { test: false }/TargetInner { benched: false, ..: lib_target("memchr", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\memchr-2.8.0\\src\\lib.rs", Edition2021) }
+   1.106413500s  INFO prepare_target{force=false package_id=memchr v2.8.0 target="memchr"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\memchr-1157358f9d78cba5\lib-memchr`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.107306200s  INFO prepare_target{force=false package_id=zmij v1.0.21 target="zmij"}: cargo::core::compiler::fingerprint: fingerprint error for zmij v1.0.21/Check { test: false }/TargetInner { ..: lib_target("zmij", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\zmij-1.0.21\\src\\lib.rs", Edition2021) }
+   1.107319200s  INFO prepare_target{force=false package_id=zmij v1.0.21 target="zmij"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\zmij-c70c0b499ff2eb91\lib-zmij`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.108259000s  INFO prepare_target{force=false package_id=serde_urlencoded v0.7.1 target="serde_urlencoded"}: cargo::core::compiler::fingerprint: fingerprint error for serde_urlencoded v0.7.1/Check { test: false }/TargetInner { name_inferred: true, tested: false, ..: lib_target("serde_urlencoded", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\serde_urlencoded-0.7.1\\src\\lib.rs", Edition2018) }
+   1.108271700s  INFO prepare_target{force=false package_id=serde_urlencoded v0.7.1 target="serde_urlencoded"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\serde_urlencoded-cf178cf466778908\lib-serde_urlencoded`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.108652200s  INFO prepare_target{force=false package_id=form_urlencoded v1.2.2 target="form_urlencoded"}: cargo::core::compiler::fingerprint: fingerprint error for form_urlencoded v1.2.2/Check { test: false }/TargetInner { tested: false, ..: lib_target("form_urlencoded", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\form_urlencoded-1.2.2\\src\\lib.rs", Edition2018) }
+   1.108663300s  INFO prepare_target{force=false package_id=form_urlencoded v1.2.2 target="form_urlencoded"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\form_urlencoded-6dd31da5f8bbdb15\lib-form_urlencoded`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.108963900s  INFO prepare_target{force=false package_id=ryu v1.0.23 target="ryu"}: cargo::core::compiler::fingerprint: fingerprint error for ryu v1.0.23/Check { test: false }/TargetInner { ..: lib_target("ryu", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\ryu-1.0.23\\src\\lib.rs", Edition2021) }
+   1.108974700s  INFO prepare_target{force=false package_id=ryu v1.0.23 target="ryu"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\ryu-e3e01b2a58d0ed8c\lib-ryu`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.109362900s  INFO prepare_target{force=false package_id=sync_wrapper v1.0.2 target="sync_wrapper"}: cargo::core::compiler::fingerprint: fingerprint error for sync_wrapper v1.0.2/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("sync_wrapper", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\sync_wrapper-1.0.2\\src\\lib.rs", Edition2021) }
+   1.109376700s  INFO prepare_target{force=false package_id=sync_wrapper v1.0.2 target="sync_wrapper"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\sync_wrapper-883cbc50b8c77ef5\lib-sync_wrapper`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.109725800s  INFO prepare_target{force=false package_id=tower v0.5.3 target="tower"}: cargo::core::compiler::fingerprint: fingerprint error for tower v0.5.3/Check { test: false }/TargetInner { ..: lib_target("tower", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\tower-0.5.3\\src\\lib.rs", Edition2018) }
+   1.109737000s  INFO prepare_target{force=false package_id=tower v0.5.3 target="tower"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\tower-8ceba8bad4140c29\lib-tower`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.110145800s  INFO prepare_target{force=false package_id=tower-layer v0.3.3 target="tower_layer"}: cargo::core::compiler::fingerprint: fingerprint error for tower-layer v0.3.3/Check { test: false }/TargetInner { ..: lib_target("tower_layer", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\tower-layer-0.3.3\\src\\lib.rs", Edition2018) }
+   1.110156200s  INFO prepare_target{force=false package_id=tower-layer v0.3.3 target="tower_layer"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\tower-layer-4736266191c68a93\lib-tower_layer`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.110467200s  INFO prepare_target{force=false package_id=tower-http v0.6.8 target="tower_http"}: cargo::core::compiler::fingerprint: fingerprint error for tower-http v0.6.8/Check { test: false }/TargetInner { ..: lib_target("tower_http", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\tower-http-0.6.8\\src\\lib.rs", Edition2018) }
+   1.110478400s  INFO prepare_target{force=false package_id=tower-http v0.6.8 target="tower_http"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\tower-http-ccf23b85b9d232eb\lib-tower_http`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.110855700s  INFO prepare_target{force=false package_id=bitflags v2.11.0 target="bitflags"}: cargo::core::compiler::fingerprint: fingerprint error for bitflags v2.11.0/Check { test: false }/TargetInner { ..: lib_target("bitflags", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\bitflags-2.11.0\\src\\lib.rs", Edition2021) }
+   1.110865600s  INFO prepare_target{force=false package_id=bitflags v2.11.0 target="bitflags"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\bitflags-0bb1163d08d5eb75\lib-bitflags`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.111186300s  INFO prepare_target{force=false package_id=iri-string v0.7.10 target="iri_string"}: cargo::core::compiler::fingerprint: fingerprint error for iri-string v0.7.10/Check { test: false }/TargetInner { benched: false, ..: lib_target("iri_string", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\iri-string-0.7.10\\src\\lib.rs", Edition2021) }
+   1.111196000s  INFO prepare_target{force=false package_id=iri-string v0.7.10 target="iri_string"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\iri-string-cfd3c12119d34b09\lib-iri_string`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.111527000s  INFO prepare_target{force=false package_id=url v2.5.8 target="url"}: cargo::core::compiler::fingerprint: fingerprint error for url v2.5.8/Check { test: false }/TargetInner { ..: lib_target("url", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\url-2.5.8\\src\\lib.rs", Edition2018) }
+   1.111537200s  INFO prepare_target{force=false package_id=url v2.5.8 target="url"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\url-2d4c0671eabc9fa2\lib-url`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_libgit2_prerelease
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: git_midx_writer_dump
+  19: git_filter_source_repo
+  20: git_midx_writer_dump
+  21: BaseThreadInitThunk
+  22: RtlUserThreadStart
+   1.111902100s  INFO prepare_target{force=false package_id=idna v1.1.0 target="idna"}: cargo::core::compiler::fingerprint: fingerprint error for idna v1.1.0/Check { test: false }/TargetInner { doctest: false, ..: lib_target("idna", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\idna-1.1.0\\src\\lib.rs", Edition2018) }
+   1.111911900s  INFO prepare_target{force=false package_id=idna v1.1.0 target="idna"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\idna-7fe44f5db584d7cd\lib-idna`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_libgit2_prerelease
+  15: <unknown>
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: git_midx_writer_dump
+  20: git_filter_source_repo
+  21: git_midx_writer_dump
+  22: BaseThreadInitThunk
+  23: RtlUserThreadStart
+   1.112288800s  INFO prepare_target{force=false package_id=idna_adapter v1.2.1 target="idna_adapter"}: cargo::core::compiler::fingerprint: fingerprint error for idna_adapter v1.2.1/Check { test: false }/TargetInner { ..: lib_target("idna_adapter", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\idna_adapter-1.2.1\\src\\lib.rs", Edition2021) }
+   1.112299200s  INFO prepare_target{force=false package_id=idna_adapter v1.2.1 target="idna_adapter"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\idna_adapter-2a67638e63cf99a7\lib-idna_adapter`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.112776900s  INFO prepare_target{force=false package_id=icu_normalizer v2.1.1 target="icu_normalizer"}: cargo::core::compiler::fingerprint: fingerprint error for icu_normalizer v2.1.1/Check { test: false }/TargetInner { ..: lib_target("icu_normalizer", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\icu_normalizer-2.1.1\\src\\lib.rs", Edition2021) }
+   1.112788500s  INFO prepare_target{force=false package_id=icu_normalizer v2.1.1 target="icu_normalizer"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\icu_normalizer-8f1400f7400fc574\lib-icu_normalizer`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.113200300s  INFO prepare_target{force=false package_id=icu_collections v2.1.1 target="icu_collections"}: cargo::core::compiler::fingerprint: fingerprint error for icu_collections v2.1.1/Check { test: false }/TargetInner { benched: false, ..: lib_target("icu_collections", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\icu_collections-2.1.1\\src\\lib.rs", Edition2021) }
+   1.113211100s  INFO prepare_target{force=false package_id=icu_collections v2.1.1 target="icu_collections"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\icu_collections-94665ff3048b6b23\lib-icu_collections`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   1.113735600s  INFO prepare_target{force=false package_id=potential_utf v0.1.4 target="potential_utf"}: cargo::core::compiler::fingerprint: fingerprint error for potential_utf v0.1.4/Check { test: false }/TargetInner { ..: lib_target("potential_utf", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\potential_utf-0.1.4\\src\\lib.rs", Edition2021) }
+   1.113748000s  INFO prepare_target{force=false package_id=potential_utf v0.1.4 target="potential_utf"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\potential_utf-b8bb420f5e112380\lib-potential_utf`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_libgit2_prerelease
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: git_midx_writer_dump
+  24: git_filter_source_repo
+  25: git_midx_writer_dump
+  26: BaseThreadInitThunk
+  27: RtlUserThreadStart
+   1.114168200s  INFO prepare_target{force=false package_id=zerovec v0.11.5 target="zerovec"}: cargo::core::compiler::fingerprint: fingerprint error for zerovec v0.11.5/Check { test: false }/TargetInner { benched: false, ..: lib_target("zerovec", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\zerovec-0.11.5\\src\\lib.rs", Edition2021) }
+   1.114182300s  INFO prepare_target{force=false package_id=zerovec v0.11.5 target="zerovec"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\zerovec-ee29ad27bd98d764\lib-zerovec`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_filter_source_repo
+  19: git_libgit2_prerelease
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: <unknown>
+  24: git_midx_writer_dump
+  25: git_filter_source_repo
+  26: git_midx_writer_dump
+  27: BaseThreadInitThunk
+  28: RtlUserThreadStart
+   1.114551800s  INFO prepare_target{force=false package_id=yoke v0.8.1 target="yoke"}: cargo::core::compiler::fingerprint: fingerprint error for yoke v0.8.1/Check { test: false }/TargetInner { ..: lib_target("yoke", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\yoke-0.8.1\\src\\lib.rs", Edition2021) }
+   1.114562500s  INFO prepare_target{force=false package_id=yoke v0.8.1 target="yoke"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\yoke-cea020e1a1d10e47\lib-yoke`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_filter_source_repo
+  19: git_filter_source_repo
+  20: git_libgit2_prerelease
+  21: <unknown>
+  22: <unknown>
+  23: <unknown>
+  24: <unknown>
+  25: git_midx_writer_dump
+  26: git_filter_source_repo
+  27: git_midx_writer_dump
+  28: BaseThreadInitThunk
+  29: RtlUserThreadStart
+   1.114978600s  INFO prepare_target{force=false package_id=stable_deref_trait v1.2.1 target="stable_deref_trait"}: cargo::core::compiler::fingerprint: fingerprint error for stable_deref_trait v1.2.1/Check { test: false }/TargetInner { ..: lib_target("stable_deref_trait", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\stable_deref_trait-1.2.1\\src\\lib.rs", Edition2015) }
+   1.114991600s  INFO prepare_target{force=false package_id=stable_deref_trait v1.2.1 target="stable_deref_trait"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\stable_deref_trait-7e3da126ecc8b10f\lib-stable_deref_trait`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_filter_source_repo
+  19: git_filter_source_repo
+  20: git_filter_source_repo
+  21: git_libgit2_prerelease
+  22: <unknown>
+  23: <unknown>
+  24: <unknown>
+  25: <unknown>
+  26: git_midx_writer_dump
+  27: git_filter_source_repo
+  28: git_midx_writer_dump
+  29: BaseThreadInitThunk
+  30: RtlUserThreadStart
+   1.115525400s  INFO prepare_target{force=false package_id=zerofrom v0.1.6 target="zerofrom"}: cargo::core::compiler::fingerprint: fingerprint error for zerofrom v0.1.6/Check { test: false }/TargetInner { ..: lib_target("zerofrom", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\zerofrom-0.1.6\\src\\lib.rs", Edition2021) }
+   1.115536500s  INFO prepare_target{force=false package_id=zerofrom v0.1.6 target="zerofrom"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\zerofrom-f5808bcefd1e4b6a\lib-zerofrom`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_filter_source_repo
+  19: git_filter_source_repo
+  20: git_filter_source_repo
+  21: git_libgit2_prerelease
+  22: <unknown>
+  23: <unknown>
+  24: <unknown>
+  25: <unknown>
+  26: git_midx_writer_dump
+  27: git_filter_source_repo
+  28: git_midx_writer_dump
+  29: BaseThreadInitThunk
+  30: RtlUserThreadStart
+   1.116154800s  INFO prepare_target{force=false package_id=icu_normalizer_data v2.1.1 target="icu_normalizer_data"}: cargo::core::compiler::fingerprint: fingerprint error for icu_normalizer_data v2.1.1/Check { test: false }/TargetInner { ..: lib_target("icu_normalizer_data", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\icu_normalizer_data-2.1.1\\src\\lib.rs", Edition2021) }
+   1.116167100s  INFO prepare_target{force=false package_id=icu_normalizer_data v2.1.1 target="icu_normalizer_data"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\icu_normalizer_data-4eeb9ea125b6d4bb\lib-icu_normalizer_data`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   1.117021300s  INFO prepare_target{force=false package_id=icu_provider v2.1.1 target="icu_provider"}: cargo::core::compiler::fingerprint: fingerprint error for icu_provider v2.1.1/Check { test: false }/TargetInner { benched: false, ..: lib_target("icu_provider", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\icu_provider-2.1.1\\src\\lib.rs", Edition2021) }
+   1.117033100s  INFO prepare_target{force=false package_id=icu_provider v2.1.1 target="icu_provider"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\icu_provider-c6d81b88db3212ed\lib-icu_provider`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   1.117472400s  INFO prepare_target{force=false package_id=icu_locale_core v2.1.1 target="icu_locale_core"}: cargo::core::compiler::fingerprint: fingerprint error for icu_locale_core v2.1.1/Check { test: false }/TargetInner { benched: false, ..: lib_target("icu_locale_core", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\icu_locale_core-2.1.1\\src\\lib.rs", Edition2021) }
+   1.117484200s  INFO prepare_target{force=false package_id=icu_locale_core v2.1.1 target="icu_locale_core"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\icu_locale_core-8c75bb02a9573d94\lib-icu_locale_core`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_libgit2_prerelease
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: git_midx_writer_dump
+  24: git_filter_source_repo
+  25: git_midx_writer_dump
+  26: BaseThreadInitThunk
+  27: RtlUserThreadStart
+   1.117926800s  INFO prepare_target{force=false package_id=litemap v0.8.1 target="litemap"}: cargo::core::compiler::fingerprint: fingerprint error for litemap v0.8.1/Check { test: false }/TargetInner { benched: false, ..: lib_target("litemap", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\litemap-0.8.1\\src\\lib.rs", Edition2021) }
+   1.117940200s  INFO prepare_target{force=false package_id=litemap v0.8.1 target="litemap"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\litemap-d32bb148fde5a830\lib-litemap`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_filter_source_repo
+  19: git_libgit2_prerelease
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: <unknown>
+  24: git_midx_writer_dump
+  25: git_filter_source_repo
+  26: git_midx_writer_dump
+  27: BaseThreadInitThunk
+  28: RtlUserThreadStart
+   1.118294200s  INFO prepare_target{force=false package_id=tinystr v0.8.2 target="tinystr"}: cargo::core::compiler::fingerprint: fingerprint error for tinystr v0.8.2/Check { test: false }/TargetInner { benched: false, ..: lib_target("tinystr", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\tinystr-0.8.2\\src\\lib.rs", Edition2021) }
+   1.118305200s  INFO prepare_target{force=false package_id=tinystr v0.8.2 target="tinystr"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\tinystr-a2d9ae5233c960cb\lib-tinystr`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_filter_source_repo
+  19: git_libgit2_prerelease
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: <unknown>
+  24: git_midx_writer_dump
+  25: git_filter_source_repo
+  26: git_midx_writer_dump
+  27: BaseThreadInitThunk
+  28: RtlUserThreadStart
+   1.118646000s  INFO prepare_target{force=false package_id=writeable v0.6.2 target="writeable"}: cargo::core::compiler::fingerprint: fingerprint error for writeable v0.6.2/Check { test: false }/TargetInner { benched: false, ..: lib_target("writeable", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\writeable-0.6.2\\src\\lib.rs", Edition2021) }
+   1.118657100s  INFO prepare_target{force=false package_id=writeable v0.6.2 target="writeable"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\writeable-36f48f6992b66b63\lib-writeable`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_filter_source_repo
+  19: git_libgit2_prerelease
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: <unknown>
+  24: git_midx_writer_dump
+  25: git_filter_source_repo
+  26: git_midx_writer_dump
+  27: BaseThreadInitThunk
+  28: RtlUserThreadStart
+   1.119018900s  INFO prepare_target{force=false package_id=zerotrie v0.2.3 target="zerotrie"}: cargo::core::compiler::fingerprint: fingerprint error for zerotrie v0.2.3/Check { test: false }/TargetInner { benched: false, ..: lib_target("zerotrie", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\zerotrie-0.2.3\\src\\lib.rs", Edition2021) }
+   1.119029200s  INFO prepare_target{force=false package_id=zerotrie v0.2.3 target="zerotrie"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\zerotrie-ba37c6c841066e52\lib-zerotrie`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_filter_source_repo
+  18: git_libgit2_prerelease
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: <unknown>
+  23: git_midx_writer_dump
+  24: git_filter_source_repo
+  25: git_midx_writer_dump
+  26: BaseThreadInitThunk
+  27: RtlUserThreadStart
+   1.119414500s  INFO prepare_target{force=false package_id=icu_properties v2.1.2 target="icu_properties"}: cargo::core::compiler::fingerprint: fingerprint error for icu_properties v2.1.2/Check { test: false }/TargetInner { ..: lib_target("icu_properties", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\icu_properties-2.1.2\\src\\lib.rs", Edition2021) }
+   1.119426600s  INFO prepare_target{force=false package_id=icu_properties v2.1.2 target="icu_properties"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\icu_properties-01bd5edc3d6beba4\lib-icu_properties`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_libgit2_prerelease
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: git_midx_writer_dump
+  22: git_filter_source_repo
+  23: git_midx_writer_dump
+  24: BaseThreadInitThunk
+  25: RtlUserThreadStart
+   1.120178700s  INFO prepare_target{force=false package_id=icu_properties_data v2.1.2 target="icu_properties_data"}: cargo::core::compiler::fingerprint: fingerprint error for icu_properties_data v2.1.2/Check { test: false }/TargetInner { ..: lib_target("icu_properties_data", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\icu_properties_data-2.1.2\\src\\lib.rs", Edition2021) }
+   1.120201300s  INFO prepare_target{force=false package_id=icu_properties_data v2.1.2 target="icu_properties_data"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\icu_properties_data-545490d9700a6d61\lib-icu_properties_data`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_filter_source_repo
+  16: git_filter_source_repo
+  17: git_libgit2_prerelease
+  18: <unknown>
+  19: <unknown>
+  20: <unknown>
+  21: <unknown>
+  22: git_midx_writer_dump
+  23: git_filter_source_repo
+  24: git_midx_writer_dump
+  25: BaseThreadInitThunk
+  26: RtlUserThreadStart
+   1.121827400s  INFO prepare_target{force=false package_id=utf8_iter v1.0.4 target="utf8_iter"}: cargo::core::compiler::fingerprint: fingerprint error for utf8_iter v1.0.4/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("utf8_iter", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\utf8_iter-1.0.4\\src\\lib.rs", Edition2021) }
+   1.121844000s  INFO prepare_target{force=false package_id=utf8_iter v1.0.4 target="utf8_iter"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\utf8_iter-c62651a4c86416e5\lib-utf8_iter`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_filter_source_repo
+  13: git_filter_source_repo
+  14: git_filter_source_repo
+  15: git_libgit2_prerelease
+  16: <unknown>
+  17: <unknown>
+  18: <unknown>
+  19: <unknown>
+  20: git_midx_writer_dump
+  21: git_filter_source_repo
+  22: git_midx_writer_dump
+  23: BaseThreadInitThunk
+  24: RtlUserThreadStart
+   1.122228800s  INFO prepare_target{force=false package_id=thiserror v2.0.18 target="thiserror"}: cargo::core::compiler::fingerprint: fingerprint error for thiserror v2.0.18/Check { test: false }/TargetInner { ..: lib_target("thiserror", ["lib"], "C:\\Users\\Andre\\.cargo\\registry\\src\\crates.rkst.io-027f5cf70e02cfc3\\thiserror-2.0.18\\src\\lib.rs", Edition2021) }
+   1.122240400s  INFO prepare_target{force=false package_id=thiserror v2.0.18 target="thiserror"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\thiserror-3db5003f68696428\lib-thiserror`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_filter_source_repo
+  12: git_libgit2_prerelease
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: <unknown>
+  17: git_midx_writer_dump
+  18: git_filter_source_repo
+  19: git_midx_writer_dump
+  20: BaseThreadInitThunk
+  21: RtlUserThreadStart
+   1.123303400s  INFO prepare_target{force=false package_id=semaphore-sms v0.1.0 (D:\SC\Work\Washtrack\src-tauri\semaphore-sms) target="semaphore_sms"}: cargo::core::compiler::fingerprint: fingerprint error for semaphore-sms v0.1.0 (D:\SC\Work\Washtrack\src-tauri\semaphore-sms)/Check { test: true }/TargetInner { name_inferred: true, ..: lib_target("semaphore_sms", ["lib"], "D:\\SC\\Work\\Washtrack\\src-tauri\\semaphore-sms\\src\\lib.rs", Edition2021) }
+   1.123316900s  INFO prepare_target{force=false package_id=semaphore-sms v0.1.0 (D:\SC\Work\Washtrack\src-tauri\semaphore-sms) target="semaphore_sms"}: cargo::core::compiler::fingerprint:     err: failed to read `D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\.fingerprint\semaphore-sms-ee719843c3c08ca8\test-lib-semaphore_sms`
+
+Caused by:
+    The system cannot find the file specified. (os error 2)
+
+Stack backtrace:
+   0: git_midx_writer_dump
+   1: git_midx_writer_dump
+   2: git_midx_writer_dump
+   3: git_midx_writer_dump
+   4: git_filter_source_repo
+   5: git_filter_source_repo
+   6: git_filter_source_repo
+   7: git_filter_source_repo
+   8: git_filter_source_repo
+   9: git_filter_source_repo
+  10: git_filter_source_repo
+  11: git_libgit2_prerelease
+  12: <unknown>
+  13: <unknown>
+  14: <unknown>
+  15: <unknown>
+  16: git_midx_writer_dump
+  17: git_filter_source_repo
+  18: git_midx_writer_dump
+  19: BaseThreadInitThunk
+  20: RtlUserThreadStart
+    Checking windows-link v0.2.1
+    Checking stable_deref_trait v1.2.1
+    Checking bytes v1.11.1
+    Checking pin-project-lite v0.2.17
+    Checking futures-core v0.3.32
+    Checking itoa v1.0.17
+    Checking litemap v0.8.1
+    Checking writeable v0.6.2
+    Checking slab v0.4.12
+    Checking smallvec v1.15.1
+    Checking once_cell v1.21.3
+    Checking equivalent v1.0.2
+    Checking futures-sink v0.3.32
+    Checking hashbrown v0.16.1
+    Checking percent-encoding v2.3.2
+    Checking futures-task v0.3.32
+    Checking tower-service v0.3.3
+    Checking atomic-waker v1.1.2
+    Checking try-lock v0.2.5
+    Checking fnv v1.0.7
+    Checking pin-utils v0.1.0
+    Checking windows_x86_64_msvc v0.53.1
+    Checking icu_properties_data v2.1.2
+    Checking icu_normalizer_data v2.1.1
+    Checking httparse v1.10.1
+    Checking serde_core v1.0.228
+    Checking libc v0.2.182
+    Checking ipnet v2.11.0
+    Checking utf8_iter v1.0.4
+    Checking tower-layer v0.3.3
+    Checking base64 v0.22.1
+    Checking zerofrom v0.1.6
+    Checking windows-sys v0.61.2
+    Checking http v1.4.0
+    Checking futures-channel v0.3.32
+    Checking windows-result v0.4.1
+    Checking windows-strings v0.5.1
+    Checking sync_wrapper v1.0.2
+    Checking zmij v1.0.21
+    Checking cfg-if v1.0.4
+    Checking zeroize v1.8.2
+    Checking memchr v2.8.0
+    Checking tracing-core v0.1.36
+    Checking want v0.3.1
+    Checking ryu v1.0.23
+    Checking bitflags v2.11.0
+    Checking form_urlencoded v1.2.2
+    Checking indexmap v2.13.0
+    Checking iri-string v0.7.10
+    Checking windows-targets v0.53.5
+    Checking mime v0.3.17
+    Checking log v0.4.29
+    Checking thiserror v2.0.18
+    Checking encoding_rs v0.8.35
+    Checking futures-util v0.3.32
+    Checking rustls-pki-types v1.14.0
+    Checking yoke v0.8.1
+    Checking http-body v1.0.1
+    Checking tracing v0.1.44
+    Checking windows-sys v0.60.2
+    Checking windows-registry v0.6.1
+    Checking http-body-util v0.1.3
+    Checking zerovec v0.11.5
+    Checking zerotrie v0.2.3
+    Checking socket2 v0.6.2
+    Checking tinystr v0.8.2
+    Checking potential_utf v0.1.4
+    Checking icu_collections v2.1.1
+    Checking icu_locale_core v2.1.1
+    Checking serde v1.0.228
+    Checking serde_json v1.0.149
+    Checking icu_provider v2.1.1
+    Checking serde_urlencoded v0.7.1
+    Checking icu_normalizer v2.1.1
+    Checking icu_properties v2.1.2
+    Checking mio v1.1.1
+    Checking schannel v0.1.28
+    Checking idna_adapter v1.2.1
+    Checking idna v1.1.0
+    Checking native-tls v0.2.18
+    Checking tokio v1.49.0
+    Checking url v2.5.8
+    Checking tokio-util v0.7.18
+    Checking tokio-native-tls v0.3.1
+    Checking tower v0.5.3
+    Checking tower-http v0.6.8
+    Checking h2 v0.4.13
+    Checking hyper v1.8.1
+    Checking hyper-util v0.1.20
+    Checking hyper-tls v0.6.0
+    Checking reqwest v0.12.28
+    Checking semaphore-sms v0.1.0 (D:\SC\Work\Washtrack\src-tauri\semaphore-sms)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 10.38s

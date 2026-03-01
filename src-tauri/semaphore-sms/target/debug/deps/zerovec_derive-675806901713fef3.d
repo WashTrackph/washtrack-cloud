@@ -1,0 +1,10 @@
+D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\deps\zerovec_derive-675806901713fef3.d: C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\lib.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\make_ule.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\make_varule.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\ule.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\utils.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\varule.rs
+
+D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\deps\zerovec_derive-675806901713fef3.dll: C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\lib.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\make_ule.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\make_varule.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\ule.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\utils.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\varule.rs
+
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\lib.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\make_ule.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\make_varule.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\ule.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\utils.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\zerovec-derive-0.11.2\src\varule.rs:

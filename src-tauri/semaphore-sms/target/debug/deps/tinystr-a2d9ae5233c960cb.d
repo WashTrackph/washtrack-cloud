@@ -1,0 +1,12 @@
+D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\deps\tinystr-a2d9ae5233c960cb.d: C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\lib.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\macros.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\ascii.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\asciibyte.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\error.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\int_ops.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\unvalidated.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\ule.rs
+
+D:\SC\Work\Washtrack\src-tauri\semaphore-sms\target\debug\deps\libtinystr-a2d9ae5233c960cb.rmeta: C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\lib.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\macros.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\ascii.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\asciibyte.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\error.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\int_ops.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\unvalidated.rs C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\ule.rs
+
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\lib.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\macros.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\ascii.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\asciibyte.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\error.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\int_ops.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\unvalidated.rs:
+C:\Users\Andre\.cargo\registry\src\crates.rkst.io-027f5cf70e02cfc3\tinystr-0.8.2\src\ule.rs:
