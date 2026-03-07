@@ -15,6 +15,8 @@ export interface Shop {
   overstayCritHrs: number;
   autoSmsReady: boolean;
   autoSmsReceipt: boolean;
+  smsApiKey: string;
+  smsSenderName: string;
   reportEmail: string;
   autoEmailEndOfShift: boolean;
   autoEmailDaily: boolean;

@@ -15,6 +15,8 @@ export const SEED_SHOP: Shop = {
   overstayCritHrs: 72,
   autoSmsReady: true,
   autoSmsReceipt: true,
+  smsApiKey: "",
+  smsSenderName: "SEMAPHORE",
   reportEmail: "",
   autoEmailEndOfShift: false,
   autoEmailDaily: false,

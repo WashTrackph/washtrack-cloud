@@ -67,6 +67,11 @@ export function SettingsScreen() {
   const [svcForm, setSvcForm] = useState(EMPTY_SERVICE_FORM);
   const [showAddService, setShowAddService] = useState(false);
 
+  // SMS test state
+  const [smsTesting, setSmsTesting] = useState(false);
+  const [smsTestNumber, setSmsTestNumber] = useState("");
+  const [smsTestMessage, setSmsTestMessage] = useState("Hello from WashTrack POS! This is a test SMS.");
+
   // Email state
   const [emailTesting, setEmailTesting] = useState(false);
 
@@ -177,6 +182,43 @@ export function SettingsScreen() {
   const toggleStaffActive = (id: string) => {
     setStaff((prev) => prev.map((s) => (s.id === id ? { ...s, active: !s.active } : s)));
     notify("Staff status updated");
+  };
+
+  // ── SMS helpers ──
+  const handleTestSms = async () => {
+    if (!shop.smsApiKey) {
+      notify("Please enter your Semaphore API key first", "error");
+      return;
+    }
+    if (!smsTestNumber.trim()) {
+      notify("Please enter a recipient phone number", "error");
+      return;
+    }
+    setSmsTesting(true);
+    try {
+      if ((window as any).__TAURI_INTERNALS__) {
+        const { invoke } = await import("@tauri-apps/api/core");
+        const result = await invoke("send_sms", {
+          payload: {
+            api_key: shop.smsApiKey,
+            number: smsTestNumber.trim(),
+            message: smsTestMessage,
+            sender_name: shop.smsSenderName || null,
+          },
+        });
+        const parsed = JSON.parse(result as string);
+        const status = parsed?.[0]?.status || "Unknown";
+        const network = parsed?.[0]?.network || "Unknown";
+        notify(`SMS sent! Status: ${status}, Network: ${network}`);
+        addAudit("SMS_TEST", `Test SMS sent to ${smsTestNumber}`);
+      } else {
+        notify("SMS sending requires Tauri (not available in browser dev mode)", "error");
+      }
+    } catch (err: any) {
+      notify(`SMS failed: ${err?.message || err}`, "error");
+    } finally {
+      setSmsTesting(false);
+    }
   };
 
   // ── Email helpers ──
@@ -584,7 +626,83 @@ export function SettingsScreen() {
         {tab === "sms" && (
           <div>
             <h3 style={{ margin: "0 0 6px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-              {"\uD83D\uDCAC"} SMS Templates
+              {"\uD83D\uDCAC"} SMS Configuration
+            </h3>
+            <p style={{ margin: "0 0 20px", fontSize: 12, color: "var(--muted)" }}>
+              Powered by Semaphore.co &mdash; Philippine SMS gateway
+            </p>
+
+            {/* API Configuration */}
+            <div style={{ marginBottom: 20, padding: 18, borderRadius: 10, background: "var(--card)", border: "1px solid var(--border)" }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)", marginBottom: 12 }}>API Settings</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+                <div>
+                  <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>Semaphore API Key *</label>
+                  <input
+                    type="password"
+                    value={shop.smsApiKey || ""}
+                    onChange={(e) => setShop((p) => ({ ...p, smsApiKey: e.target.value }))}
+                    placeholder="Your API key from semaphore.co"
+                    className="input"
+                  />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>Sender Name</label>
+                  <input
+                    value={shop.smsSenderName || ""}
+                    onChange={(e) => setShop((p) => ({ ...p, smsSenderName: e.target.value }))}
+                    placeholder="SEMAPHORE"
+                    className="input"
+                  />
+                  <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 3 }}>Must be registered at semaphore.co</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Test SMS */}
+            <div style={{ marginBottom: 24, padding: 18, borderRadius: 10, background: "var(--bg)", border: "1px dashed var(--border)" }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>Send Test SMS</div>
+              <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 12 }}>
+                Sends a real SMS (costs 1 credit per 160 chars). No sandbox mode available.
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+                <div>
+                  <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>Recipient Number *</label>
+                  <input
+                    value={smsTestNumber}
+                    onChange={(e) => setSmsTestNumber(e.target.value)}
+                    placeholder="09171234567"
+                    className="input"
+                  />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>Message</label>
+                  <input
+                    value={smsTestMessage}
+                    onChange={(e) => setSmsTestMessage(e.target.value)}
+                    placeholder="Your test message"
+                    className="input"
+                  />
+                  <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 3 }}>{smsTestMessage.length} / 160 chars</div>
+                </div>
+              </div>
+              <button
+                onClick={handleTestSms}
+                disabled={smsTesting || !shop.smsApiKey || !smsTestNumber.trim()}
+                className="btn-primary"
+                style={{
+                  width: "100%",
+                  opacity: (smsTesting || !shop.smsApiKey || !smsTestNumber.trim()) ? 0.5 : 1,
+                  cursor: (smsTesting || !shop.smsApiKey || !smsTestNumber.trim()) ? "not-allowed" : "pointer",
+                }}
+              >
+                {smsTesting ? "Sending..." : "Send Test SMS"}
+              </button>
+            </div>
+
+            {/* Templates heading */}
+            <h3 style={{ margin: "0 0 6px", fontSize: 16, fontWeight: 700, color: "var(--text)" }}>
+              Message Templates
             </h3>
             <p style={{ margin: "0 0 20px", fontSize: 12, color: "var(--muted)" }}>
               Tokens: {"{name}"} {"{order}"} {"{shop}"} {"{kg}"} {"{total}"} {"{address}"} {"{message}"}
