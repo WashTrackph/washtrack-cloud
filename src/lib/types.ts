@@ -155,8 +155,22 @@ export interface SmsLogEntry {
   phone: string;
   message: string;
   orderId: string | null;
+  promoId?: string | null;
   status: string;
   at: number;
+}
+
+export interface Promotion {
+  id: string;
+  name: string;
+  message: string;
+  recipientIds: string[];
+  sentCount: number;
+  mockCount: number;
+  skippedCount: number;
+  filter: string;
+  createdAt: number;
+  createdBy: string;
 }
 
 export interface AuditLogEntry {

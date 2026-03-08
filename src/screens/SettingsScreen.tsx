@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { ThemeCustomizer } from "../components/ThemeCustomizer";
-import { EMAIL_PROVIDERS } from "../data/seeds";
+import {
+  EMAIL_PROVIDERS, SEED_SHOP, SEED_SERVICES, SEED_STAGES, SEED_SMS_TEMPLATES,
+  SEED_STAFF, SEED_CUSTOMERS, SEED_INVENTORY, SEED_SUPPLY_RULES, SEED_PAYMETHODS,
+  SEED_EMAIL_CONFIG, DEFAULT_THEME,
+} from "../data/seeds";
 import type { Service, Staff, SupplyRule, SmsTemplates, EmailProvider } from "../lib/types";
 
 type TabId = "shop" | "theme" | "services" | "workflow" | "sms" | "email" | "staff" | "inventory" | "supplies" | "logs" | "smslog" | "printer";
@@ -55,10 +59,10 @@ export function SettingsScreen() {
   const {
     shop, setShop, services, setServices, stages, setStages,
     smsTemplates, setSmsTemplates, staff, setStaff,
-    customers, orders, inventory, setInventory,
+    customers, setCustomers, orders, setOrders, inventory, setInventory,
     supplyRules, setSupplyRules, payMethods, setPayMethods,
     emailConfig, setEmailConfig,
-    smsLog, setSmsLog, auditLog, currentStaff, notify, addAudit, fmt, genId, theme,
+    smsLog, setSmsLog, auditLog, setAuditLog, currentStaff, notify, addAudit, fmt, genId, theme, setTheme, promotions,
   } = useApp();
 
   const [tab, setTab] = useState<TabId>("shop");
@@ -517,6 +521,43 @@ export function SettingsScreen() {
             >
               Save Changes
             </button>
+
+            {import.meta.env.DEV && (
+              <div style={{ marginTop: 32, padding: 18, borderRadius: 10, background: "var(--danger-bg-dark)", border: "1px solid var(--danger)" }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "var(--danger-text)", marginBottom: 4 }}>
+                  DEV MODE — Reset to Seed Data
+                </div>
+                <div style={{ fontSize: 12, color: "var(--subtext)", marginBottom: 12 }}>
+                  Replaces ALL data (shop, staff, services, customers, orders, inventory, SMS log, audit log) with seed defaults. This cannot be undone.
+                </div>
+                <button
+                  onClick={() => {
+                    if (!confirm("Reset ALL data to seed defaults? This cannot be undone.")) return;
+                    setShop(SEED_SHOP);
+                    setServices(SEED_SERVICES);
+                    setStages(SEED_STAGES);
+                    setSmsTemplates(SEED_SMS_TEMPLATES);
+                    setStaff(SEED_STAFF);
+                    setCustomers(SEED_CUSTOMERS);
+                    setOrders([]);
+                    setSmsLog([]);
+                    setAuditLog([]);
+                    setInventory(SEED_INVENTORY);
+                    setSupplyRules(SEED_SUPPLY_RULES);
+                    setPayMethods(SEED_PAYMETHODS);
+                    setEmailConfig(SEED_EMAIL_CONFIG);
+                    setTheme(DEFAULT_THEME);
+                    notify("All data reset to seed defaults");
+                    addAudit("SYSTEM", "Data reset to seed defaults (dev mode)");
+                  }}
+                  style={{
+                    width: "100%", padding: 10, borderRadius: 8, cursor: "pointer",
+                    background: "var(--danger)", color: "#fff", border: "none",
+                    fontWeight: 700, fontSize: 13,
+                  }}
+                >Reset All Data to Defaults</button>
+              </div>
+            )}
           </div>
         )}
 
@@ -1340,7 +1381,7 @@ export function SettingsScreen() {
                 {"\uD83D\uDCF1"} SMS Log
               </h3>
               <div style={{ display: "flex", gap: 6 }}>
-                {["all", "SENT", "MOCK"].map((f) => (
+                {["all", "SENT", "MOCK", "PROMO"].map((f) => (
                   <button
                     key={f}
                     onClick={() => setSmsLogFilter(f)}
@@ -1367,7 +1408,7 @@ export function SettingsScreen() {
               >Clear Mock Entries</button>
             )}
             {(() => {
-              const filtered = smsLogFilter === "all" ? smsLog : smsLog.filter((e) => e.status === smsLogFilter);
+              const filtered = smsLogFilter === "all" ? smsLog : smsLogFilter === "PROMO" ? smsLog.filter((e) => e.promoId) : smsLog.filter((e) => e.status === smsLogFilter);
               return filtered.length === 0 ? (
                 <div style={{ color: "var(--muted)", fontSize: 13 }}>
                   {smsLogFilter === "all" ? "No SMS sent yet" : `No ${smsLogFilter} messages`}
@@ -1393,7 +1434,7 @@ export function SettingsScreen() {
                     </div>
                     <div style={{ fontSize: 12, color: "var(--subtext)", marginBottom: 4 }}>{entry.message}</div>
                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--muted-deep)" }}>
-                      <span>{entry.orderId ? `Order: ${entry.orderId}` : "No order"}</span>
+                      <span>{entry.promoId ? `Promo: ${promotions.find((p) => p.id === entry.promoId)?.name || entry.promoId}` : entry.orderId ? `Order: ${entry.orderId}` : "No order"}</span>
                       <span>{new Date(entry.at).toLocaleString()}</span>
                     </div>
                   </div>

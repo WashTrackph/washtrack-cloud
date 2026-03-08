@@ -7,6 +7,7 @@ import { InventoryScreen } from "./InventoryScreen";
 import { CustomersScreen } from "./CustomersScreen";
 import { ReportsScreen } from "./ReportsScreen";
 import { SettingsScreen } from "./SettingsScreen";
+import { PromoBlastScreen } from "./PromoBlastScreen";
 
 interface MainLayoutProps {
   screen: string;
@@ -27,7 +28,10 @@ export function MainLayout({ screen, setScreen, handleLogout }: MainLayoutProps)
     { id: "inventory", icon: "\uD83D\uDCE6", label: "Inventory", badge: lowStockCount > 0 ? lowStockCount : null, badgeColor: "var(--alert)" },
     { id: "customers", icon: "\uD83D\uDC65", label: "Customers" },
     { id: "reports", icon: "\uD83D\uDCCA", label: "Reports" },
-    ...(currentStaff?.role === "OWNER" || currentStaff?.role === "MANAGER" ? [{ id: "settings", icon: "\u2699", label: "Settings" }] : []),
+    ...(currentStaff?.role === "OWNER" || currentStaff?.role === "MANAGER" ? [
+      { id: "promo", icon: "\uD83D\uDCE2", label: "Promo" },
+      { id: "settings", icon: "\u2699", label: "Settings" },
+    ] : []),
   ];
 
   return (
@@ -75,6 +79,7 @@ export function MainLayout({ screen, setScreen, handleLogout }: MainLayoutProps)
         {screen === "inventory" && <InventoryScreen />}
         {screen === "customers" && <CustomersScreen />}
         {screen === "reports" && <ReportsScreen />}
+        {screen === "promo" && <PromoBlastScreen />}
         {screen === "settings" && <SettingsScreen />}
       </main>
     </div>

@@ -8,7 +8,7 @@ import {
 } from "../data/seeds";
 import type {
   Shop, Service, Stage, SmsTemplates, Staff, Customer, Order,
-  InventoryItem, SupplyRule, PayMethod, SmsLogEntry, AuditLogEntry, ThemePreset, EmailConfig,
+  InventoryItem, SupplyRule, PayMethod, SmsLogEntry, AuditLogEntry, ThemePreset, EmailConfig, Promotion,
 } from "../lib/types";
 
 interface AppContextValue {
@@ -40,10 +40,15 @@ interface AppContextValue {
   setSupplyRules: React.Dispatch<React.SetStateAction<SupplyRule[]>>;
   emailConfig: EmailConfig;
   setEmailConfig: React.Dispatch<React.SetStateAction<EmailConfig>>;
+  promotions: Promotion[];
+  setPromotions: React.Dispatch<React.SetStateAction<Promotion[]>>;
   currentStaff: Staff | null;
+  setCurrentStaff: React.Dispatch<React.SetStateAction<Staff | null>>;
+  pinModal: any;
+  setPinModal: React.Dispatch<React.SetStateAction<any>>;
   notify: (msg: string, type?: string) => void;
   addAudit: (type: string, desc: string, staffId?: string) => void;
-  sendSms: (phone: string, template: string, vars: Record<string, any>, orderId: string | null) => SmsLogEntry;
+  sendSms: (phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null) => SmsLogEntry;
   requirePin: (role: string, onSuccess: () => void, message?: string) => void;
   modal: any;
   setModal: React.Dispatch<React.SetStateAction<any>>;
@@ -65,13 +70,13 @@ export function useApp(): AppContextValue {
 
 interface AppProviderProps {
   children: React.ReactNode;
-  currentStaff: Staff | null;
-  onPinModal: (pm: any) => void;
 }
 
-export function AppProvider({ children, currentStaff, onPinModal }: AppProviderProps) {
+export function AppProvider({ children }: AppProviderProps) {
   const [initialized, setInitialized] = useState(false);
   const [theme, setThemeRaw] = useState<ThemePreset>(DEFAULT_THEME);
+  const [currentStaff, setCurrentStaff] = useState<Staff | null>(null);
+  const [pinModal, setPinModal] = useState<any>(null);
 
   // App State
   const [shop, setShop] = useState<Shop>(SEED_SHOP);
@@ -88,6 +93,7 @@ export function AppProvider({ children, currentStaff, onPinModal }: AppProviderP
   const [supplyRules, setSupplyRules] = useState<SupplyRule[]>(SEED_SUPPLY_RULES);
   const [payMethods, setPayMethods] = useState<PayMethod[]>(SEED_PAYMETHODS);
   const [emailConfig, setEmailConfig] = useState<EmailConfig>(SEED_EMAIL_CONFIG);
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
 
   // UI State
   const [notification, setNotification] = useState<{ msg: string; type: string; id: number } | null>(null);
@@ -121,6 +127,7 @@ export function AppProvider({ children, currentStaff, onPinModal }: AppProviderP
       const savedPayMethods = await DB.get("wt:paymethods");
       const savedSupplyRules = await DB.get("wt:supplyrules");
       const savedEmailConfig = await DB.get("wt:emailconfig");
+      const savedPromotions = await DB.get("wt:promotions");
 
       if (savedOrders) setOrders(savedOrders);
       if (savedCustomers) setCustomers(savedCustomers);
@@ -136,6 +143,7 @@ export function AppProvider({ children, currentStaff, onPinModal }: AppProviderP
       if (savedPayMethods) setPayMethods(savedPayMethods);
       if (savedSupplyRules) setSupplyRules(savedSupplyRules);
       if (savedEmailConfig) setEmailConfig({ ...SEED_EMAIL_CONFIG, ...savedEmailConfig });
+      if (savedPromotions) setPromotions(savedPromotions);
       const savedTheme = await DB.get("wt:theme");
       if (savedTheme) { setThemeRaw(savedTheme); applyTheme(savedTheme); }
       else { applyTheme(DEFAULT_THEME); }
@@ -159,6 +167,7 @@ export function AppProvider({ children, currentStaff, onPinModal }: AppProviderP
   useEffect(() => { if (initialized) DB.set("wt:paymethods", payMethods); }, [payMethods, initialized]);
   useEffect(() => { if (initialized) DB.set("wt:supplyrules", supplyRules); }, [supplyRules, initialized]);
   useEffect(() => { if (initialized) DB.set("wt:emailconfig", emailConfig); }, [emailConfig, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:promotions", promotions); }, [promotions, initialized]);
 
   // ── Helpers ──
   const notify = useCallback((msg: string, type = "success") => {
@@ -171,17 +180,17 @@ export function AppProvider({ children, currentStaff, onPinModal }: AppProviderP
     setAuditLog((prev) => [entry, ...prev].slice(0, 500));
   }, [currentStaff]);
 
-  const sendSms = useCallback((phone: string, template: string, vars: Record<string, any>, orderId: string | null): SmsLogEntry => {
+  const sendSms = useCallback((phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null): SmsLogEntry => {
     let msg = template;
     Object.entries(vars).forEach(([k, v]) => { msg = msg.replaceAll(`{${k}}`, String(v)); });
     const isMock = shop.smsMockMode || !shop.smsApiKey;
-    const entry: SmsLogEntry = { id: genId(), phone, message: msg, orderId, status: isMock ? "MOCK" : "SENT", at: Date.now() };
+    const entry: SmsLogEntry = { id: genId(), phone, message: msg, orderId, promoId: promoId || null, status: isMock ? "MOCK" : "SENT", at: Date.now() };
     setSmsLog((prev) => [entry, ...prev]);
     return entry;
   }, [shop.smsMockMode, shop.smsApiKey]);
 
   const requirePin = (role: string, onSuccess: () => void, message?: string) => {
-    onPinModal({ role, onSuccess, message });
+    setPinModal({ role, onSuccess, message });
   };
 
   const ctx: AppContextValue = {
@@ -190,8 +199,9 @@ export function AppProvider({ children, currentStaff, onPinModal }: AppProviderP
     customers, setCustomers, orders, setOrders,
     smsLog, setSmsLog, auditLog, setAuditLog, orderCounter, setOrderCounter,
     inventory, setInventory, payMethods, setPayMethods, supplyRules, setSupplyRules,
-    emailConfig, setEmailConfig,
-    currentStaff, notify, addAudit, sendSms, requirePin,
+    emailConfig, setEmailConfig, promotions, setPromotions,
+    currentStaff, setCurrentStaff, pinModal, setPinModal,
+    notify, addAudit, sendSms, requirePin,
     modal, setModal, calcPrice, genId, genOrderNum, fmt, theme, setTheme,
   };
 
