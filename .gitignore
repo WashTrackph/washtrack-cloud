@@ -6,7 +6,17 @@ dist/
 
 # Tauri build artifacts
 src-tauri/target/
-src-tauri/gen/
+src-tauri/gen/android/.gradle/
+src-tauri/gen/android/app/build/
+src-tauri/gen/android/app/src/main/jniLibs/
+src-tauri/gen/android/build/
+src-tauri/gen/android/local.properties
+src-tauri/gen/android/.tauri/
+src-tauri/gen/schemas/
+
+# Plugin build artifacts
+src-tauri/tauri-plugin-printer/android/build/
+src-tauri/tauri-plugin-printer/android/.gradle/
 
 # IDE
 .vscode/

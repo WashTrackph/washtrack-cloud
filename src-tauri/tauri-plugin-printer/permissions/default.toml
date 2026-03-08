@@ -1,0 +1,3 @@
+[default]
+description = "Allows receipt printing via native print dialog"
+permissions = ["allow-print-receipt"]

@@ -63,6 +63,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_sql::Builder::default().build())
         .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_printer::init())
         .invoke_handler(tauri::generate_handler![
             send_email,
             semaphore_sms::tauri_commands::send_sms,

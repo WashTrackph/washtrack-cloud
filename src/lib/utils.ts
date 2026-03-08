@@ -156,10 +156,23 @@ export function buildReceiptHTML(order: Order, shop: Shop): string {
   </body></html>`;
 }
 
-export function openReceiptWindow(order: Order, shop: Shop): void {
+export async function openReceiptWindow(order: Order, shop: Shop): Promise<void> {
   const html = buildReceiptHTML(order, shop);
 
-  // Use a hidden iframe to print — avoids popup blockers in both browsers and Tauri webview
+  // On Tauri (Android), use native print plugin
+  if ((window as any).__TAURI_INTERNALS__) {
+    try {
+      const { invoke } = await import("@tauri-apps/api/core");
+      await invoke("plugin:printer|print_receipt", {
+        payload: { html, jobName: `Receipt #${order.id}` },
+      });
+      return;
+    } catch (e) {
+      console.warn("Native print failed, falling back to window.print():", e);
+    }
+  }
+
+  // Fallback: hidden iframe + window.print() (desktop browsers & Tauri desktop)
   const iframe = document.createElement("iframe");
   iframe.style.cssText = "position:fixed;top:0;left:0;width:0;height:0;border:none;visibility:hidden;";
   document.body.appendChild(iframe);
