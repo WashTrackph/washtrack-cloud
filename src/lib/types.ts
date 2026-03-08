@@ -23,6 +23,7 @@ export interface Shop {
   autoEmailWeekly: boolean;
   autoEmailMonthly: boolean;
   shiftEndTime: string;
+  smsMockMode?: boolean;
   btPrinterAddress?: string;
   btPrinterName?: string;
   receiptPaperWidth?: number; // 58 or 80, default 58

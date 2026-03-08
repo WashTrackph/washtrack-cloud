@@ -58,7 +58,7 @@ export function SettingsScreen() {
     customers, orders, inventory, setInventory,
     supplyRules, setSupplyRules, payMethods, setPayMethods,
     emailConfig, setEmailConfig,
-    smsLog, auditLog, currentStaff, notify, addAudit, fmt, genId, theme,
+    smsLog, setSmsLog, auditLog, currentStaff, notify, addAudit, fmt, genId, theme,
   } = useApp();
 
   const [tab, setTab] = useState<TabId>("shop");
@@ -80,6 +80,9 @@ export function SettingsScreen() {
   const [staffEditId, setStaffEditId] = useState<string | null>(null);
   const [staffForm, setStaffForm] = useState(EMPTY_STAFF_FORM);
   const [showAddStaff, setShowAddStaff] = useState(false);
+
+  // SMS log filter
+  const [smsLogFilter, setSmsLogFilter] = useState("all");
 
   // Printer state
   const [btDevices, setBtDevices] = useState<{ name: string; address: string }[]>([]);
@@ -665,11 +668,32 @@ export function SettingsScreen() {
               </div>
             </div>
 
+            {/* Mock Mode Toggle */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 18px", borderRadius: 10, background: shop.smsMockMode ? "var(--warning-bg-dark)" : "var(--card)", border: `1px solid ${shop.smsMockMode ? "var(--warning)" : "var(--border)"}`, marginBottom: 20 }}>
+              <div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)" }}>Mock Mode {shop.smsMockMode ? "(ON)" : ""}</div>
+                <div style={{ fontSize: 12, color: "var(--subtext)" }}>Simulate SMS without sending. Messages appear in SMS Log as MOCK.</div>
+              </div>
+              <div
+                onClick={() => {
+                  setShop((p) => ({ ...p, smsMockMode: !p.smsMockMode }));
+                  notify(shop.smsMockMode ? "Mock mode OFF \u2014 SMS will send for real" : "Mock mode ON \u2014 SMS will be simulated");
+                }}
+                style={{
+                  width: 44, height: 24, borderRadius: 12, cursor: "pointer", position: "relative",
+                  background: shop.smsMockMode ? "var(--warning)" : "var(--border-dark)",
+                  transition: "background 0.2s",
+                }}
+              >
+                <div style={{ position: "absolute", top: 3, left: shop.smsMockMode ? 23 : 3, width: 18, height: 18, borderRadius: "50%", background: "var(--white)", transition: "left 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.2)" }} />
+              </div>
+            </div>
+
             {/* Test SMS */}
             <div style={{ marginBottom: 24, padding: 18, borderRadius: 10, background: "var(--bg)", border: "1px dashed var(--border)" }}>
               <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>Send Test SMS</div>
               <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 12 }}>
-                Sends a real SMS (costs 1 credit per 160 chars). No sandbox mode available.
+                {shop.smsMockMode ? "Mock mode is ON \u2014 test will be simulated, not sent." : "Sends a real SMS (costs 1 credit per 160 chars)."}
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
                 <div>
@@ -1311,29 +1335,71 @@ export function SettingsScreen() {
         {/* 10. SMS LOG */}
         {tab === "smslog" && (
           <div>
-            <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-              {"\uD83D\uDCF1"} SMS Log
-            </h3>
-            {smsLog.length === 0 ? (
-              <div style={{ color: "var(--muted)", fontSize: 13 }}>No SMS sent yet</div>
-            ) : (
-              smsLog.slice(0, 50).map((entry) => (
-                <div
-                  key={entry.id}
-                  style={{ padding: "10px 14px", borderRadius: 8, background: "var(--card)", marginBottom: 6, border: "1px solid var(--border)" }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{entry.phone}</span>
-                    <span style={{ fontSize: 11, color: "var(--success)" }}>{"\u2713"} {entry.status}</span>
-                  </div>
-                  <div style={{ fontSize: 12, color: "var(--subtext)", marginBottom: 4 }}>{entry.message}</div>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--muted-deep)" }}>
-                    <span>{entry.orderId ? `Order: ${entry.orderId}` : "No order"}</span>
-                    <span>{new Date(entry.at).toLocaleString()}</span>
-                  </div>
-                </div>
-              ))
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
+                {"\uD83D\uDCF1"} SMS Log
+              </h3>
+              <div style={{ display: "flex", gap: 6 }}>
+                {["all", "SENT", "MOCK"].map((f) => (
+                  <button
+                    key={f}
+                    onClick={() => setSmsLogFilter(f)}
+                    style={{
+                      padding: "4px 12px", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: "pointer",
+                      background: smsLogFilter === f ? (f === "MOCK" ? "var(--warning)" : "var(--accent)") : "var(--card)",
+                      color: smsLogFilter === f ? "#fff" : "var(--text)",
+                      border: `1px solid ${smsLogFilter === f ? "transparent" : "var(--border)"}`,
+                    }}
+                  >{f === "all" ? "All" : f}</button>
+                ))}
+              </div>
+            </div>
+            {smsLog.some((e) => e.status === "MOCK") && (
+              <button
+                onClick={() => {
+                  setSmsLog((prev) => prev.filter((e) => e.status !== "MOCK"));
+                  notify("Mock SMS entries cleared");
+                }}
+                style={{
+                  marginBottom: 12, padding: "6px 14px", borderRadius: 6, fontSize: 11, fontWeight: 700,
+                  background: "var(--danger)", color: "#fff", border: "none", cursor: "pointer",
+                }}
+              >Clear Mock Entries</button>
             )}
+            {(() => {
+              const filtered = smsLogFilter === "all" ? smsLog : smsLog.filter((e) => e.status === smsLogFilter);
+              return filtered.length === 0 ? (
+                <div style={{ color: "var(--muted)", fontSize: 13 }}>
+                  {smsLogFilter === "all" ? "No SMS sent yet" : `No ${smsLogFilter} messages`}
+                </div>
+              ) : (
+                filtered.slice(0, 50).map((entry) => (
+                  <div
+                    key={entry.id}
+                    style={{
+                      padding: "10px 14px", borderRadius: 8, marginBottom: 6,
+                      background: entry.status === "MOCK" ? "var(--warning-bg-dark)" : "var(--card)",
+                      border: `1px solid ${entry.status === "MOCK" ? "var(--warning)" : "var(--border)"}`,
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{entry.phone}</span>
+                      <span style={{
+                        fontSize: 11, fontWeight: 700,
+                        color: entry.status === "MOCK" ? "var(--warning)" : "var(--success)",
+                      }}>
+                        {entry.status === "MOCK" ? "\uD83E\uDDEA MOCK" : "\u2713 SENT"}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: 12, color: "var(--subtext)", marginBottom: 4 }}>{entry.message}</div>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--muted-deep)" }}>
+                      <span>{entry.orderId ? `Order: ${entry.orderId}` : "No order"}</span>
+                      <span>{new Date(entry.at).toLocaleString()}</span>
+                    </div>
+                  </div>
+                ))
+              );
+            })()}
           </div>
         )}
 

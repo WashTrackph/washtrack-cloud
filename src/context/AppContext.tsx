@@ -174,10 +174,11 @@ export function AppProvider({ children, currentStaff, onPinModal }: AppProviderP
   const sendSms = useCallback((phone: string, template: string, vars: Record<string, any>, orderId: string | null): SmsLogEntry => {
     let msg = template;
     Object.entries(vars).forEach(([k, v]) => { msg = msg.replaceAll(`{${k}}`, String(v)); });
-    const entry: SmsLogEntry = { id: genId(), phone, message: msg, orderId, status: "SENT", at: Date.now() };
+    const isMock = shop.smsMockMode || !shop.smsApiKey;
+    const entry: SmsLogEntry = { id: genId(), phone, message: msg, orderId, status: isMock ? "MOCK" : "SENT", at: Date.now() };
     setSmsLog((prev) => [entry, ...prev]);
     return entry;
-  }, []);
+  }, [shop.smsMockMode, shop.smsApiKey]);
 
   const requirePin = (role: string, onSuccess: () => void, message?: string) => {
     onPinModal({ role, onSuccess, message });
