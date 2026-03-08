@@ -1,0 +1,30 @@
+@tenantapikey = ""
+
+
+##########
+POST https://api.semaphore.co/api/v4/messages HTTP/1.1
+content-type: application/json
+
+{
+    "apikey": "",
+    "number":"",
+    "message":"I just sent my first message with senderName",
+    "senderName": "WashTrack"
+}
+
+########
+GET https://api.semaphore.co/api/v4/account HTTP/1.1
+content-type: application/json
+
+{
+    "apikey": ""
+}
+
+
+########
+GET https://api.semaphore.co/api/v4/messages HTTP/1.1
+content-type: application/json
+
+{
+    "apikey": {{tenantapikey}}
+}
