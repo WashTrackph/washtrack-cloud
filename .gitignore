@@ -34,6 +34,10 @@ desktop.ini
 .env.local
 .env.*.local
 
+# Dev/scratch files
+Plans/
+report-preview.html
+
 # Temp files
 tsc_output.txt
 tsc_out.txt
