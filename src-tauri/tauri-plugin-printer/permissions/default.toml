@@ -1,0 +1,3 @@
+[default]
+description = "Allows receipt printing via native print dialog and Bluetooth thermal printing"
+permissions = ["allow-print-receipt", "allow-print-bluetooth", "allow-list-bluetooth-printers"]

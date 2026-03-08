@@ -1,0 +1,227 @@
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { DB, initDatabase } from "../lib/db";
+import { genId, applyTheme, calcPrice, genOrderNum, formatCurrency } from "../lib/utils";
+import {
+  SEED_SHOP, SEED_SERVICES, SEED_STAGES, SEED_SMS_TEMPLATES, SEED_STAFF,
+  SEED_CUSTOMERS, SEED_INVENTORY, SEED_SUPPLY_RULES, SEED_PAYMETHODS,
+  DEFAULT_THEME, SEED_EMAIL_CONFIG,
+} from "../data/seeds";
+import type {
+  Shop, Service, Stage, SmsTemplates, Staff, Customer, Order,
+  InventoryItem, SupplyRule, PayMethod, SmsLogEntry, AuditLogEntry, ThemePreset, EmailConfig, Promotion,
+} from "../lib/types";
+
+interface AppContextValue {
+  shop: Shop;
+  setShop: React.Dispatch<React.SetStateAction<Shop>>;
+  services: Service[];
+  setServices: React.Dispatch<React.SetStateAction<Service[]>>;
+  stages: Stage[];
+  setStages: React.Dispatch<React.SetStateAction<Stage[]>>;
+  smsTemplates: SmsTemplates;
+  setSmsTemplates: React.Dispatch<React.SetStateAction<SmsTemplates>>;
+  staff: Staff[];
+  setStaff: React.Dispatch<React.SetStateAction<Staff[]>>;
+  customers: Customer[];
+  setCustomers: React.Dispatch<React.SetStateAction<Customer[]>>;
+  orders: Order[];
+  setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
+  smsLog: SmsLogEntry[];
+  setSmsLog: React.Dispatch<React.SetStateAction<SmsLogEntry[]>>;
+  auditLog: AuditLogEntry[];
+  setAuditLog: React.Dispatch<React.SetStateAction<AuditLogEntry[]>>;
+  orderCounter: number;
+  setOrderCounter: React.Dispatch<React.SetStateAction<number>>;
+  inventory: InventoryItem[];
+  setInventory: React.Dispatch<React.SetStateAction<InventoryItem[]>>;
+  payMethods: PayMethod[];
+  setPayMethods: React.Dispatch<React.SetStateAction<PayMethod[]>>;
+  supplyRules: SupplyRule[];
+  setSupplyRules: React.Dispatch<React.SetStateAction<SupplyRule[]>>;
+  emailConfig: EmailConfig;
+  setEmailConfig: React.Dispatch<React.SetStateAction<EmailConfig>>;
+  promotions: Promotion[];
+  setPromotions: React.Dispatch<React.SetStateAction<Promotion[]>>;
+  currentStaff: Staff | null;
+  setCurrentStaff: React.Dispatch<React.SetStateAction<Staff | null>>;
+  pinModal: any;
+  setPinModal: React.Dispatch<React.SetStateAction<any>>;
+  notify: (msg: string, type?: string) => void;
+  addAudit: (type: string, desc: string, staffId?: string) => void;
+  sendSms: (phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null) => SmsLogEntry;
+  requirePin: (role: string, onSuccess: () => void, message?: string) => void;
+  modal: any;
+  setModal: React.Dispatch<React.SetStateAction<any>>;
+  calcPrice: (service: Service, kg: number, express: boolean) => number;
+  genId: () => string;
+  genOrderNum: (n: number) => string;
+  fmt: (amount: number) => string;
+  theme: ThemePreset;
+  setTheme: (t: ThemePreset) => void;
+}
+
+const AppCtx = createContext<AppContextValue | null>(null);
+
+export function useApp(): AppContextValue {
+  const ctx = useContext(AppCtx);
+  if (!ctx) throw new Error("useApp must be used within AppProvider");
+  return ctx;
+}
+
+interface AppProviderProps {
+  children: React.ReactNode;
+}
+
+export function AppProvider({ children }: AppProviderProps) {
+  const [initialized, setInitialized] = useState(false);
+  const [theme, setThemeRaw] = useState<ThemePreset>(DEFAULT_THEME);
+  const [currentStaff, setCurrentStaff] = useState<Staff | null>(null);
+  const [pinModal, setPinModal] = useState<any>(null);
+
+  // App State
+  const [shop, setShop] = useState<Shop>(SEED_SHOP);
+  const [services, setServices] = useState<Service[]>(SEED_SERVICES);
+  const [stages, setStages] = useState<Stage[]>(SEED_STAGES);
+  const [smsTemplates, setSmsTemplates] = useState<SmsTemplates>(SEED_SMS_TEMPLATES);
+  const [staff, setStaff] = useState<Staff[]>(SEED_STAFF);
+  const [customers, setCustomers] = useState<Customer[]>(SEED_CUSTOMERS);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [smsLog, setSmsLog] = useState<SmsLogEntry[]>([]);
+  const [auditLog, setAuditLog] = useState<AuditLogEntry[]>([]);
+  const [orderCounter, setOrderCounter] = useState(1);
+  const [inventory, setInventory] = useState<InventoryItem[]>(SEED_INVENTORY);
+  const [supplyRules, setSupplyRules] = useState<SupplyRule[]>(SEED_SUPPLY_RULES);
+  const [payMethods, setPayMethods] = useState<PayMethod[]>(SEED_PAYMETHODS);
+  const [emailConfig, setEmailConfig] = useState<EmailConfig>(SEED_EMAIL_CONFIG);
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
+
+  // UI State
+  const [notification, setNotification] = useState<{ msg: string; type: string; id: number } | null>(null);
+  const [modal, setModal] = useState<any>(null);
+
+  const setTheme = (t: ThemePreset) => {
+    setThemeRaw(t);
+    applyTheme(t);
+    DB.set("wt:theme", t);
+  };
+
+  // Currency formatting shorthand
+  const fmt = useCallback((amount: number) => formatCurrency(amount, shop), [shop]);
+
+  // ── Initialize / Load ──
+  useEffect(() => {
+    (async () => {
+      await initDatabase();
+
+      const savedOrders = await DB.get("wt:orders");
+      const savedCustomers = await DB.get("wt:customers");
+      const savedShop = await DB.get("wt:shop");
+      const savedServices = await DB.get("wt:services");
+      const savedStages = await DB.get("wt:stages");
+      const savedSmsTemplates = await DB.get("wt:smstemplates");
+      const savedStaff = await DB.get("wt:staff");
+      const savedSms = await DB.get("wt:smslog");
+      const savedAudit = await DB.get("wt:audit");
+      const savedCounter = await DB.get("wt:counter");
+      const savedInventory = await DB.get("wt:inventory");
+      const savedPayMethods = await DB.get("wt:paymethods");
+      const savedSupplyRules = await DB.get("wt:supplyrules");
+      const savedEmailConfig = await DB.get("wt:emailconfig");
+      const savedPromotions = await DB.get("wt:promotions");
+
+      if (savedOrders) setOrders(savedOrders);
+      if (savedCustomers) setCustomers(savedCustomers);
+      if (savedShop) setShop({ ...SEED_SHOP, ...savedShop });
+      if (savedServices) setServices(savedServices);
+      if (savedStages) setStages(savedStages);
+      if (savedSmsTemplates) setSmsTemplates(savedSmsTemplates);
+      if (savedStaff) setStaff(savedStaff);
+      if (savedSms) setSmsLog(savedSms);
+      if (savedAudit) setAuditLog(savedAudit);
+      if (savedCounter) setOrderCounter(savedCounter);
+      if (savedInventory) setInventory(savedInventory);
+      if (savedPayMethods) setPayMethods(savedPayMethods);
+      if (savedSupplyRules) setSupplyRules(savedSupplyRules);
+      if (savedEmailConfig) setEmailConfig({ ...SEED_EMAIL_CONFIG, ...savedEmailConfig });
+      if (savedPromotions) setPromotions(savedPromotions);
+      const savedTheme = await DB.get("wt:theme");
+      if (savedTheme) { setThemeRaw(savedTheme); applyTheme(savedTheme); }
+      else { applyTheme(DEFAULT_THEME); }
+
+      setInitialized(true);
+    })();
+  }, []);
+
+  // ── Persist ──
+  useEffect(() => { if (initialized) DB.set("wt:orders", orders); }, [orders, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:customers", customers); }, [customers, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:shop", shop); }, [shop, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:services", services); }, [services, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:stages", stages); }, [stages, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:smstemplates", smsTemplates); }, [smsTemplates, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:staff", staff); }, [staff, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:smslog", smsLog); }, [smsLog, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:audit", auditLog); }, [auditLog, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:counter", orderCounter); }, [orderCounter, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:inventory", inventory); }, [inventory, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:paymethods", payMethods); }, [payMethods, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:supplyrules", supplyRules); }, [supplyRules, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:emailconfig", emailConfig); }, [emailConfig, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:promotions", promotions); }, [promotions, initialized]);
+
+  // ── Helpers ──
+  const notify = useCallback((msg: string, type = "success") => {
+    setNotification({ msg, type, id: Date.now() });
+    setTimeout(() => setNotification(null), 3000);
+  }, []);
+
+  const addAudit = useCallback((type: string, desc: string, staffId?: string) => {
+    const entry: AuditLogEntry = { id: genId(), type, desc, staffId: staffId || currentStaff?.id || "", at: Date.now() };
+    setAuditLog((prev) => [entry, ...prev].slice(0, 500));
+  }, [currentStaff]);
+
+  const sendSms = useCallback((phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null): SmsLogEntry => {
+    let msg = template;
+    Object.entries(vars).forEach(([k, v]) => { msg = msg.replaceAll(`{${k}}`, String(v)); });
+    const isMock = shop.smsMockMode || !shop.smsApiKey;
+    const entry: SmsLogEntry = { id: genId(), phone, message: msg, orderId, promoId: promoId || null, status: isMock ? "MOCK" : "SENT", at: Date.now() };
+    setSmsLog((prev) => [entry, ...prev]);
+    return entry;
+  }, [shop.smsMockMode, shop.smsApiKey]);
+
+  const requirePin = (role: string, onSuccess: () => void, message?: string) => {
+    setPinModal({ role, onSuccess, message });
+  };
+
+  const ctx: AppContextValue = {
+    shop, setShop, services, setServices, stages, setStages,
+    smsTemplates, setSmsTemplates, staff, setStaff,
+    customers, setCustomers, orders, setOrders,
+    smsLog, setSmsLog, auditLog, setAuditLog, orderCounter, setOrderCounter,
+    inventory, setInventory, payMethods, setPayMethods, supplyRules, setSupplyRules,
+    emailConfig, setEmailConfig, promotions, setPromotions,
+    currentStaff, setCurrentStaff, pinModal, setPinModal,
+    notify, addAudit, sendSms, requirePin,
+    modal, setModal, calcPrice, genId, genOrderNum, fmt, theme, setTheme,
+  };
+
+  if (!initialized) return (
+    <div style={{ background: "var(--bg)", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ textAlign: "center" }}>
+        <div className="spin" style={{ width: 48, height: 48, border: "4px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%", margin: "0 auto 16px" }} />
+        <p style={{ color: "var(--subtext)", fontFamily: "monospace" }}>Loading WashTrack POS...</p>
+      </div>
+    </div>
+  );
+
+  return (
+    <AppCtx.Provider value={ctx}>
+      {notification && (
+        <div className={`notif notif-${notification.type}`} key={notification.id}>
+          {notification.type === "success" ? "\u2713" : notification.type === "error" ? "\u2715" : "\u2139"} {notification.msg}
+        </div>
+      )}
+      {children}
+    </AppCtx.Provider>
+  );
+}
