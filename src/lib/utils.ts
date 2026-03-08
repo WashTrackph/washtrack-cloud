@@ -102,8 +102,8 @@ export function buildReceiptHTML(order: Order, shop: Shop): string {
       if (i.pricingType === "FIXED_LOAD") desc = ` (${i.minKg || i.kg}kg fixed load)`;
       const express = i.express ? " \u26A1" : "";
       return `<tr>
-      <td style="padding:4px 0;border-bottom:1px dashed #ddd">${i.serviceName}${express}${desc}</td>
-      <td style="padding:4px 0;border-bottom:1px dashed #ddd;text-align:right;font-weight:600">${c}${i.subtotal.toLocaleString(loc)}</td>
+      <td style="padding:2px 0;border-bottom:1px dashed #ddd">${i.serviceName}${express}${desc}</td>
+      <td style="padding:2px 0;border-bottom:1px dashed #ddd;text-align:right;font-weight:600">${c}${i.subtotal.toLocaleString(loc)}</td>
     </tr>`;
     })
     .join("");
@@ -117,22 +117,22 @@ export function buildReceiptHTML(order: Order, shop: Shop): string {
   return `<!DOCTYPE html><html><head><title>Receipt ${order.orderNum}</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: monospace; font-size:13px; color:#111; padding:20px; max-width:320px; margin:0 auto; }
-    .shop-name { font-size:17px; font-weight:800; margin-bottom:2px; }
-    .divider { border:none; border-top:2px dashed #aaa; margin:10px 0; }
+    body { font-family: monospace; font-size:9px; color:#111; padding:8px; max-width:280px; margin:0 auto; }
+    .shop-name { font-size:12px; font-weight:800; margin-bottom:1px; }
+    .divider { border:none; border-top:1px dashed #aaa; margin:4px 0; }
     table { width:100%; border-collapse:collapse; }
-    .total-row td { font-size:16px; font-weight:800; padding-top:8px; }
-    .footer { text-align:center; font-size:11px; color:#777; margin-top:14px; line-height:1.6; }
-    .print-btn { display:block; width:100%; margin-top:16px; padding:12px; background:#2563EB; color:#fff; border:none; border-radius:8px; cursor:pointer; font-family:monospace; font-size:14px; font-weight:700; }
-    @media print { .print-btn { display:none; } }
+    .total-row td { font-size:11px; font-weight:800; padding-top:4px; }
+    .footer { text-align:center; font-size:8px; color:#777; margin-top:6px; line-height:1.4; }
+    .print-btn { display:block; width:100%; margin-top:8px; padding:8px; background:#2563EB; color:#fff; border:none; border-radius:6px; cursor:pointer; font-family:monospace; font-size:11px; font-weight:700; }
+    @media print { .print-btn { display:none; } @page { margin:2mm; } }
   </style></head><body>
-  <div style="text-align:center;margin-bottom:10px">
-    <div class="shop-name">\uD83E\uDEE7 ${shop.name}</div>
-    <div style="font-size:11px;color:#555">${shop.address}</div>
-    <div style="font-size:11px;color:#555">\uD83D\uDCDE ${shop.phone}</div>
+  <div style="text-align:center;margin-bottom:4px">
+    <div class="shop-name">${shop.name}</div>
+    <div style="font-size:8px;color:#555">${shop.address}</div>
+    <div style="font-size:8px;color:#555">${shop.phone}</div>
   </div>
   <hr class="divider"/>
-  <table style="margin-bottom:8px">
+  <table style="margin-bottom:4px">
     <tr><td style="color:#555">Order #</td><td style="text-align:right;font-weight:700">${order.orderNum}</td></tr>
     <tr><td style="color:#555">Customer</td><td style="text-align:right">${order.customerName}</td></tr>
     <tr><td style="color:#555">Phone</td><td style="text-align:right">${order.customerPhone}</td></tr>
@@ -156,10 +156,53 @@ export function buildReceiptHTML(order: Order, shop: Shop): string {
   </body></html>`;
 }
 
+export async function printBluetoothReceipt(order: Order, shop: Shop): Promise<void> {
+  if (!(window as any).__TAURI_INTERNALS__ || !shop.btPrinterAddress) {
+    throw new Error("Bluetooth printing not available");
+  }
+  const { invoke } = await import("@tauri-apps/api/core");
+  await invoke("plugin:printer|print_bluetooth", {
+    order: {
+      orderNum: order.orderNum,
+      customerName: order.customerName,
+      customerPhone: order.customerPhone,
+      items: order.items.map((i) => ({
+        serviceName: i.serviceName,
+        pricingType: i.pricingType,
+        kg: i.kg,
+        unitPrice: i.unitPrice,
+        subtotal: i.subtotal,
+        express: i.express,
+      })),
+      subtotal: order.subtotal,
+      discount: order.discount,
+      total: order.total,
+      express: order.express,
+      paymentMethod: order.paymentMethod || "Cash",
+      isCashPayment: order.isCashPayment,
+      cashTendered: order.cashTendered,
+      change: order.change,
+      createdAt: order.createdAt,
+    },
+    shop: {
+      name: shop.name,
+      address: shop.address,
+      phone: shop.phone,
+      currency: shop.currency || "\u20B1",
+    },
+    printerAddress: shop.btPrinterAddress,
+    paperWidth: shop.receiptPaperWidth || 58,
+  });
+}
+
+export function hasBtPrinter(shop: Shop): boolean {
+  return !!(shop.btPrinterAddress && (window as any).__TAURI_INTERNALS__);
+}
+
 export async function openReceiptWindow(order: Order, shop: Shop): Promise<void> {
   const html = buildReceiptHTML(order, shop);
 
-  // On Tauri (Android), use native print plugin
+  // On Tauri (Android) without BT printer, use native print dialog
   if ((window as any).__TAURI_INTERNALS__) {
     try {
       const { invoke } = await import("@tauri-apps/api/core");

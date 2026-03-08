@@ -23,6 +23,9 @@ export interface Shop {
   autoEmailWeekly: boolean;
   autoEmailMonthly: boolean;
   shiftEndTime: string;
+  btPrinterAddress?: string;
+  btPrinterName?: string;
+  receiptPaperWidth?: number; // 58 or 80, default 58
 }
 
 export interface PayMethod {

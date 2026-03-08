@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useApp } from "../context/AppContext";
-import { openReceiptWindow } from "../lib/utils";
+import { openReceiptWindow, printBluetoothReceipt, hasBtPrinter } from "../lib/utils";
+import { ReceiptPreview } from "../components/ReceiptPreview";
 import { SEED_PAYMETHODS } from "../data/seeds";
 
 export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
@@ -20,6 +21,8 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
   const [notes, setNotes] = useState("");
   const [cashTendered, setCashTendered] = useState("");
   const [selectedPayMethod, setSelectedPayMethod] = useState<any>(null);
+  const [receiptPreview, setReceiptPreview] = useState<any>(null);
+  const [btPrinting, setBtPrinting] = useState(false);
 
   const activePM = (payMethods || SEED_PAYMETHODS).filter((p: any) => p.active).sort((a: any, b: any) => a.sortOrder - b.sortOrder);
 
@@ -126,7 +129,11 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
 
     addAudit("ORDER_CREATED", `${orderNum} for ${customer.name} \u2014 ${fmt(total)} via ${selectedPayMethod.label}`);
     notify(`Order ${orderNum} created! ${fmt(total)} via ${selectedPayMethod.label}`);
-    openReceiptWindow(order, shop);
+    if (hasBtPrinter(shop)) {
+      setReceiptPreview(order);
+    } else {
+      openReceiptWindow(order, shop);
+    }
     setScreen("orders");
   };
 
@@ -313,6 +320,27 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
           </div>
         )}
       </div>
+
+      {receiptPreview && (
+        <ReceiptPreview
+          order={receiptPreview}
+          shop={shop}
+          printing={btPrinting}
+          onCancel={() => setReceiptPreview(null)}
+          onPrint={async () => {
+            setBtPrinting(true);
+            try {
+              await printBluetoothReceipt(receiptPreview, shop);
+              notify("Receipt printed!");
+              setReceiptPreview(null);
+            } catch (e: any) {
+              notify(`Print failed: ${e?.message || e}`, "error");
+            } finally {
+              setBtPrinting(false);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

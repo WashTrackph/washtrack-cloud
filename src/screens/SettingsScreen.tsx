@@ -4,7 +4,7 @@ import { ThemeCustomizer } from "../components/ThemeCustomizer";
 import { EMAIL_PROVIDERS } from "../data/seeds";
 import type { Service, Staff, SupplyRule, SmsTemplates, EmailProvider } from "../lib/types";
 
-type TabId = "shop" | "theme" | "services" | "workflow" | "sms" | "email" | "staff" | "inventory" | "supplies" | "logs" | "smslog";
+type TabId = "shop" | "theme" | "services" | "workflow" | "sms" | "email" | "staff" | "inventory" | "supplies" | "logs" | "smslog" | "printer";
 
 const TABS: { id: TabId; icon: string; label: string }[] = [
   { id: "shop",      icon: "\uD83C\uDFEA", label: "Shop" },
@@ -18,6 +18,7 @@ const TABS: { id: TabId; icon: string; label: string }[] = [
   { id: "supplies",  icon: "\uD83E\uDDF4", label: "Supplies" },
   { id: "logs",      icon: "\uD83D\uDCDC", label: "Audit Log" },
   { id: "smslog",    icon: "\uD83D\uDCF1", label: "SMS Log" },
+  { id: "printer",   icon: "\uD83D\uDDA8\uFE0F", label: "Printer" },
 ];
 
 const PRICING_OPTIONS: { value: Service["pricingType"]; label: string }[] = [
@@ -79,6 +80,11 @@ export function SettingsScreen() {
   const [staffEditId, setStaffEditId] = useState<string | null>(null);
   const [staffForm, setStaffForm] = useState(EMPTY_STAFF_FORM);
   const [showAddStaff, setShowAddStaff] = useState(false);
+
+  // Printer state
+  const [btDevices, setBtDevices] = useState<{ name: string; address: string }[]>([]);
+  const [btScanning, setBtScanning] = useState(false);
+  const [btTestPrinting, setBtTestPrinting] = useState(false);
 
   // ── Service helpers ──
   const startEditService = (svc: Service) => {
@@ -1327,6 +1333,141 @@ export function SettingsScreen() {
                   </div>
                 </div>
               ))
+            )}
+          </div>
+        )}
+
+        {tab === "printer" && (
+          <div>
+            <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
+              {"\uD83D\uDDA8\uFE0F"} Bluetooth Thermal Printer
+            </h3>
+
+            {/* Current printer */}
+            <div style={{ padding: 14, borderRadius: 8, background: "var(--card)", border: "1px solid var(--border)", marginBottom: 16 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", marginBottom: 8 }}>Current Printer</div>
+              {shop.btPrinterAddress ? (
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text)" }}>{shop.btPrinterName || "Unknown"}</div>
+                    <div style={{ fontSize: 11, color: "var(--muted)" }}>{shop.btPrinterAddress}</div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShop((s) => ({ ...s, btPrinterAddress: undefined, btPrinterName: undefined }));
+                      notify("Printer disconnected");
+                    }}
+                    style={{ padding: "6px 12px", background: "var(--danger)", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontSize: 12 }}
+                  >Remove</button>
+                </div>
+              ) : (
+                <div style={{ fontSize: 13, color: "var(--muted)" }}>No printer selected. Scan to find paired devices.</div>
+              )}
+            </div>
+
+            {/* Paper width */}
+            <div style={{ padding: 14, borderRadius: 8, background: "var(--card)", border: "1px solid var(--border)", marginBottom: 16 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", marginBottom: 8 }}>Paper Width</div>
+              <div style={{ display: "flex", gap: 8 }}>
+                {[58, 80].map((w) => (
+                  <button
+                    key={w}
+                    onClick={() => setShop((s) => ({ ...s, receiptPaperWidth: w }))}
+                    style={{
+                      flex: 1, padding: "10px 0", borderRadius: 8, cursor: "pointer", fontWeight: 700, fontSize: 14,
+                      background: (shop.receiptPaperWidth || 58) === w ? "var(--accent)" : "var(--bg)",
+                      color: (shop.receiptPaperWidth || 58) === w ? "#fff" : "var(--text)",
+                      border: `2px solid ${(shop.receiptPaperWidth || 58) === w ? "var(--accent)" : "var(--border)"}`,
+                    }}
+                  >{w}mm</button>
+                ))}
+              </div>
+              <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 6 }}>
+                58mm = 32 chars/line (most common) | 80mm = 48 chars/line
+              </div>
+            </div>
+
+            {/* Scan for printers */}
+            <button
+              onClick={async () => {
+                setBtScanning(true);
+                try {
+                  const { invoke } = await import("@tauri-apps/api/core");
+                  const result = await invoke<{ name: string; address: string }[]>("plugin:printer|list_bluetooth_printers");
+                  setBtDevices(result);
+                  if (result.length === 0) notify("No paired Bluetooth devices found. Pair your printer in Android Settings first.", "error");
+                } catch (e: any) {
+                  notify(`Scan failed: ${e?.message || e}`, "error");
+                  setBtDevices([]);
+                } finally {
+                  setBtScanning(false);
+                }
+              }}
+              disabled={btScanning}
+              style={{
+                width: "100%", padding: 12, marginBottom: 16, borderRadius: 8, cursor: "pointer",
+                background: "var(--accent)", color: "#fff", border: "none", fontWeight: 700, fontSize: 14,
+                opacity: btScanning ? 0.6 : 1,
+              }}
+            >{btScanning ? "Scanning..." : "Scan for Paired Printers"}</button>
+
+            {/* Device list */}
+            {btDevices.length > 0 && (
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)", marginBottom: 8 }}>Paired Devices</div>
+                {btDevices.map((d) => (
+                  <div
+                    key={d.address}
+                    onClick={() => {
+                      setShop((s) => ({ ...s, btPrinterAddress: d.address, btPrinterName: d.name }));
+                      notify(`Printer set: ${d.name}`);
+                    }}
+                    style={{
+                      padding: "10px 14px", borderRadius: 8, marginBottom: 6, cursor: "pointer",
+                      background: shop.btPrinterAddress === d.address ? "var(--accent-bg)" : "var(--card)",
+                      border: `1px solid ${shop.btPrinterAddress === d.address ? "var(--accent)" : "var(--border)"}`,
+                    }}
+                  >
+                    <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text)" }}>{d.name}</div>
+                    <div style={{ fontSize: 11, color: "var(--muted)" }}>{d.address}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Test print */}
+            {shop.btPrinterAddress && (
+              <button
+                onClick={async () => {
+                  setBtTestPrinting(true);
+                  try {
+                    const { invoke } = await import("@tauri-apps/api/core");
+                    await invoke("plugin:printer|print_bluetooth", {
+                      order: {
+                        orderNum: "TEST-001", customerName: "Test Customer", customerPhone: "09171234567",
+                        items: [{ serviceName: "Regular Wash", pricingType: "PER_KG", kg: 5.0, unitPrice: 65, subtotal: 325, express: false }],
+                        subtotal: 325, discount: 0, total: 325, express: false,
+                        paymentMethod: "Cash", isCashPayment: true, cashTendered: 500, change: 175,
+                        createdAt: Date.now(),
+                      },
+                      shop: { name: shop.name, address: shop.address, phone: shop.phone, currency: shop.currency || "\u20B1" },
+                      printerAddress: shop.btPrinterAddress,
+                      paperWidth: shop.receiptPaperWidth || 58,
+                    });
+                    notify("Test receipt sent!");
+                  } catch (e: any) {
+                    notify(`Test print failed: ${e?.message || e}`, "error");
+                  } finally {
+                    setBtTestPrinting(false);
+                  }
+                }}
+                disabled={btTestPrinting}
+                style={{
+                  width: "100%", padding: 12, borderRadius: 8, cursor: "pointer",
+                  background: "var(--success)", color: "#fff", border: "none", fontWeight: 700, fontSize: 14,
+                  opacity: btTestPrinting ? 0.6 : 1,
+                }}
+              >{btTestPrinting ? "Printing..." : "Test Print"}</button>
             )}
           </div>
         )}

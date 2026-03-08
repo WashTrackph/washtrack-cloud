@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-print-bluetooth"
+description = "Enables the print_bluetooth command without any pre-configured scope."
+commands.allow = ["print_bluetooth"]
+
+[[permission]]
+identifier = "deny-print-bluetooth"
+description = "Denies the print_bluetooth command without any pre-configured scope."
+commands.deny = ["print_bluetooth"]

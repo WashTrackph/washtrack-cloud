@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useApp } from "../context/AppContext";
-import { getOverstay, openReceiptWindow } from "../lib/utils";
+import { getOverstay, openReceiptWindow, printBluetoothReceipt, hasBtPrinter } from "../lib/utils";
+import { ReceiptPreview } from "../components/ReceiptPreview";
 
 export function OrdersScreen() {
   const { orders, setOrders, stages, shop, smsTemplates, sendSms, requirePin, currentStaff, notify, addAudit, fmt } = useApp();
@@ -8,6 +9,8 @@ export function OrdersScreen() {
   const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
   const [voidReason, setVoidReason] = useState("");
   const [showVoidFor, setShowVoidFor] = useState<string | null>(null);
+  const [receiptPreview, setReceiptPreview] = useState<any>(null);
+  const [btPrinting, setBtPrinting] = useState(false);
 
   const activeOrders = orders.filter((o) => !o.voided);
   const stageOrders = stages.slice(0, 5).map((stage) => ({
@@ -70,7 +73,13 @@ export function OrdersScreen() {
           <div style={{ marginTop: 12, display: "flex", justifyContent: "space-between", fontWeight: 800, fontSize: 20, color: "var(--accent)" }}>
             <span>Total</span><span>{fmt(order.total)}</span>
           </div>
-          <button onClick={() => openReceiptWindow(order, shop)} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", marginTop: 12, padding: "9px 0", borderRadius: 8, border: "1px solid var(--accent)", background: "color-mix(in srgb, var(--accent) 6%, transparent)", color: "var(--accent)", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>
+          <button onClick={() => {
+            if (hasBtPrinter(shop)) {
+              setReceiptPreview(order);
+            } else {
+              openReceiptWindow(order, shop);
+            }
+          }} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", marginTop: 12, padding: "9px 0", borderRadius: 8, border: "1px solid var(--accent)", background: "color-mix(in srgb, var(--accent) 6%, transparent)", color: "var(--accent)", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>
             {"\uD83D\uDDA8\uFE0F"} Reprint Receipt
           </button>
           {!order.voided && order.statusId < 6 && (
@@ -157,6 +166,26 @@ export function OrdersScreen() {
             </div>
           ))}
         </div>
+      )}
+      {receiptPreview && (
+        <ReceiptPreview
+          order={receiptPreview}
+          shop={shop}
+          printing={btPrinting}
+          onCancel={() => setReceiptPreview(null)}
+          onPrint={async () => {
+            setBtPrinting(true);
+            try {
+              await printBluetoothReceipt(receiptPreview, shop);
+              notify("Receipt printed!");
+              setReceiptPreview(null);
+            } catch (e: any) {
+              notify(`Print failed: ${e?.message || e}`, "error");
+            } finally {
+              setBtPrinting(false);
+            }
+          }}
+        />
       )}
     </div>
   );

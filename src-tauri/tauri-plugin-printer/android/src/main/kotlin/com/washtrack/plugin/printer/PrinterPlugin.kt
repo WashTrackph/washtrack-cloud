@@ -1,9 +1,13 @@
 package com.washtrack.plugin.printer
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothSocket
 import android.os.Handler
 import android.os.Looper
 import android.print.PrintAttributes
 import android.print.PrintManager
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +19,9 @@ import app.tauri.annotation.TauriPlugin
 import app.tauri.plugin.Invoke
 import app.tauri.plugin.JSObject
 import app.tauri.plugin.Plugin
+import org.json.JSONArray
+import org.json.JSONObject
+import java.util.UUID
 
 @InvokeArg
 internal class PrintReceiptArgs {
@@ -22,11 +29,85 @@ internal class PrintReceiptArgs {
     var jobName: String? = null
 }
 
+@InvokeArg
+internal class SendBluetoothDataArgs {
+    lateinit var bytes: String
+    lateinit var address: String
+}
+
 @TauriPlugin
 class PrinterPlugin(private val activity: android.app.Activity) : Plugin(activity) {
 
     companion object {
         private const val TAG = "PrinterPlugin"
+        private val SPP_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+    }
+
+    @Command
+    fun listBluetoothPrinters(invoke: Invoke) {
+        try {
+            val adapter = BluetoothAdapter.getDefaultAdapter()
+            if (adapter == null) {
+                invoke.resolve(JSObject().apply { put("devices", JSONArray()) })
+                return
+            }
+
+            val devices = JSONArray()
+            try {
+                adapter.bondedDevices?.forEach { device: BluetoothDevice ->
+                    devices.put(JSONObject().apply {
+                        put("name", device.name ?: "Unknown")
+                        put("address", device.address)
+                    })
+                }
+            } catch (se: SecurityException) {
+                Log.w(TAG, "Bluetooth permission not granted", se)
+            }
+
+            invoke.resolve(JSObject().apply { put("devices", devices) })
+        } catch (e: Exception) {
+            Log.e(TAG, "listBluetoothPrinters failed", e)
+            invoke.reject("Failed to list BT devices: ${e.message}")
+        }
+    }
+
+    @Command
+    fun sendBluetoothData(invoke: Invoke) {
+        try {
+            val args = invoke.parseArgs(SendBluetoothDataArgs::class.java)
+            val data = Base64.decode(args.bytes, Base64.DEFAULT)
+            val address = args.address
+
+            Thread {
+                var socket: BluetoothSocket? = null
+                try {
+                    val adapter = BluetoothAdapter.getDefaultAdapter()
+                        ?: throw Exception("No Bluetooth adapter")
+                    val device = adapter.getRemoteDevice(address)
+                    socket = device.createRfcommSocketToServiceRecord(SPP_UUID)
+                    socket.connect()
+                    socket.outputStream.write(data)
+                    socket.outputStream.flush()
+
+                    activity.runOnUiThread {
+                        invoke.resolve(JSObject().apply {
+                            put("success", true)
+                            put("bytesWritten", data.size)
+                        })
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "BT send failed", e)
+                    activity.runOnUiThread {
+                        invoke.reject("BT send failed: ${e.message}")
+                    }
+                } finally {
+                    try { socket?.close() } catch (_: Exception) {}
+                }
+            }.start()
+        } catch (e: Exception) {
+            Log.e(TAG, "sendBluetoothData failed", e)
+            invoke.reject("Failed to parse args: ${e.message}")
+        }
     }
 
     @Command

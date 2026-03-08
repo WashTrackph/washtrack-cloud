@@ -295,6 +295,30 @@
       "type": "string",
       "oneOf": [
         {
+          "description": "Enables the list_bluetooth_printers command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-list-bluetooth-printers",
+          "markdownDescription": "Enables the list_bluetooth_printers command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the list_bluetooth_printers command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-list-bluetooth-printers",
+          "markdownDescription": "Denies the list_bluetooth_printers command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the print_bluetooth command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-print-bluetooth",
+          "markdownDescription": "Enables the print_bluetooth command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the print_bluetooth command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-print-bluetooth",
+          "markdownDescription": "Denies the print_bluetooth command without any pre-configured scope."
+        },
+        {
           "description": "Enables the print_receipt command without any pre-configured scope.",
           "type": "string",
           "const": "allow-print-receipt",
@@ -307,10 +331,10 @@
           "markdownDescription": "Denies the print_receipt command without any pre-configured scope."
         },
         {
-          "description": "Allows receipt printing via native print dialog\n#### This default permission set includes:\n\n- `allow-print-receipt`",
+          "description": "Allows receipt printing via native print dialog and Bluetooth thermal printing\n#### This default permission set includes:\n\n- `allow-print-receipt`\n- `allow-print-bluetooth`\n- `allow-list-bluetooth-printers`",
           "type": "string",
           "const": "default",
-          "markdownDescription": "Allows receipt printing via native print dialog\n#### This default permission set includes:\n\n- `allow-print-receipt`"
+          "markdownDescription": "Allows receipt printing via native print dialog and Bluetooth thermal printing\n#### This default permission set includes:\n\n- `allow-print-receipt`\n- `allow-print-bluetooth`\n- `allow-list-bluetooth-printers`"
         }
       ]
     }
