@@ -3,7 +3,7 @@ name = "semaphore-sms"
 version = "0.1.0"
 edition = "2021"
 description = "Rust client for the Semaphore.co SMS API (Philippine SMS gateway)"
-license = "MIT"
+license = "LicenseRef-Proprietary"
 
 [dependencies]
 reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
