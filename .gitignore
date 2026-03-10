@@ -29,6 +29,10 @@ src-tauri/tauri-plugin-printer/android/.gradle/
 Thumbs.db
 desktop.ini
 
+# Android signing
+src-tauri/gen/android/keystore.properties
+*.jks
+
 # Environment
 .env
 .env.local
