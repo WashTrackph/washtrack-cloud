@@ -62,13 +62,13 @@ jobs:
         id: apk
         run: |
           APK_PATH=$(find src-tauri/gen/android/app/build/outputs/apk -name "*.apk" -type f | head -1)
-          echo "PATH=$APK_PATH" >> $GITHUB_OUTPUT
+          echo "APK_PATH=$APK_PATH" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           name: WashTrack POS v${{ steps.version.outputs.VERSION }}
           draft: true
-          files: ${{ steps.apk.outputs.PATH }}
+          files: ${{ steps.apk.outputs.APK_PATH }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
