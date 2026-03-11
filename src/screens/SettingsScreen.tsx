@@ -62,7 +62,7 @@ export function SettingsScreen() {
     customers, setCustomers, orders, setOrders, inventory, setInventory,
     supplyRules, setSupplyRules, payMethods, setPayMethods,
     emailConfig, setEmailConfig,
-    smsLog, setSmsLog, auditLog, setAuditLog, currentStaff, notify, addAudit, fmt, genId, theme, setTheme, promotions,
+    smsLog, setSmsLog, auditLog, setAuditLog, currentStaff, notify, addAudit, fmt, genId, theme, setTheme, promotions, checkSmsStatus,
   } = useApp();
 
   const [tab, setTab] = useState<TabId>("shop");
@@ -1381,13 +1381,13 @@ export function SettingsScreen() {
                 {"\uD83D\uDCF1"} SMS Log
               </h3>
               <div style={{ display: "flex", gap: 6 }}>
-                {["all", "SENT", "MOCK", "PROMO"].map((f) => (
+                {["all", "SENT", "FAILED", "MOCK", "PROMO"].map((f) => (
                   <button
                     key={f}
                     onClick={() => setSmsLogFilter(f)}
                     style={{
                       padding: "4px 12px", borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: "pointer",
-                      background: smsLogFilter === f ? (f === "MOCK" ? "var(--warning)" : "var(--accent)") : "var(--card)",
+                      background: smsLogFilter === f ? (f === "MOCK" ? "var(--warning)" : f === "FAILED" ? "var(--danger)" : "var(--accent)") : "var(--card)",
                       color: smsLogFilter === f ? "#fff" : "var(--text)",
                       border: `1px solid ${smsLogFilter === f ? "transparent" : "var(--border)"}`,
                     }}
@@ -1408,7 +1408,9 @@ export function SettingsScreen() {
               >Clear Mock Entries</button>
             )}
             {(() => {
-              const filtered = smsLogFilter === "all" ? smsLog : smsLogFilter === "PROMO" ? smsLog.filter((e) => e.promoId) : smsLog.filter((e) => e.status === smsLogFilter);
+              const filtered = smsLogFilter === "all" ? smsLog : smsLogFilter === "PROMO" ? smsLog.filter((e) => e.promoId) : smsLogFilter === "FAILED" ? smsLog.filter((e) => e.status === "FAILED") : smsLog.filter((e) => e.status === smsLogFilter || e.status === (smsLogFilter === "SENT" ? "Sent" : smsLogFilter));
+              const statusColor = (s: string) => s === "MOCK" ? "var(--warning)" : s === "FAILED" ? "var(--danger)" : s === "SENDING" ? "var(--accent)" : "var(--success)";
+              const statusLabel = (s: string) => s === "MOCK" ? "\uD83E\uDDEA MOCK" : s === "FAILED" ? "\u2717 FAILED" : s === "SENDING" ? "\u23F3 SENDING" : `\u2713 ${s.toUpperCase()}`;
               return filtered.length === 0 ? (
                 <div style={{ color: "var(--muted)", fontSize: 13 }}>
                   {smsLogFilter === "all" ? "No SMS sent yet" : `No ${smsLogFilter} messages`}
@@ -1419,22 +1421,27 @@ export function SettingsScreen() {
                     key={entry.id}
                     style={{
                       padding: "10px 14px", borderRadius: 8, marginBottom: 6,
-                      background: entry.status === "MOCK" ? "var(--warning-bg-dark)" : "var(--card)",
-                      border: `1px solid ${entry.status === "MOCK" ? "var(--warning)" : "var(--border)"}`,
+                      background: entry.status === "MOCK" ? "var(--warning-bg-dark)" : entry.status === "FAILED" ? "color-mix(in srgb, var(--danger) 8%, var(--card))" : "var(--card)",
+                      border: `1px solid ${entry.status === "MOCK" ? "var(--warning)" : entry.status === "FAILED" ? "var(--danger)" : "var(--border)"}`,
                     }}
                   >
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
                       <span style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{entry.phone}</span>
-                      <span style={{
-                        fontSize: 11, fontWeight: 700,
-                        color: entry.status === "MOCK" ? "var(--warning)" : "var(--success)",
-                      }}>
-                        {entry.status === "MOCK" ? "\uD83E\uDDEA MOCK" : "\u2713 SENT"}
-                      </span>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: statusColor(entry.status) }}>
+                          {statusLabel(entry.status)}
+                        </span>
+                        {entry.messageId && (
+                          <button
+                            onClick={async (e) => { e.stopPropagation(); await checkSmsStatus(entry); notify("Status refreshed"); }}
+                            style={{ padding: "2px 8px", borderRadius: 4, border: "1px solid var(--border-dark)", background: "transparent", color: "var(--subtext)", cursor: "pointer", fontSize: 10, fontWeight: 600 }}
+                          >{"\uD83D\uDD04"} Check</button>
+                        )}
+                      </div>
                     </div>
                     <div style={{ fontSize: 12, color: "var(--subtext)", marginBottom: 4 }}>{entry.message}</div>
                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "var(--muted-deep)" }}>
-                      <span>{entry.promoId ? `Promo: ${promotions.find((p) => p.id === entry.promoId)?.name || entry.promoId}` : entry.orderId ? `Order: ${entry.orderId}` : "No order"}</span>
+                      <span>{entry.promoId ? `Promo: ${promotions.find((p) => p.id === entry.promoId)?.name || entry.promoId}` : entry.orderId ? `Order: ${entry.orderId}` : "No order"}{entry.network ? ` \u00B7 ${entry.network}` : ""}</span>
                       <span>{new Date(entry.at).toLocaleString()}</span>
                     </div>
                   </div>

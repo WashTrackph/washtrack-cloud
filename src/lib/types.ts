@@ -162,6 +162,8 @@ export interface SmsLogEntry {
   orderId: string | null;
   promoId?: string | null;
   status: string;
+  messageId?: number | null;
+  network?: string | null;
   at: number;
 }
 

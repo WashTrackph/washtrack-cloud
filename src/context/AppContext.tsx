@@ -48,7 +48,8 @@ interface AppContextValue {
   setPinModal: React.Dispatch<React.SetStateAction<any>>;
   notify: (msg: string, type?: string) => void;
   addAudit: (type: string, desc: string, staffId?: string) => void;
-  sendSms: (phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null) => SmsLogEntry;
+  sendSms: (phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null) => Promise<SmsLogEntry>;
+  checkSmsStatus: (entry: SmsLogEntry) => Promise<void>;
   requirePin: (role: string, onSuccess: () => void, message?: string) => void;
   modal: any;
   setModal: React.Dispatch<React.SetStateAction<any>>;
@@ -180,14 +181,50 @@ export function AppProvider({ children }: AppProviderProps) {
     setAuditLog((prev) => [entry, ...prev].slice(0, 500));
   }, [currentStaff]);
 
-  const sendSms = useCallback((phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null): SmsLogEntry => {
+  const sendSms = useCallback(async (phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null): Promise<SmsLogEntry> => {
     let msg = template;
     Object.entries(vars).forEach(([k, v]) => { msg = msg.replaceAll(`{${k}}`, String(v)); });
     const isMock = shop.smsMockMode || !shop.smsApiKey;
-    const entry: SmsLogEntry = { id: genId(), phone, message: msg, orderId, promoId: promoId || null, status: isMock ? "MOCK" : "SENT", at: Date.now() };
+    const entry: SmsLogEntry = { id: genId(), phone, message: msg, orderId, promoId: promoId || null, status: isMock ? "MOCK" : "SENDING", messageId: null, network: null, at: Date.now() };
     setSmsLog((prev) => [entry, ...prev]);
+
+    if (!isMock && (window as any).__TAURI_INTERNALS__) {
+      try {
+        const { invoke } = await import("@tauri-apps/api/core");
+        const result = await invoke("send_sms", {
+          payload: {
+            api_key: shop.smsApiKey,
+            number: phone.trim(),
+            message: msg,
+            sender_name: shop.smsSenderName || null,
+          },
+        });
+        const parsed = JSON.parse(result as string);
+        const resp = parsed?.[0];
+        const updatedEntry = { ...entry, status: resp?.status || "SENT", messageId: resp?.message_id || null, network: resp?.network || null };
+        setSmsLog((prev) => prev.map((e) => e.id === entry.id ? updatedEntry : e));
+        return updatedEntry;
+      } catch (err: any) {
+        const failedEntry = { ...entry, status: "FAILED" };
+        setSmsLog((prev) => prev.map((e) => e.id === entry.id ? failedEntry : e));
+        return failedEntry;
+      }
+    }
     return entry;
-  }, [shop.smsMockMode, shop.smsApiKey]);
+  }, [shop.smsMockMode, shop.smsApiKey, shop.smsSenderName]);
+
+  const checkSmsStatus = useCallback(async (entry: SmsLogEntry): Promise<void> => {
+    if (!entry.messageId || !shop.smsApiKey) return;
+    try {
+      const { invoke } = await import("@tauri-apps/api/core");
+      const result = await invoke("get_sms_message_by_id", {
+        payload: { api_key: shop.smsApiKey, message_id: entry.messageId },
+      });
+      const parsed = JSON.parse(result as string);
+      const newStatus = parsed?.status || entry.status;
+      setSmsLog((prev) => prev.map((e) => e.id === entry.id ? { ...e, status: newStatus } : e));
+    } catch { /* silently fail — status stays as-is */ }
+  }, [shop.smsApiKey]);
 
   const requirePin = (role: string, onSuccess: () => void, message?: string) => {
     setPinModal({ role, onSuccess, message });
@@ -201,7 +238,7 @@ export function AppProvider({ children }: AppProviderProps) {
     inventory, setInventory, payMethods, setPayMethods, supplyRules, setSupplyRules,
     emailConfig, setEmailConfig, promotions, setPromotions,
     currentStaff, setCurrentStaff, pinModal, setPinModal,
-    notify, addAudit, sendSms, requirePin,
+    notify, addAudit, sendSms, checkSmsStatus, requirePin,
     modal, setModal, calcPrice, genId, genOrderNum, fmt, theme, setTheme,
   };
 
