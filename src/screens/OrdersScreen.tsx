@@ -23,17 +23,15 @@ export function OrdersScreen() {
     const isCash = collectPayMethod.isCash;
     const tendered = isCash ? (parseFloat(collectCash) || 0) : 0;
     if (isCash && tendered < order.total) { notify("Cash tendered is less than total", "error"); return; }
-    requirePin("MANAGER", () => {
-      const change = isCash ? Math.max(0, tendered - order.total) : 0;
-      setOrders((prev) => prev.map((o) => o.id === order.id ? {
-        ...o, paid: true, paidAt: Date.now(), paidBy: currentStaff?.id, paidByName: currentStaff?.name,
-        paymentMethod: collectPayMethod.label, paymentMethodId: collectPayMethod.id,
-        isCashPayment: isCash, cashTendered: isCash ? tendered : null, change: isCash ? change : null,
-      } : o));
-      addAudit("PAYMENT_COLLECTED", `${order.orderNum} \u2014 ${fmt(order.total)} via ${collectPayMethod.label}`);
-      notify(`Payment collected for ${order.orderNum}! ${fmt(order.total)} via ${collectPayMethod.label}`);
-      setShowCollectPay(false); setCollectPayMethod(null); setCollectCash("");
-    }, "Enter Manager PIN to collect payment");
+    const change = isCash ? Math.max(0, tendered - order.total) : 0;
+    setOrders((prev) => prev.map((o) => o.id === order.id ? {
+      ...o, paid: true, paidAt: Date.now(), paidBy: currentStaff?.id, paidByName: currentStaff?.name,
+      paymentMethod: collectPayMethod.label, paymentMethodId: collectPayMethod.id,
+      isCashPayment: isCash, cashTendered: isCash ? tendered : null, change: isCash ? change : null,
+    } : o));
+    addAudit("PAYMENT_COLLECTED", `${order.orderNum} \u2014 ${fmt(order.total)} via ${collectPayMethod.label}`);
+    notify(`Payment collected for ${order.orderNum}! ${fmt(order.total)} via ${collectPayMethod.label}`);
+    setShowCollectPay(false); setCollectPayMethod(null); setCollectCash("");
   };
 
   const activeOrders = orders.filter((o) => !o.voided);
