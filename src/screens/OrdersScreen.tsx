@@ -66,7 +66,7 @@ export function OrdersScreen() {
           </div>
           {order.items.map((item: any) => (
             <div key={item.id} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid var(--border)", fontSize: 13 }}>
-              <span style={{ color: "var(--text)" }}>{item.serviceName} {item.express ? "\u26A1" : ""}</span>
+              <span style={{ color: "var(--text)" }}>{item.serviceName}{item.qty > 1 ? ` x${item.qty}` : ""} {item.express ? "\u26A1" : ""}</span>
               <span style={{ fontWeight: 700, color: "var(--accent)" }}>{fmt(item.subtotal)}</span>
             </div>
           ))}

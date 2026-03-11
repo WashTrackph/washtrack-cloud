@@ -92,6 +92,7 @@ export interface CartItem {
   pricingType: "PER_KG" | "FLAT" | "FIXED_LOAD";
   minKg: number;
   kg: number;
+  qty: number;
   express: boolean;
   unitPrice: number;
   subtotal: number;

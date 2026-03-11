@@ -55,6 +55,7 @@ export function ReceiptPreview({ order, shop, onPrint, onCancel, printing }: Rec
             if (item.express) desc += " [E]";
             if (item.pricingType === "PER_KG") desc += ` ${item.kg}kg`;
             if (item.pricingType === "FIXED_LOAD") desc += " (fixed)";
+            if (item.pricingType !== "PER_KG" && item.qty > 1) desc += ` x${item.qty}`;
             return (
               <Row key={i} left={desc} right={`${c}${item.subtotal.toLocaleString()}`}
                 style={{ borderBottom: "1px dashed #ddd", padding: "4px 0" }} />

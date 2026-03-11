@@ -47,17 +47,31 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
         setCartItems((prev) => prev.map((i) =>
           i.id === existing.id ? { ...i, kg: i.kg + 1, subtotal: calcPrice(service, i.kg + 1, express) } : i
         ));
-      } else { notify("Already added \u2014 one per order", "info"); }
+      } else {
+        const newQty = existing.qty + 1;
+        setCartItems((prev) => prev.map((i) =>
+          i.id === existing.id ? { ...i, qty: newQty, subtotal: calcPrice(service, i.kg, i.express) * newQty } : i
+        ));
+      }
       return;
     }
     const kg = (service.pricingType === "PER_KG") ? Math.max(service.minKg, 4) :
       (service.pricingType === "FIXED_LOAD") ? service.minKg : 0;
     setCartItems((prev) => [...prev, {
       id: genId(), serviceId: service.id, serviceName: service.name,
-      pricingType: service.pricingType, minKg: service.minKg, kg, express,
+      pricingType: service.pricingType, minKg: service.minKg, kg, qty: 1, express,
       unitPrice: service.basePrice, subtotal: calcPrice(service, kg, express),
       color: service.color,
     }]);
+  };
+
+  const updateCartQty = (itemId: string, newQty: number) => {
+    if (newQty < 1) { removeCartItem(itemId); return; }
+    const item = cartItems.find((i) => i.id === itemId);
+    if (!item) return;
+    const svc = services.find((s) => s.id === item.serviceId);
+    if (!svc) return;
+    setCartItems((prev) => prev.map((i) => i.id === itemId ? { ...i, qty: newQty, subtotal: calcPrice(svc, i.kg, i.express) * newQty } : i));
   };
 
   const updateCartKg = (itemId: string, kg: number) => {
@@ -109,7 +123,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
           if (!applies) return;
           if (!deductions[rule.invId]) deductions[rule.invId] = 0;
           if (item.pricingType === "PER_KG" && rule.perKg > 0) deductions[rule.invId] += rule.perKg * item.kg;
-          if ((item.pricingType === "FIXED_LOAD" || item.pricingType === "FLAT") && rule.perLoad > 0) deductions[rule.invId] += rule.perLoad;
+          if ((item.pricingType === "FIXED_LOAD" || item.pricingType === "FLAT") && rule.perLoad > 0) deductions[rule.invId] += rule.perLoad * (item.qty || 1);
           if (rule.perOrder > 0) deductions[rule.invId] += rule.perOrder;
         });
       });
@@ -303,9 +317,14 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
                     <span style={{ marginLeft: "auto", fontWeight: 700, color: "var(--accent)", fontSize: 14 }}>{fmt(item.subtotal)}</span>
                   </div>
                 ) : (
-                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
-                    <span style={{ fontSize: 12, color: "var(--muted)" }}>{item.pricingType === "FIXED_LOAD" ? `${item.minKg || item.kg}kg load` : "Flat rate"}</span>
-                    <span style={{ fontWeight: 700, color: "var(--accent)", fontSize: 14 }}>{fmt(item.subtotal)}</span>
+                  <div style={{ marginTop: 4 }}>
+                    <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>{item.pricingType === "FIXED_LOAD" ? `${item.minKg || item.kg}kg load` : "Flat rate"}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <button onClick={() => updateCartQty(item.id, item.qty - 1)} style={{ width: 24, height: 24, borderRadius: 4, border: "1px solid var(--border-dark)", background: "transparent", color: "var(--subtext)", cursor: "pointer", fontSize: 14 }}>-</button>
+                      <span style={{ fontSize: 14, fontWeight: 700, minWidth: 20, textAlign: "center" }}>{item.qty}x</span>
+                      <button onClick={() => updateCartQty(item.id, item.qty + 1)} style={{ width: 24, height: 24, borderRadius: 4, border: "1px solid var(--border-dark)", background: "transparent", color: "var(--subtext)", cursor: "pointer", fontSize: 14 }}>+</button>
+                      <span style={{ marginLeft: "auto", fontWeight: 700, color: "var(--accent)", fontSize: 14 }}>{fmt(item.subtotal)}</span>
+                    </div>
                   </div>
                 )}
               </div>
