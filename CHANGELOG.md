@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0-rc.1](https://github.com/WashTrackph/Washtrack/compare/v1.1.0-rc.1...v1.2.0-rc.1) (2026-03-11)
+
+
+### Features
+
+* service quantity, SMS, security hardening & UX fixes ([0cbda6d](https://github.com/WashTrackph/Washtrack/commit/0cbda6d9750ed379f4619826e30505c1724196ce))
+
+
+### Bug Fixes
+
+* POS new customer flow, unpaid order UX, and placeholder rendering ([4292c88](https://github.com/WashTrackph/Washtrack/commit/4292c88f1bbd9e54e1160e44a4e707d914f1d24b))
+
 ## [1.1.0-rc.1](https://github.com/WashTrackph/Washtrack/compare/v1.0.0-rc.1...v1.1.0-rc.1) (2026-03-11)
 
 
