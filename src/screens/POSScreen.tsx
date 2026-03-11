@@ -83,10 +83,10 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
 
   const removeCartItem = (id: string) => setCartItems((prev) => prev.filter((i) => i.id !== id));
 
-  const completeOrder = () => {
+  const completeOrder = (payLater = false) => {
     if (!selectedCustomer && (!newName || !newPhone)) { notify("Customer info required", "error"); return; }
     if (cartItems.length === 0) { notify("Add at least one service", "error"); return; }
-    if (!selectedPayMethod) { notify("Please select a payment method", "error"); return; }
+    if (!payLater && !selectedPayMethod) { notify("Please select a payment method", "error"); return; }
 
     let customer = selectedCustomer;
     if (!customer) {
@@ -103,11 +103,13 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
       id: genId(), orderNum,
       customerId: customer.id, customerName: customer.name, customerPhone: customer.phone,
       items: cartItems, subtotal, discount, total, notes, express,
-      paymentMethod: selectedPayMethod.label,
-      paymentMethodId: selectedPayMethod.id,
-      isCashPayment: isCash,
-      cashTendered: isCash ? (parseFloat(cashTendered) || 0) : null,
-      change: isCash ? change : null,
+      paymentMethod: payLater ? "Pay Later" : selectedPayMethod.label,
+      paymentMethodId: payLater ? "" : selectedPayMethod.id,
+      isCashPayment: payLater ? false : isCash,
+      cashTendered: (!payLater && isCash) ? (parseFloat(cashTendered) || 0) : null,
+      change: (!payLater && isCash) ? change : null,
+      paid: !payLater,
+      ...(!payLater ? { paidAt: Date.now(), paidBy: currentStaff?.id, paidByName: currentStaff?.name } : {}),
       statusId: 1, statusLabel: "Received",
       createdAt: Date.now(), statusUpdatedAt: Date.now(),
       createdBy: currentStaff?.id, createdByName: currentStaff?.name,
@@ -141,8 +143,9 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
       sendSms(customer.phone, smsTemplates.receipt, { name: customer.name, order: orderNum, shop: shop.name, kg: totalKg, total }, order.id);
     }
 
-    addAudit("ORDER_CREATED", `${orderNum} for ${customer.name} \u2014 ${fmt(total)} via ${selectedPayMethod.label}`);
-    notify(`Order ${orderNum} created! ${fmt(total)} via ${selectedPayMethod.label}`);
+    const payLabel = payLater ? "Pay Later" : selectedPayMethod.label;
+    addAudit("ORDER_CREATED", `${orderNum} for ${customer.name} \u2014 ${fmt(total)} via ${payLabel}`);
+    notify(`Order ${orderNum} created! ${fmt(total)} via ${payLabel}`);
     if (hasBtPrinter(shop)) {
       setReceiptPreview(order);
     } else {
@@ -286,8 +289,11 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
                 <div style={{ fontSize: 12, color: "var(--subtext)", marginTop: 4 }}>Ask customer to send <strong style={{ color: "var(--text)" }}>{fmt(total)}</strong> to your {selectedPayMethod.label} account</div>
               </div>
             )}
-            <button onClick={completeOrder} className="btn-success" style={{ width: "100%", fontSize: 17, padding: 16, fontWeight: 800 }}>
+            <button onClick={() => completeOrder(false)} className="btn-success" style={{ width: "100%", fontSize: 17, padding: 16, fontWeight: 800 }}>
               {"\u2713"} Confirm Payment + Print Receipt {"\uD83D\uDDA8\uFE0F"}
+            </button>
+            <button onClick={() => completeOrder(true)} style={{ width: "100%", marginTop: 10, fontSize: 14, padding: 14, fontWeight: 700, borderRadius: 10, border: "1px solid var(--warning)", background: "color-mix(in srgb, var(--warning) 8%, transparent)", color: "var(--warning)", cursor: "pointer" }}>
+              {"\uD83D\uDD52"} Pay Later (Collect on Pickup)
             </button>
           </div>
         )}

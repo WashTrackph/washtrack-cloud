@@ -122,6 +122,10 @@ export interface Order {
   statusUpdatedAt: number;
   createdBy: string;
   createdByName: string;
+  paid: boolean;
+  paidAt?: number;
+  paidBy?: string;
+  paidByName?: string;
   voided: boolean;
   voidReason?: string;
   voidedAt?: number;
