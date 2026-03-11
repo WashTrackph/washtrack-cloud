@@ -50,6 +50,7 @@ interface AppContextValue {
   addAudit: (type: string, desc: string, staffId?: string) => void;
   sendSms: (phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null) => Promise<SmsLogEntry>;
   checkSmsStatus: (entry: SmsLogEntry) => Promise<void>;
+  refreshAllSmsStatuses: () => Promise<void>;
   requirePin: (role: string, onSuccess: () => void, message?: string) => void;
   modal: any;
   setModal: React.Dispatch<React.SetStateAction<any>>;
@@ -208,10 +209,29 @@ export function AppProvider({ children }: AppProviderProps) {
         const resp = parsed?.[0];
         const updatedEntry = { ...entry, status: resp?.status || "SENT", messageId: resp?.message_id || null, network: resp?.network || null };
         setSmsLog((prev) => prev.map((e) => e.id === entry.id ? updatedEntry : e));
+        // Background check after 15s to get final delivery status
+        if (updatedEntry.messageId) {
+          setTimeout(async () => {
+            try {
+              const result2 = await invoke("get_sms_message_by_id", {
+                payload: { api_key: shop.smsApiKey, message_id: updatedEntry.messageId },
+              });
+              const p = JSON.parse(result2 as string);
+              const finalStatus = p?.status || updatedEntry.status;
+              setSmsLog((prev) => prev.map((e) => e.id === entry.id ? { ...e, status: finalStatus } : e));
+              if (finalStatus === "Sent" || finalStatus === "sent") {
+                notify(`SMS delivered to ${phone}`);
+              } else if (finalStatus === "Failed" || finalStatus === "failed") {
+                notify(`SMS to ${phone} failed`, "error");
+              }
+            } catch { /* silent — status stays as initial response */ }
+          }, 15000);
+        }
         return updatedEntry;
       } catch (err: any) {
         const failedEntry = { ...entry, status: "FAILED" };
         setSmsLog((prev) => prev.map((e) => e.id === entry.id ? failedEntry : e));
+        notify(`SMS to ${phone} failed to send`, "error");
         return failedEntry;
       }
     }
@@ -219,7 +239,7 @@ export function AppProvider({ children }: AppProviderProps) {
   }, [shop.smsMockMode, shop.smsApiKey, shop.smsSenderName]);
 
   const checkSmsStatus = useCallback(async (entry: SmsLogEntry): Promise<void> => {
-    if (!entry.messageId || !shop.smsApiKey) return;
+    if (!entry.messageId || !shop.smsApiKey || !(window as any).__TAURI_INTERNALS__) return;
     try {
       const { invoke } = await import("@tauri-apps/api/core");
       const result = await invoke("get_sms_message_by_id", {
@@ -229,6 +249,27 @@ export function AppProvider({ children }: AppProviderProps) {
       const newStatus = parsed?.status || entry.status;
       setSmsLog((prev) => prev.map((e) => e.id === entry.id ? { ...e, status: newStatus } : e));
     } catch { /* silently fail — status stays as-is */ }
+  }, [shop.smsApiKey]);
+
+  const refreshAllSmsStatuses = useCallback(async (): Promise<void> => {
+    if (!shop.smsApiKey || !(window as any).__TAURI_INTERNALS__) return;
+    try {
+      const { invoke } = await import("@tauri-apps/api/core");
+      const today = new Date().toISOString().split("T")[0];
+      const result = await invoke("get_sms_messages", {
+        payload: { api_key: shop.smsApiKey, limit: 100, page: 1, start_date: today, end_date: today, network: null, status: null },
+      });
+      const messages: any[] = JSON.parse(result as string);
+      if (!messages?.length) return;
+      const statusMap = new Map<number, string>();
+      messages.forEach((m: any) => { if (m.message_id && m.status) statusMap.set(m.message_id, m.status); });
+      setSmsLog((prev) => prev.map((e) => {
+        if (e.messageId && statusMap.has(e.messageId)) {
+          return { ...e, status: statusMap.get(e.messageId)! };
+        }
+        return e;
+      }));
+    } catch { /* silent fail */ }
   }, [shop.smsApiKey]);
 
   const requirePin = (role: string, onSuccess: () => void, message?: string) => {
@@ -243,7 +284,7 @@ export function AppProvider({ children }: AppProviderProps) {
     inventory, setInventory, payMethods, setPayMethods, supplyRules, setSupplyRules,
     emailConfig, setEmailConfig, promotions, setPromotions,
     currentStaff, setCurrentStaff, pinModal, setPinModal,
-    notify, addAudit, sendSms, checkSmsStatus, requirePin,
+    notify, addAudit, sendSms, checkSmsStatus, refreshAllSmsStatuses, requirePin,
     modal, setModal, calcPrice, genId, genOrderNum, fmt, theme, setTheme,
   };
 

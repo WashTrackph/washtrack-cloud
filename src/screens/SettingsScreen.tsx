@@ -62,7 +62,7 @@ export function SettingsScreen() {
     customers, setCustomers, orders, setOrders, inventory, setInventory,
     supplyRules, setSupplyRules, payMethods, setPayMethods,
     emailConfig, setEmailConfig,
-    smsLog, setSmsLog, auditLog, setAuditLog, currentStaff, notify, addAudit, fmt, genId, theme, setTheme, promotions, checkSmsStatus,
+    smsLog, setSmsLog, auditLog, setAuditLog, currentStaff, notify, addAudit, fmt, genId, theme, setTheme, promotions, checkSmsStatus, refreshAllSmsStatuses,
   } = useApp();
 
   const [tab, setTab] = useState<TabId>("shop");
@@ -1395,20 +1395,29 @@ export function SettingsScreen() {
                 ))}
               </div>
             </div>
-            {smsLog.some((e) => e.status === "MOCK") && (
+            <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
               <button
-                onClick={() => {
-                  setSmsLog((prev) => prev.filter((e) => e.status !== "MOCK"));
-                  notify("Mock SMS entries cleared");
-                }}
+                onClick={async () => { await refreshAllSmsStatuses(); notify("SMS statuses refreshed"); }}
                 style={{
-                  marginBottom: 12, padding: "6px 14px", borderRadius: 6, fontSize: 11, fontWeight: 700,
-                  background: "var(--danger)", color: "#fff", border: "none", cursor: "pointer",
+                  padding: "6px 14px", borderRadius: 6, fontSize: 11, fontWeight: 700,
+                  background: "var(--accent)", color: "#fff", border: "none", cursor: "pointer",
                 }}
-              >Clear Mock Entries</button>
-            )}
+              >{"\uD83D\uDD04"} Refresh Statuses</button>
+              {smsLog.some((e) => e.status === "MOCK") && (
+                <button
+                  onClick={() => {
+                    setSmsLog((prev) => prev.filter((e) => e.status !== "MOCK"));
+                    notify("Mock SMS entries cleared");
+                  }}
+                  style={{
+                    padding: "6px 14px", borderRadius: 6, fontSize: 11, fontWeight: 700,
+                    background: "var(--danger)", color: "#fff", border: "none", cursor: "pointer",
+                  }}
+                >Clear Mock Entries</button>
+              )}
+            </div>
             {(() => {
-              const filtered = smsLogFilter === "all" ? smsLog : smsLogFilter === "PROMO" ? smsLog.filter((e) => e.promoId) : smsLogFilter === "FAILED" ? smsLog.filter((e) => e.status === "FAILED") : smsLog.filter((e) => e.status === smsLogFilter || e.status === (smsLogFilter === "SENT" ? "Sent" : smsLogFilter));
+              const filtered = smsLogFilter === "all" ? smsLog : smsLogFilter === "PROMO" ? smsLog.filter((e) => e.promoId) : smsLog.filter((e) => e.status.toUpperCase() === smsLogFilter || (smsLogFilter === "SENT" && ["Queued", "Pending", "SENDING"].includes(e.status)));
               const statusColor = (s: string) => s === "MOCK" ? "var(--warning)" : s === "FAILED" ? "var(--danger)" : s === "SENDING" ? "var(--accent)" : "var(--success)";
               const statusLabel = (s: string) => s === "MOCK" ? "\uD83E\uDDEA MOCK" : s === "FAILED" ? "\u2717 FAILED" : s === "SENDING" ? "\u23F3 SENDING" : `\u2713 ${s.toUpperCase()}`;
               return filtered.length === 0 ? (
