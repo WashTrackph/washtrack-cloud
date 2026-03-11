@@ -23,6 +23,7 @@ struct BtDevice {
     address: String,
 }
 
+#[cfg(target_os = "android")]
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct BtSendPayload {
@@ -30,6 +31,7 @@ struct BtSendPayload {
     address: String,
 }
 
+#[cfg(target_os = "android")]
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 struct BtListResult {
