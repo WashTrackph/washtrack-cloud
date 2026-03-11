@@ -47,17 +47,31 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
         setCartItems((prev) => prev.map((i) =>
           i.id === existing.id ? { ...i, kg: i.kg + 1, subtotal: calcPrice(service, i.kg + 1, express) } : i
         ));
-      } else { notify("Already added \u2014 one per order", "info"); }
+      } else {
+        const newQty = existing.qty + 1;
+        setCartItems((prev) => prev.map((i) =>
+          i.id === existing.id ? { ...i, qty: newQty, subtotal: calcPrice(service, i.kg, i.express) * newQty } : i
+        ));
+      }
       return;
     }
     const kg = (service.pricingType === "PER_KG") ? Math.max(service.minKg, 4) :
       (service.pricingType === "FIXED_LOAD") ? service.minKg : 0;
     setCartItems((prev) => [...prev, {
       id: genId(), serviceId: service.id, serviceName: service.name,
-      pricingType: service.pricingType, minKg: service.minKg, kg, express,
+      pricingType: service.pricingType, minKg: service.minKg, kg, qty: 1, express,
       unitPrice: service.basePrice, subtotal: calcPrice(service, kg, express),
       color: service.color,
     }]);
+  };
+
+  const updateCartQty = (itemId: string, newQty: number) => {
+    if (newQty < 1) { removeCartItem(itemId); return; }
+    const item = cartItems.find((i) => i.id === itemId);
+    if (!item) return;
+    const svc = services.find((s) => s.id === item.serviceId);
+    if (!svc) return;
+    setCartItems((prev) => prev.map((i) => i.id === itemId ? { ...i, qty: newQty, subtotal: calcPrice(svc, i.kg, i.express) * newQty } : i));
   };
 
   const updateCartKg = (itemId: string, kg: number) => {
@@ -69,10 +83,10 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
 
   const removeCartItem = (id: string) => setCartItems((prev) => prev.filter((i) => i.id !== id));
 
-  const completeOrder = () => {
-    if (!selectedCustomer && (!newName || !newPhone)) { notify("Customer info required", "error"); return; }
+  const completeOrder = (payLater = false) => {
+    if (!selectedCustomer && !newName) { notify("Customer name required", "error"); return; }
     if (cartItems.length === 0) { notify("Add at least one service", "error"); return; }
-    if (!selectedPayMethod) { notify("Please select a payment method", "error"); return; }
+    if (!payLater && !selectedPayMethod) { notify("Please select a payment method", "error"); return; }
 
     let customer = selectedCustomer;
     if (!customer) {
@@ -89,11 +103,13 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
       id: genId(), orderNum,
       customerId: customer.id, customerName: customer.name, customerPhone: customer.phone,
       items: cartItems, subtotal, discount, total, notes, express,
-      paymentMethod: selectedPayMethod.label,
-      paymentMethodId: selectedPayMethod.id,
-      isCashPayment: isCash,
-      cashTendered: isCash ? (parseFloat(cashTendered) || 0) : null,
-      change: isCash ? change : null,
+      paymentMethod: payLater ? "Pay Later" : selectedPayMethod.label,
+      paymentMethodId: payLater ? "" : selectedPayMethod.id,
+      isCashPayment: payLater ? false : isCash,
+      cashTendered: (!payLater && isCash) ? (parseFloat(cashTendered) || 0) : null,
+      change: (!payLater && isCash) ? change : null,
+      paid: !payLater,
+      ...(!payLater ? { paidAt: Date.now(), paidBy: currentStaff?.id, paidByName: currentStaff?.name } : {}),
       statusId: 1, statusLabel: "Received",
       createdAt: Date.now(), statusUpdatedAt: Date.now(),
       createdBy: currentStaff?.id, createdByName: currentStaff?.name,
@@ -109,7 +125,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
           if (!applies) return;
           if (!deductions[rule.invId]) deductions[rule.invId] = 0;
           if (item.pricingType === "PER_KG" && rule.perKg > 0) deductions[rule.invId] += rule.perKg * item.kg;
-          if ((item.pricingType === "FIXED_LOAD" || item.pricingType === "FLAT") && rule.perLoad > 0) deductions[rule.invId] += rule.perLoad;
+          if ((item.pricingType === "FIXED_LOAD" || item.pricingType === "FLAT") && rule.perLoad > 0) deductions[rule.invId] += rule.perLoad * (item.qty || 1);
           if (rule.perOrder > 0) deductions[rule.invId] += rule.perOrder;
         });
       });
@@ -122,13 +138,14 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
       }
     }
 
-    if (shop.autoSmsReceipt) {
+    if (shop.autoSmsReceipt && customer.phone) {
       const totalKg = cartItems.filter((i: any) => i.pricingType === "PER_KG").reduce((s: number, i: any) => s + i.kg, 0);
       sendSms(customer.phone, smsTemplates.receipt, { name: customer.name, order: orderNum, shop: shop.name, kg: totalKg, total }, order.id);
     }
 
-    addAudit("ORDER_CREATED", `${orderNum} for ${customer.name} \u2014 ${fmt(total)} via ${selectedPayMethod.label}`);
-    notify(`Order ${orderNum} created! ${fmt(total)} via ${selectedPayMethod.label}`);
+    const payLabel = payLater ? "Pay Later" : selectedPayMethod.label;
+    addAudit("ORDER_CREATED", `${orderNum} for ${customer.name} \u2014 ${fmt(total)} via ${payLabel}`);
+    notify(`Order ${orderNum} created! ${fmt(total)} via ${payLabel}`);
     if (hasBtPrinter(shop)) {
       setReceiptPreview(order);
     } else {
@@ -172,10 +189,10 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
             {newCustomerMode && (
               <div style={{ marginTop: 12, padding: 16, background: "var(--card)", borderRadius: 8, border: "1px solid var(--border)" }}>
                 <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Full Name *" className="input" style={{ marginBottom: 8 }} />
-                <input value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder="Phone (09XXXXXXXXX) *" className="input" />
+                <input value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder="Phone (09XXXXXXXXX)" className="input" />
               </div>
             )}
-            {(selectedCustomer || (newName && newPhone)) && (
+            {(selectedCustomer || newName) && (
               <button onClick={() => setStep("items")} className="btn-primary" style={{ width: "100%", marginTop: 16 }}>Continue {"\u2192"}</button>
             )}
           </div>
@@ -226,7 +243,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
             </div>
             <div style={{ marginBottom: 12 }}>
               <label style={{ fontSize: 12, color: "var(--subtext)" }}>Discount ({shop.currency})</label>
-              <input type="number" value={discount} onChange={(e) => setDiscount(parseInt(e.target.value) || 0)} className="input" placeholder="0" />
+              <input type="number" min="0" value={discount} onChange={(e) => setDiscount(Math.max(0, parseInt(e.target.value) || 0))} className="input" placeholder="0" />
             </div>
             <div style={{ marginBottom: 16 }}>
               <label style={{ fontSize: 12, color: "var(--subtext)" }}>Notes</label>
@@ -272,8 +289,11 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
                 <div style={{ fontSize: 12, color: "var(--subtext)", marginTop: 4 }}>Ask customer to send <strong style={{ color: "var(--text)" }}>{fmt(total)}</strong> to your {selectedPayMethod.label} account</div>
               </div>
             )}
-            <button onClick={completeOrder} className="btn-success" style={{ width: "100%", fontSize: 17, padding: 16, fontWeight: 800 }}>
+            <button onClick={() => completeOrder(false)} className="btn-success" style={{ width: "100%", fontSize: 17, padding: 16, fontWeight: 800 }}>
               {"\u2713"} Confirm Payment + Print Receipt {"\uD83D\uDDA8\uFE0F"}
+            </button>
+            <button onClick={() => completeOrder(true)} style={{ width: "100%", marginTop: 10, fontSize: 14, padding: 14, fontWeight: 700, borderRadius: 10, border: "1px solid var(--warning)", background: "color-mix(in srgb, var(--warning) 8%, transparent)", color: "var(--warning)", cursor: "pointer" }}>
+              {"\uD83D\uDD52"} Pay Later (Collect on Pickup)
             </button>
           </div>
         )}
@@ -283,7 +303,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
       <div style={{ width: 280, background: "var(--sidebar)", display: "flex", flexDirection: "column", padding: 16 }}>
         <div style={{ marginBottom: 12 }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{selectedCustomer ? selectedCustomer.name : newName || "\u2014"}</div>
-          <div style={{ fontSize: 12, color: "var(--muted)" }}>{selectedCustomer ? selectedCustomer.phone : newPhone || "New Customer"}</div>
+          <div style={{ fontSize: 12, color: "var(--muted)" }}>{selectedCustomer ? (selectedCustomer.phone || "No phone") : (newPhone || "New Customer")}</div>
         </div>
         {express && <div style={{ background: "var(--warning-bg-dark)", border: "1px solid var(--warning)", borderRadius: 6, padding: "4px 10px", fontSize: 12, color: "var(--warning-light)", marginBottom: 10 }}>{"\u26A1"} Express pricing active</div>}
         <div style={{ flex: 1, overflow: "auto" }}>
@@ -303,9 +323,14 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
                     <span style={{ marginLeft: "auto", fontWeight: 700, color: "var(--accent)", fontSize: 14 }}>{fmt(item.subtotal)}</span>
                   </div>
                 ) : (
-                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
-                    <span style={{ fontSize: 12, color: "var(--muted)" }}>{item.pricingType === "FIXED_LOAD" ? `${item.minKg || item.kg}kg load` : "Flat rate"}</span>
-                    <span style={{ fontWeight: 700, color: "var(--accent)", fontSize: 14 }}>{fmt(item.subtotal)}</span>
+                  <div style={{ marginTop: 4 }}>
+                    <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>{item.pricingType === "FIXED_LOAD" ? `${item.minKg || item.kg}kg load` : "Flat rate"}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <button onClick={() => updateCartQty(item.id, item.qty - 1)} style={{ width: 24, height: 24, borderRadius: 4, border: "1px solid var(--border-dark)", background: "transparent", color: "var(--subtext)", cursor: "pointer", fontSize: 14 }}>-</button>
+                      <span style={{ fontSize: 14, fontWeight: 700, minWidth: 20, textAlign: "center" }}>{item.qty}x</span>
+                      <button onClick={() => updateCartQty(item.id, item.qty + 1)} style={{ width: 24, height: 24, borderRadius: 4, border: "1px solid var(--border-dark)", background: "transparent", color: "var(--subtext)", cursor: "pointer", fontSize: 14 }}>+</button>
+                      <span style={{ marginLeft: "auto", fontWeight: 700, color: "var(--accent)", fontSize: 14 }}>{fmt(item.subtotal)}</span>
+                    </div>
                   </div>
                 )}
               </div>

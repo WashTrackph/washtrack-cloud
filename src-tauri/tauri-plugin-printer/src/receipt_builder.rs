@@ -17,6 +17,7 @@ pub struct ShopData {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[allow(dead_code)]
 pub struct CartItemData {
     pub service_name: String,
     pub pricing_type: String,
@@ -28,6 +29,7 @@ pub struct CartItemData {
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[allow(dead_code)]
 pub struct OrderData {
     pub order_num: String,
     pub customer_name: String,

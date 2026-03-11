@@ -10,9 +10,10 @@ interface LoginScreenProps {
   handlePinDigit: (d: string) => void;
   handlePinBackspace: () => void;
   shop: Shop;
+  lockoutRemaining?: number;
 }
 
-export function LoginScreen({ staff, selectedStaff, setSelectedStaff, pinBuffer, pinError, handlePinDigit, handlePinBackspace, shop }: LoginScreenProps) {
+export function LoginScreen({ staff, selectedStaff, setSelectedStaff, pinBuffer, pinError, handlePinDigit, handlePinBackspace, shop, lockoutRemaining = 0 }: LoginScreenProps) {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, var(--bg) 0%, var(--sidebar) 50%, var(--bg) 100%)" }}>
       <div style={{ textAlign: "center", marginBottom: 32 }}>
@@ -41,6 +42,7 @@ export function LoginScreen({ staff, selectedStaff, setSelectedStaff, pinBuffer,
           <p style={{ margin: "0 0 20px", color: "var(--muted)", fontSize: 13 }}>Enter your 4-digit PIN</p>
           <PinDots count={pinBuffer.length} />
           {pinError && <p style={{ color: "var(--danger-text)", fontSize: 13, marginTop: 8 }}>{pinError}</p>}
+          {lockoutRemaining > 0 && <p style={{ color: "var(--warning)", fontSize: 12, marginTop: 4 }}>Try again in {lockoutRemaining}s</p>}
           <PinPad onDigit={handlePinDigit} onBack={handlePinBackspace} />
           <button onClick={() => setSelectedStaff(null)} style={{ marginTop: 12, background: "transparent", border: "none", color: "var(--subtext)", cursor: "pointer", fontSize: 13 }}>{"\u2190"} Back</button>
         </div>

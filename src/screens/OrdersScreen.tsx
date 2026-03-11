@@ -1,16 +1,152 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useApp } from "../context/AppContext";
 import { getOverstay, openReceiptWindow, printBluetoothReceipt, hasBtPrinter } from "../lib/utils";
 import { ReceiptPreview } from "../components/ReceiptPreview";
+import { SEED_PAYMETHODS } from "../data/seeds";
+
+// ── Pointer-event drag state (works on desktop + touch/Android) ──
+interface DragState {
+  orderId: string;
+  startX: number;
+  startY: number;
+  currentX: number;
+  currentY: number;
+  isDragging: boolean; // true once moved past threshold
+  ghostEl: HTMLDivElement | null;
+}
+
+const DRAG_THRESHOLD = 8; // px before drag activates (prevents accidental drags on tap)
 
 export function OrdersScreen() {
-  const { orders, setOrders, stages, shop, smsTemplates, sendSms, requirePin, currentStaff, notify, addAudit, fmt } = useApp();
+  const { orders, setOrders, stages, shop, smsTemplates, sendSms, requirePin, currentStaff, notify, addAudit, fmt, payMethods } = useApp();
   const [view, setView] = useState("kanban");
   const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
   const [voidReason, setVoidReason] = useState("");
   const [showVoidFor, setShowVoidFor] = useState<string | null>(null);
   const [receiptPreview, setReceiptPreview] = useState<any>(null);
   const [btPrinting, setBtPrinting] = useState(false);
+  const [showCollectPay, setShowCollectPay] = useState(false);
+  const [collectPayMethod, setCollectPayMethod] = useState<any>(null);
+  const [collectCash, setCollectCash] = useState("");
+  const [dragOverStage, setDragOverStage] = useState<number | null>(null);
+  const dragRef = useRef<DragState | null>(null);
+  const columnRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+
+  const setColumnRef = useCallback((stageId: number, el: HTMLDivElement | null) => {
+    if (el) columnRefs.current.set(stageId, el);
+    else columnRefs.current.delete(stageId);
+  }, []);
+
+  const getStageAtPoint = useCallback((x: number, y: number): number | null => {
+    for (const [stageId, el] of columnRefs.current.entries()) {
+      const rect = el.getBoundingClientRect();
+      if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+        return stageId;
+      }
+    }
+    return null;
+  }, []);
+
+  const handlePointerDown = useCallback((e: React.PointerEvent, orderId: string) => {
+    // Only primary button (left click / single touch)
+    if (e.button !== 0) return;
+    const target = e.currentTarget as HTMLDivElement;
+    target.setPointerCapture(e.pointerId);
+    dragRef.current = {
+      orderId,
+      startX: e.clientX,
+      startY: e.clientY,
+      currentX: e.clientX,
+      currentY: e.clientY,
+      isDragging: false,
+      ghostEl: null,
+    };
+  }, []);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    const drag = dragRef.current;
+    if (!drag) return;
+
+    drag.currentX = e.clientX;
+    drag.currentY = e.clientY;
+
+    // Check threshold
+    if (!drag.isDragging) {
+      const dx = e.clientX - drag.startX;
+      const dy = e.clientY - drag.startY;
+      if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+      drag.isDragging = true;
+
+      // Create ghost element
+      const source = e.currentTarget as HTMLDivElement;
+      const ghost = document.createElement("div");
+      ghost.style.cssText = `
+        position: fixed; pointer-events: none; z-index: 10000;
+        width: ${source.offsetWidth}px; opacity: 0.85;
+        background: var(--card); border-radius: 8px; padding: 10px;
+        border-left: 3px solid var(--accent); box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        transform: rotate(2deg); transition: none;
+      `;
+      ghost.innerHTML = source.innerHTML;
+      document.body.appendChild(ghost);
+      drag.ghostEl = ghost;
+    }
+
+    // Update ghost position
+    if (drag.ghostEl) {
+      drag.ghostEl.style.left = `${e.clientX - 60}px`;
+      drag.ghostEl.style.top = `${e.clientY - 20}px`;
+    }
+
+    // Highlight drop target
+    const hoverStage = getStageAtPoint(e.clientX, e.clientY);
+    setDragOverStage(hoverStage);
+  }, [getStageAtPoint]);
+
+  const handlePointerUp = useCallback((e: React.PointerEvent) => {
+    const drag = dragRef.current;
+    if (!drag) return;
+
+    // Clean up ghost
+    if (drag.ghostEl) {
+      drag.ghostEl.remove();
+    }
+
+    // If we were actually dragging, do the drop
+    if (drag.isDragging) {
+      const targetStage = getStageAtPoint(e.clientX, e.clientY);
+      if (targetStage !== null) {
+        const order = orders.find((o) => o.id === drag.orderId);
+        if (order && order.statusId !== targetStage) {
+          updateStatus(drag.orderId, targetStage);
+        }
+      }
+    } else {
+      // Wasn't a drag — treat as click
+      setSelectedOrder(drag.orderId);
+    }
+
+    setDragOverStage(null);
+    dragRef.current = null;
+  }, [getStageAtPoint, orders]);
+
+  const activePM = (payMethods || SEED_PAYMETHODS).filter((p: any) => p.active).sort((a: any, b: any) => a.sortOrder - b.sortOrder);
+
+  const collectPayment = (order: any) => {
+    if (!collectPayMethod) { notify("Select a payment method", "error"); return; }
+    const isCash = collectPayMethod.isCash;
+    const tendered = isCash ? (parseFloat(collectCash) || 0) : 0;
+    if (isCash && tendered < order.total) { notify("Cash tendered is less than total", "error"); return; }
+    const change = isCash ? Math.max(0, tendered - order.total) : 0;
+    setOrders((prev) => prev.map((o) => o.id === order.id ? {
+      ...o, paid: true, paidAt: Date.now(), paidBy: currentStaff?.id, paidByName: currentStaff?.name,
+      paymentMethod: collectPayMethod.label, paymentMethodId: collectPayMethod.id,
+      isCashPayment: isCash, cashTendered: isCash ? tendered : null, change: isCash ? change : null,
+    } : o));
+    addAudit("PAYMENT_COLLECTED", `${order.orderNum} \u2014 ${fmt(order.total)} via ${collectPayMethod.label}`);
+    notify(`Payment collected for ${order.orderNum}! ${fmt(order.total)} via ${collectPayMethod.label}`);
+    setShowCollectPay(false); setCollectPayMethod(null); setCollectCash("");
+  };
 
   const activeOrders = orders.filter((o) => !o.voided);
   const stageOrders = stages.slice(0, 5).map((stage) => ({
@@ -24,8 +160,9 @@ export function OrdersScreen() {
     setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, statusId: newStatusId, statusLabel: stage.label, statusUpdatedAt: Date.now() } : o));
     const order = orders.find((o) => o.id === orderId);
     addAudit("STATUS_CHANGED", `${order?.orderNum} \u2192 ${stage.label}`);
-    if (newStatusId === 5 && shop.autoSmsReady && order) {
+    if (newStatusId === 5 && shop.autoSmsReady && order && order.customerPhone && !order.readySmsSent) {
       sendSms(order.customerPhone, smsTemplates.ready, { name: order.customerName, order: order.orderNum, shop: shop.name }, orderId);
+      setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, readySmsSent: true } : o));
       notify(`SMS sent to ${order.customerName}`);
     }
     if (newStatusId === 6 && order) {
@@ -66,13 +203,73 @@ export function OrdersScreen() {
           </div>
           {order.items.map((item: any) => (
             <div key={item.id} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid var(--border)", fontSize: 13 }}>
-              <span style={{ color: "var(--text)" }}>{item.serviceName} {item.express ? "\u26A1" : ""}</span>
+              <span style={{ color: "var(--text)" }}>{item.serviceName}{item.qty > 1 ? ` x${item.qty}` : ""} {item.express ? "\u26A1" : ""}</span>
               <span style={{ fontWeight: 700, color: "var(--accent)" }}>{fmt(item.subtotal)}</span>
             </div>
           ))}
           <div style={{ marginTop: 12, display: "flex", justifyContent: "space-between", fontWeight: 800, fontSize: 20, color: "var(--accent)" }}>
             <span>Total</span><span>{fmt(order.total)}</span>
           </div>
+          {order.paid === false && !order.voided && (
+            <div style={{ marginTop: 12 }}>
+              <div style={{ padding: "8px 14px", borderRadius: 8, background: "color-mix(in srgb, var(--warning) 12%, transparent)", border: "1px solid var(--warning)", marginBottom: 10 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--warning)" }}>{"\uD83D\uDD52"} Payment Pending</div>
+                <div style={{ fontSize: 12, color: "var(--subtext)", marginTop: 2 }}>Customer will pay on pickup</div>
+              </div>
+              {!showCollectPay ? (
+                <button onClick={() => setShowCollectPay(true)} style={{ width: "100%", padding: "10px 14px", borderRadius: 8, border: "1px solid var(--success)", background: "color-mix(in srgb, var(--success) 8%, transparent)", color: "var(--success)", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>
+                  {"\uD83D\uDCB0"} Collect Payment
+                </button>
+              ) : (
+                <div style={{ padding: 14, background: "var(--bg)", borderRadius: 10, border: "1px solid var(--border)" }}>
+                  <label style={{ fontSize: 12, color: "var(--subtext)", fontWeight: 600, display: "block", marginBottom: 8 }}>Payment Method</label>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
+                    {activePM.map((pm: any) => (
+                      <button key={pm.id} onClick={() => { setCollectPayMethod(pm); setCollectCash(""); }}
+                        style={{ padding: "8px 14px", borderRadius: 8, cursor: "pointer", fontSize: 12, fontWeight: 700,
+                          border: `2px solid ${collectPayMethod?.id === pm.id ? pm.color : "var(--border-dark)"}`,
+                          background: collectPayMethod?.id === pm.id ? pm.color + "25" : "transparent",
+                          color: collectPayMethod?.id === pm.id ? pm.color : "var(--muted)" }}>
+                        {pm.icon} {pm.label}
+                      </button>
+                    ))}
+                  </div>
+                  {collectPayMethod?.isCash && (
+                    <div style={{ marginBottom: 12 }}>
+                      <label style={{ fontSize: 12, color: "var(--subtext)" }}>Cash Tendered ({shop.currency})</label>
+                      <input type="number" value={collectCash} onChange={(e) => setCollectCash(e.target.value)} className="input" placeholder="0" style={{ fontSize: 18, fontWeight: 700 }} />
+                      <div style={{ display: "flex", gap: 6, marginTop: 6, flexWrap: "wrap" }}>
+                        {(shop.cashDenominations || [100, 200, 500, 1000]).map((d) => (
+                          <button key={d} onClick={() => setCollectCash(String(d))}
+                            style={{ padding: "4px 12px", borderRadius: 6, border: "1px solid var(--border-dark)", background: parseFloat(collectCash) === d ? "var(--border-dark)" : "transparent", color: "var(--subtext)", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
+                            {shop.currency}{d.toLocaleString()}
+                          </button>
+                        ))}
+                        <button onClick={() => setCollectCash(String(order.total))}
+                          style={{ padding: "4px 12px", borderRadius: 6, border: "1px solid var(--success)", background: "transparent", color: "var(--success)", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
+                          Exact {fmt(order.total)}
+                        </button>
+                      </div>
+                      {parseFloat(collectCash) > order.total && (
+                        <div style={{ marginTop: 6, fontSize: 14, fontWeight: 700, color: "var(--success)" }}>Change: {fmt(Math.max(0, parseFloat(collectCash) - order.total))}</div>
+                      )}
+                    </div>
+                  )}
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button onClick={() => collectPayment(order)} style={{ flex: 1, padding: "10px", borderRadius: 8, border: "none", background: "var(--success)", color: "#fff", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>
+                      {"\u2713"} Confirm Payment
+                    </button>
+                    <button onClick={() => { setShowCollectPay(false); setCollectPayMethod(null); setCollectCash(""); }} style={{ padding: "10px 16px", borderRadius: 8, border: "1px solid var(--border-dark)", background: "transparent", color: "var(--subtext)", cursor: "pointer", fontSize: 13 }}>Cancel</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          {order.paid !== false && (
+            <div style={{ marginTop: 8, fontSize: 12, color: "var(--muted)" }}>
+              Paid via {order.paymentMethod}{order.paidAt ? ` \u2014 ${new Date(order.paidAt).toLocaleString()}` : ""}
+            </div>
+          )}
           <button onClick={() => {
             if (hasBtPrinter(shop)) {
               setReceiptPreview(order);
@@ -127,7 +324,15 @@ export function OrdersScreen() {
       {view === "kanban" ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 12, height: "calc(100% - 60px)", overflow: "auto" }}>
           {stageOrders.map((stage) => (
-            <div key={stage.id} style={{ background: "var(--sidebar)", borderRadius: 10, padding: 10, minHeight: 200 }}>
+            <div
+              key={stage.id}
+              ref={(el) => setColumnRef(stage.id, el)}
+              style={{
+                background: dragOverStage === stage.id ? `color-mix(in srgb, ${stage.color} 8%, var(--sidebar))` : "var(--sidebar)",
+                borderRadius: 10, padding: 10, minHeight: 200, transition: "background 0.15s",
+                outline: dragOverStage === stage.id ? `2px dashed ${stage.color}` : "none",
+              }}
+            >
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
                 <span style={{ fontSize: 16 }}>{stage.icon}</span>
                 <span style={{ fontSize: 12, fontWeight: 700, color: stage.color }}>{stage.label}</span>
@@ -135,15 +340,26 @@ export function OrdersScreen() {
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {stage.orders.map((order: any) => (
-                  <div key={order.id} onClick={() => setSelectedOrder(order.id)}
-                    style={{ padding: "10px", background: "var(--card)", borderRadius: 8, cursor: "pointer", borderLeft: `3px solid ${stage.color}`, transition: "all 0.15s" }}>
+                  <div key={order.id}
+                    onPointerDown={(e) => handlePointerDown(e, order.id)}
+                    onPointerMove={handlePointerMove}
+                    onPointerUp={handlePointerUp}
+                    onPointerCancel={(e) => {
+                      if (dragRef.current?.ghostEl) dragRef.current.ghostEl.remove();
+                      dragRef.current = null;
+                      setDragOverStage(null);
+                    }}
+                    style={{ padding: "10px", background: "var(--card)", borderRadius: 8, cursor: "grab", borderLeft: `3px solid ${stage.color}`, transition: "all 0.15s", touchAction: "none", userSelect: "none" }}>
                     <div style={{ fontWeight: 700, fontSize: 12, color: "var(--text)", marginBottom: 3 }}>{order.orderNum}</div>
                     <div style={{ fontSize: 11, color: "var(--subtext)", marginBottom: 4 }}>{order.customerName}</div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <span style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)" }}>{fmt(order.total)}</span>
                       <span style={{ fontSize: 10, color: "var(--muted)" }}>{Math.floor((Date.now() - order.createdAt) / 3600000)}h ago</span>
                     </div>
-                    {order.express && <span style={{ fontSize: 10, color: "var(--warning)" }}>{"\u26A1"} Express</span>}
+                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                      {order.express && <span style={{ fontSize: 10, color: "var(--warning)" }}>{"\u26A1"} Express</span>}
+                      {order.paid === false && <span style={{ fontSize: 10, color: "var(--warning)", fontWeight: 700 }}>{"\uD83D\uDD52"} Unpaid</span>}
+                    </div>
                   </div>
                 ))}
                 {stage.orders.length === 0 && <div style={{ textAlign: "center", padding: "20px 0", fontSize: 12, color: "var(--border-dark)" }}>Empty</div>}
@@ -159,6 +375,7 @@ export function OrdersScreen() {
               <div style={{ flex: 1 }}>
                 <span style={{ fontWeight: 700, fontSize: 13, color: "var(--text)" }}>{order.orderNum}</span>
                 {order.voided && <span style={{ marginLeft: 8, fontSize: 11, color: "var(--danger)", fontWeight: 700 }}>VOIDED</span>}
+                {!order.voided && order.paid === false && <span style={{ marginLeft: 8, fontSize: 11, color: "var(--warning)", fontWeight: 700 }}>{"\uD83D\uDD52"} Unpaid</span>}
               </div>
               <div style={{ fontSize: 12, color: "var(--subtext)", minWidth: 120 }}>{order.customerName}</div>
               <span style={{ padding: "2px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, background: `${stages.find((s) => s.id === order.statusId)?.color}20`, color: stages.find((s) => s.id === order.statusId)?.color }}>{order.statusLabel}</span>

@@ -16,11 +16,12 @@
         "width": 1280,
         "height": 800,
         "resizable": true,
-        "fullscreen": false
+        "fullscreen": false,
+        "dragDropEnabled": false
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self' customprotocol: asset:; style-src 'unsafe-inline' 'self'; script-src 'self'; connect-src ipc: http://ipc.localhost https://api.semaphore.co; img-src 'self' asset: http://asset.localhost blob: data:; font-src 'self' data:"
     }
   },
   "bundle": {

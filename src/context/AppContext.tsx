@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { DB, initDatabase } from "../lib/db";
 import { genId, applyTheme, calcPrice, genOrderNum, formatCurrency } from "../lib/utils";
+import { isLegacyPin, createHashedPin } from "../lib/crypto";
 import {
   SEED_SHOP, SEED_SERVICES, SEED_STAGES, SEED_SMS_TEMPLATES, SEED_STAFF,
   SEED_CUSTOMERS, SEED_INVENTORY, SEED_SUPPLY_RULES, SEED_PAYMETHODS,
@@ -48,7 +49,9 @@ interface AppContextValue {
   setPinModal: React.Dispatch<React.SetStateAction<any>>;
   notify: (msg: string, type?: string) => void;
   addAudit: (type: string, desc: string, staffId?: string) => void;
-  sendSms: (phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null) => SmsLogEntry;
+  sendSms: (phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null) => Promise<SmsLogEntry>;
+  checkSmsStatus: (entry: SmsLogEntry) => Promise<void>;
+  refreshAllSmsStatuses: () => Promise<void>;
   requirePin: (role: string, onSuccess: () => void, message?: string) => void;
   modal: any;
   setModal: React.Dispatch<React.SetStateAction<any>>;
@@ -148,6 +151,37 @@ export function AppProvider({ children }: AppProviderProps) {
       if (savedTheme) { setThemeRaw(savedTheme); applyTheme(savedTheme); }
       else { applyTheme(DEFAULT_THEME); }
 
+      // ── Migrate plaintext PINs to hashed ──
+      const shopToMigrate = savedShop ? { ...SEED_SHOP, ...savedShop } : SEED_SHOP;
+      let shopMigrated = false;
+      const migratedShop = { ...shopToMigrate };
+      if (isLegacyPin(migratedShop.ownerPin)) {
+        migratedShop.ownerPin = await createHashedPin(migratedShop.ownerPin);
+        shopMigrated = true;
+      }
+      if (isLegacyPin(migratedShop.managerPin)) {
+        migratedShop.managerPin = await createHashedPin(migratedShop.managerPin);
+        shopMigrated = true;
+      }
+      if (shopMigrated) {
+        setShop(migratedShop);
+        await DB.set("wt:shop", migratedShop);
+      }
+
+      const staffToMigrate: Staff[] = savedStaff || SEED_STAFF;
+      let staffMigrated = false;
+      const migratedStaff = await Promise.all(staffToMigrate.map(async (s) => {
+        if (isLegacyPin(s.pin)) {
+          staffMigrated = true;
+          return { ...s, pin: await createHashedPin(s.pin) };
+        }
+        return s;
+      }));
+      if (staffMigrated) {
+        setStaff(migratedStaff);
+        await DB.set("wt:staff", migratedStaff);
+      }
+
       setInitialized(true);
     })();
   }, []);
@@ -180,14 +214,95 @@ export function AppProvider({ children }: AppProviderProps) {
     setAuditLog((prev) => [entry, ...prev].slice(0, 500));
   }, [currentStaff]);
 
-  const sendSms = useCallback((phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null): SmsLogEntry => {
+  const sendSms = useCallback(async (phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null): Promise<SmsLogEntry> => {
     let msg = template;
     Object.entries(vars).forEach(([k, v]) => { msg = msg.replaceAll(`{${k}}`, String(v)); });
     const isMock = shop.smsMockMode || !shop.smsApiKey;
-    const entry: SmsLogEntry = { id: genId(), phone, message: msg, orderId, promoId: promoId || null, status: isMock ? "MOCK" : "SENT", at: Date.now() };
+    const entry: SmsLogEntry = { id: genId(), phone, message: msg, orderId, promoId: promoId || null, status: isMock ? "MOCK" : "SENDING", messageId: null, network: null, at: Date.now() };
     setSmsLog((prev) => [entry, ...prev]);
+
+    if (!isMock) {
+      if (!(window as any).__TAURI_INTERNALS__) {
+        const mockEntry = { ...entry, status: "MOCK" };
+        setSmsLog((prev) => prev.map((e) => e.id === entry.id ? mockEntry : e));
+        return mockEntry;
+      }
+      try {
+        const { invoke } = await import("@tauri-apps/api/core");
+        const result = await invoke("send_sms", {
+          payload: {
+            api_key: shop.smsApiKey,
+            number: phone.trim(),
+            message: msg,
+            sender_name: shop.smsSenderName || null,
+          },
+        });
+        const parsed = JSON.parse(result as string);
+        const resp = parsed?.[0];
+        const updatedEntry = { ...entry, status: resp?.status || "SENT", messageId: resp?.message_id || null, network: resp?.network || null };
+        setSmsLog((prev) => prev.map((e) => e.id === entry.id ? updatedEntry : e));
+        // Background check after 15s to get final delivery status
+        if (updatedEntry.messageId) {
+          setTimeout(async () => {
+            try {
+              const result2 = await invoke("get_sms_message_by_id", {
+                payload: { api_key: shop.smsApiKey, message_id: updatedEntry.messageId },
+              });
+              const p = JSON.parse(result2 as string);
+              const finalStatus = p?.status || updatedEntry.status;
+              setSmsLog((prev) => prev.map((e) => e.id === entry.id ? { ...e, status: finalStatus } : e));
+              if (finalStatus === "Sent" || finalStatus === "sent") {
+                notify(`SMS delivered to ${phone}`);
+              } else if (finalStatus === "Failed" || finalStatus === "failed") {
+                notify(`SMS to ${phone} failed`, "error");
+              }
+            } catch { /* silent — status stays as initial response */ }
+          }, 15000);
+        }
+        return updatedEntry;
+      } catch (err: any) {
+        const failedEntry = { ...entry, status: "FAILED" };
+        setSmsLog((prev) => prev.map((e) => e.id === entry.id ? failedEntry : e));
+        notify(`SMS to ${phone} failed to send`, "error");
+        return failedEntry;
+      }
+    }
     return entry;
-  }, [shop.smsMockMode, shop.smsApiKey]);
+  }, [shop.smsMockMode, shop.smsApiKey, shop.smsSenderName]);
+
+  const checkSmsStatus = useCallback(async (entry: SmsLogEntry): Promise<void> => {
+    if (!entry.messageId || !shop.smsApiKey || !(window as any).__TAURI_INTERNALS__) return;
+    try {
+      const { invoke } = await import("@tauri-apps/api/core");
+      const result = await invoke("get_sms_message_by_id", {
+        payload: { api_key: shop.smsApiKey, message_id: entry.messageId },
+      });
+      const parsed = JSON.parse(result as string);
+      const newStatus = parsed?.status || entry.status;
+      setSmsLog((prev) => prev.map((e) => e.id === entry.id ? { ...e, status: newStatus } : e));
+    } catch { /* silently fail — status stays as-is */ }
+  }, [shop.smsApiKey]);
+
+  const refreshAllSmsStatuses = useCallback(async (): Promise<void> => {
+    if (!shop.smsApiKey || !(window as any).__TAURI_INTERNALS__) return;
+    try {
+      const { invoke } = await import("@tauri-apps/api/core");
+      const today = new Date().toISOString().split("T")[0];
+      const result = await invoke("get_sms_messages", {
+        payload: { api_key: shop.smsApiKey, limit: 100, page: 1, start_date: today, end_date: today, network: null, status: null },
+      });
+      const messages: any[] = JSON.parse(result as string);
+      if (!messages?.length) return;
+      const statusMap = new Map<number, string>();
+      messages.forEach((m: any) => { if (m.message_id && m.status) statusMap.set(m.message_id, m.status); });
+      setSmsLog((prev) => prev.map((e) => {
+        if (e.messageId && statusMap.has(e.messageId)) {
+          return { ...e, status: statusMap.get(e.messageId)! };
+        }
+        return e;
+      }));
+    } catch { /* silent fail */ }
+  }, [shop.smsApiKey]);
 
   const requirePin = (role: string, onSuccess: () => void, message?: string) => {
     setPinModal({ role, onSuccess, message });
@@ -201,7 +316,7 @@ export function AppProvider({ children }: AppProviderProps) {
     inventory, setInventory, payMethods, setPayMethods, supplyRules, setSupplyRules,
     emailConfig, setEmailConfig, promotions, setPromotions,
     currentStaff, setCurrentStaff, pinModal, setPinModal,
-    notify, addAudit, sendSms, requirePin,
+    notify, addAudit, sendSms, checkSmsStatus, refreshAllSmsStatuses, requirePin,
     modal, setModal, calcPrice, genId, genOrderNum, fmt, theme, setTheme,
   };
 

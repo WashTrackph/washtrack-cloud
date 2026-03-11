@@ -106,21 +106,12 @@ export function PromoBlastScreen() {
     const recipientIds: string[] = [];
 
     for (const cust of selectedList) {
-      if (!cust.promoOptIn) { skippedCount++; continue; }
+      if (!cust.promoOptIn || !cust.phone) { skippedCount++; continue; }
       try {
-        if (!isMock && (window as any).__TAURI_INTERNALS__) {
-          const { invoke } = await import("@tauri-apps/api/core");
-          await invoke("send_sms", {
-            payload: {
-              api_key: shop.smsApiKey, number: cust.phone.trim(),
-              message: smsTemplates.promo.replaceAll("{name}", cust.name).replaceAll("{shop}", shop.name).replaceAll("{address}", shop.address).replaceAll("{message}", message),
-              sender_name: shop.smsSenderName || null,
-            },
-          });
-        }
-        sendSms(cust.phone, smsTemplates.promo, { name: cust.name, shop: shop.name, address: shop.address, message }, null, promoId);
+        const result = await sendSms(cust.phone, smsTemplates.promo, { name: cust.name, shop: shop.name, address: shop.address, message }, null, promoId);
+        if (result.status === "FAILED") { skippedCount++; continue; }
         recipientIds.push(cust.id);
-        if (isMock) mockCount++; else sentCount++;
+        if (result.status === "MOCK") mockCount++; else sentCount++;
       } catch { skippedCount++; }
     }
 

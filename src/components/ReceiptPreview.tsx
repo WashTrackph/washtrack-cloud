@@ -55,6 +55,7 @@ export function ReceiptPreview({ order, shop, onPrint, onCancel, printing }: Rec
             if (item.express) desc += " [E]";
             if (item.pricingType === "PER_KG") desc += ` ${item.kg}kg`;
             if (item.pricingType === "FIXED_LOAD") desc += " (fixed)";
+            if (item.pricingType !== "PER_KG" && item.qty > 1) desc += ` x${item.qty}`;
             return (
               <Row key={i} left={desc} right={`${c}${item.subtotal.toLocaleString()}`}
                 style={{ borderBottom: "1px dashed #ddd", padding: "4px 0" }} />
@@ -69,11 +70,19 @@ export function ReceiptPreview({ order, shop, onPrint, onCancel, printing }: Rec
           )}
           <Row left="TOTAL" right={`${c}${order.total.toLocaleString()}`}
             bold style={{ fontSize: 16, padding: "8px 0 4px" }} />
-          <Row left="Paid via" right={order.paymentMethod || "Cash"} />
-          {order.isCashPayment && order.cashTendered != null && (
+          {order.paid === false ? (
+            <div style={{ textAlign: "center", fontWeight: 800, fontSize: 14, color: "#d97706", padding: "6px 0", border: "2px dashed #d97706", borderRadius: 4, margin: "4px 0" }}>
+              PAY ON PICKUP
+            </div>
+          ) : (
             <>
-              <Row left="Cash" right={`${c}${(order.cashTendered || 0).toLocaleString()}`} />
-              <Row left="Change" right={`${c}${(order.change || 0).toLocaleString()}`} />
+              <Row left="Paid via" right={order.paymentMethod || "Cash"} />
+              {order.isCashPayment && order.cashTendered != null && (
+                <>
+                  <Row left="Cash" right={`${c}${(order.cashTendered || 0).toLocaleString()}`} />
+                  <Row left="Change" right={`${c}${(order.change || 0).toLocaleString()}`} />
+                </>
+              )}
             </>
           )}
           <hr style={{ border: "none", borderTop: "2px dashed #aaa", margin: "10px 0" }} />

@@ -1,12 +1,14 @@
 // ─── DATA MODEL TYPES ────────────────────────────────────────────────────────
 
+import type { HashedPin } from "./crypto";
+
 export interface Shop {
   name: string;
   address: string;
   phone: string;
   logo: string | null;
-  ownerPin: string;
-  managerPin: string;
+  ownerPin: string | HashedPin;
+  managerPin: string | HashedPin;
   currency: string;
   locale: string;
   cashDenominations: number[];
@@ -70,7 +72,7 @@ export interface Staff {
   id: string;
   name: string;
   role: "OWNER" | "MANAGER" | "STAFF";
-  pin: string;
+  pin: string | HashedPin;
   active: boolean;
   avatar: string;
 }
@@ -92,6 +94,7 @@ export interface CartItem {
   pricingType: "PER_KG" | "FLAT" | "FIXED_LOAD";
   minKg: number;
   kg: number;
+  qty: number;
   express: boolean;
   unitPrice: number;
   subtotal: number;
@@ -121,11 +124,16 @@ export interface Order {
   statusUpdatedAt: number;
   createdBy: string;
   createdByName: string;
+  paid: boolean;
+  paidAt?: number;
+  paidBy?: string;
+  paidByName?: string;
   voided: boolean;
   voidReason?: string;
   voidedAt?: number;
   voidedBy?: string;
   pickedUpAt?: number;
+  readySmsSent?: boolean;
 }
 
 export interface InventoryItem {
@@ -157,6 +165,8 @@ export interface SmsLogEntry {
   orderId: string | null;
   promoId?: string | null;
   status: string;
+  messageId?: number | null;
+  network?: string | null;
   at: number;
 }
 
