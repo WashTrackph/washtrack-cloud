@@ -1,12 +1,14 @@
 // ─── DATA MODEL TYPES ────────────────────────────────────────────────────────
 
+import type { HashedPin } from "./crypto";
+
 export interface Shop {
   name: string;
   address: string;
   phone: string;
   logo: string | null;
-  ownerPin: string;
-  managerPin: string;
+  ownerPin: string | HashedPin;
+  managerPin: string | HashedPin;
   currency: string;
   locale: string;
   cashDenominations: number[];
@@ -70,7 +72,7 @@ export interface Staff {
   id: string;
   name: string;
   role: "OWNER" | "MANAGER" | "STAFF";
-  pin: string;
+  pin: string | HashedPin;
   active: boolean;
   avatar: string;
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import { ThemeCustomizer } from "../components/ThemeCustomizer";
+import { createHashedPin } from "../lib/crypto";
 import {
   EMAIL_PROVIDERS, SEED_SHOP, SEED_SERVICES, SEED_STAGES, SEED_SMS_TEMPLATES,
   SEED_STAFF, SEED_CUSTOMERS, SEED_INVENTORY, SEED_SUPPLY_RULES, SEED_PAYMETHODS,
@@ -156,16 +157,18 @@ export function SettingsScreen() {
   // ── Staff helpers ──
   const startEditStaff = (s: Staff) => {
     setStaffEditId(s.id);
-    setStaffForm({ name: s.name, role: s.role, pin: s.pin });
+    setStaffForm({ name: s.name, role: s.role, pin: "" });
   };
 
-  const saveStaff = () => {
+  const saveStaff = async () => {
     if (!staffForm.name.trim()) { notify("Name required", "error"); return; }
-    if (!/^\d{4}$/.test(staffForm.pin)) { notify("PIN must be exactly 4 digits", "error"); return; }
+    const pinChanged = staffForm.pin.length > 0;
+    if (pinChanged && !/^\d{4}$/.test(staffForm.pin)) { notify("PIN must be exactly 4 digits", "error"); return; }
+    const hashedPin = pinChanged ? await createHashedPin(staffForm.pin) : null;
     setStaff((prev) =>
       prev.map((s) =>
         s.id === staffEditId
-          ? { ...s, name: staffForm.name, role: staffForm.role, pin: staffForm.pin, avatar: staffForm.name[0]?.toUpperCase() || "?" }
+          ? { ...s, name: staffForm.name, role: staffForm.role, ...(hashedPin ? { pin: hashedPin } : {}), avatar: staffForm.name[0]?.toUpperCase() || "?" }
           : s
       )
     );
@@ -174,14 +177,15 @@ export function SettingsScreen() {
     setStaffEditId(null);
   };
 
-  const addNewStaff = () => {
+  const addNewStaff = async () => {
     if (!staffForm.name.trim()) { notify("Name required", "error"); return; }
     if (!/^\d{4}$/.test(staffForm.pin)) { notify("PIN must be exactly 4 digits", "error"); return; }
+    const hashedPin = await createHashedPin(staffForm.pin);
     const s: Staff = {
       id: genId(),
       name: staffForm.name,
       role: staffForm.role,
-      pin: staffForm.pin,
+      pin: hashedPin,
       active: true,
       avatar: staffForm.name[0]?.toUpperCase() || "?",
     };
@@ -354,11 +358,11 @@ export function SettingsScreen() {
           </select>
         </div>
         <div>
-          <label style={{ display: "block", fontSize: 11, color: "var(--subtext)", marginBottom: 4 }}>PIN (4 digits) *</label>
+          <label style={{ display: "block", fontSize: 11, color: "var(--subtext)", marginBottom: 4 }}>{staffEditId ? "New PIN (leave blank to keep)" : "PIN (4 digits) *"}</label>
           <input
             value={staffForm.pin}
             onChange={(e) => setStaffForm((p) => ({ ...p, pin: e.target.value.replace(/\D/g, "").slice(0, 4) }))}
-            placeholder="0000"
+            placeholder={staffEditId ? "••••" : "0000"}
             maxLength={4}
             className="input"
           />

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { AppProvider, useApp } from "./context/AppContext";
 import { PinModalOverlay } from "./components/PinModalOverlay";
 import { LoginScreen } from "./screens/LoginScreen";
 import { MainLayout } from "./screens/MainLayout";
+import { isLegacyPin, verifyPin } from "./lib/crypto";
 
 function AppInner() {
   const { staff, shop, currentStaff, setCurrentStaff, pinModal, setPinModal, notify } = useApp();
@@ -11,21 +12,34 @@ function AppInner() {
   const [pinBuffer, setPinBuffer] = useState("");
   const [pinError, setPinError] = useState("");
   const [selectedStaff, setSelectedStaff] = useState<any>(null);
+  const checking = useRef(false);
 
   const handlePinDigit = (d: string) => {
     const next = pinBuffer + d;
     setPinBuffer(next);
-    if (next.length === 4) {
-      const found = staff.find((s) => s.active && s.id === selectedStaff?.id && s.pin === next);
-      if (found) {
-        setCurrentStaff(found);
-        setScreen("home");
-        setPinBuffer("");
-        setPinError("");
-      } else {
-        setPinError("Incorrect PIN");
-        setTimeout(() => { setPinBuffer(""); setPinError(""); }, 800);
-      }
+    if (next.length === 4 && !checking.current) {
+      checking.current = true;
+      (async () => {
+        const target = staff.find((s) => s.active && s.id === selectedStaff?.id);
+        let valid = false;
+        if (target) {
+          if (isLegacyPin(target.pin)) {
+            valid = next === target.pin;
+          } else {
+            valid = await verifyPin(next, target.pin);
+          }
+        }
+        if (valid && target) {
+          setCurrentStaff(target);
+          setScreen("home");
+          setPinBuffer("");
+          setPinError("");
+        } else {
+          setPinError("Incorrect PIN");
+          setTimeout(() => { setPinBuffer(""); setPinError(""); }, 800);
+        }
+        checking.current = false;
+      })();
     }
   };
 

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { PinDots, PinPad } from "./PinPad";
 import type { Staff, Shop } from "../lib/types";
+import { isLegacyPin, verifyPin } from "../lib/crypto";
 
 interface PinModalProps {
   pinModal: { role: string; onSuccess: () => void; message?: string };
@@ -10,28 +11,44 @@ interface PinModalProps {
   notify: (msg: string, type?: string) => void;
 }
 
+async function checkPin(pin: string, stored: string | { hash: string; salt: string }): Promise<boolean> {
+  if (isLegacyPin(stored)) return pin === stored;
+  return verifyPin(pin, stored);
+}
+
 export function PinModalOverlay({ pinModal, setPinModal, staff, shop, notify }: PinModalProps) {
   const [buf, setBuf] = useState("");
   const [err, setErr] = useState("");
+  const checking = useRef(false);
 
   const handleDigit = (d: string) => {
     const next = buf + d;
     setBuf(next);
-    if (next.length >= 4) {
-      let valid = false;
-      if (pinModal.role === "OWNER") valid = next === shop.ownerPin;
-      else if (pinModal.role === "MANAGER") valid = next === shop.managerPin || next === shop.ownerPin;
-      else valid = staff.some((s) => s.active && s.pin === next);
+    if (next.length >= 4 && !checking.current) {
+      checking.current = true;
+      (async () => {
+        let valid = false;
+        if (pinModal.role === "OWNER") {
+          valid = await checkPin(next, shop.ownerPin);
+        } else if (pinModal.role === "MANAGER") {
+          valid = await checkPin(next, shop.managerPin) || await checkPin(next, shop.ownerPin);
+        } else {
+          for (const s of staff.filter((s) => s.active)) {
+            if (await checkPin(next, s.pin)) { valid = true; break; }
+          }
+        }
 
-      if (valid) {
-        setPinModal(null);
-        setBuf("");
-        setErr("");
-        pinModal.onSuccess();
-      } else {
-        setErr("Incorrect PIN");
-        setTimeout(() => { setBuf(""); setErr(""); }, 800);
-      }
+        if (valid) {
+          setPinModal(null);
+          setBuf("");
+          setErr("");
+          pinModal.onSuccess();
+        } else {
+          setErr("Incorrect PIN");
+          setTimeout(() => { setBuf(""); setErr(""); }, 800);
+        }
+        checking.current = false;
+      })();
     }
   };
 

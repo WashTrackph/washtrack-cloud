@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { DB, initDatabase } from "../lib/db";
 import { genId, applyTheme, calcPrice, genOrderNum, formatCurrency } from "../lib/utils";
+import { isLegacyPin, createHashedPin } from "../lib/crypto";
 import {
   SEED_SHOP, SEED_SERVICES, SEED_STAGES, SEED_SMS_TEMPLATES, SEED_STAFF,
   SEED_CUSTOMERS, SEED_INVENTORY, SEED_SUPPLY_RULES, SEED_PAYMETHODS,
@@ -149,6 +150,37 @@ export function AppProvider({ children }: AppProviderProps) {
       const savedTheme = await DB.get("wt:theme");
       if (savedTheme) { setThemeRaw(savedTheme); applyTheme(savedTheme); }
       else { applyTheme(DEFAULT_THEME); }
+
+      // ── Migrate plaintext PINs to hashed ──
+      const shopToMigrate = savedShop ? { ...SEED_SHOP, ...savedShop } : SEED_SHOP;
+      let shopMigrated = false;
+      const migratedShop = { ...shopToMigrate };
+      if (isLegacyPin(migratedShop.ownerPin)) {
+        migratedShop.ownerPin = await createHashedPin(migratedShop.ownerPin);
+        shopMigrated = true;
+      }
+      if (isLegacyPin(migratedShop.managerPin)) {
+        migratedShop.managerPin = await createHashedPin(migratedShop.managerPin);
+        shopMigrated = true;
+      }
+      if (shopMigrated) {
+        setShop(migratedShop);
+        await DB.set("wt:shop", migratedShop);
+      }
+
+      const staffToMigrate: Staff[] = savedStaff || SEED_STAFF;
+      let staffMigrated = false;
+      const migratedStaff = await Promise.all(staffToMigrate.map(async (s) => {
+        if (isLegacyPin(s.pin)) {
+          staffMigrated = true;
+          return { ...s, pin: await createHashedPin(s.pin) };
+        }
+        return s;
+      }));
+      if (staffMigrated) {
+        setStaff(migratedStaff);
+        await DB.set("wt:staff", migratedStaff);
+      }
 
       setInitialized(true);
     })();
