@@ -133,6 +133,7 @@ export interface Order {
   voidedAt?: number;
   voidedBy?: string;
   pickedUpAt?: number;
+  readySmsSent?: boolean;
 }
 
 export interface InventoryItem {
