@@ -1,8 +1,21 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useApp } from "../context/AppContext";
 import { getOverstay, openReceiptWindow, printBluetoothReceipt, hasBtPrinter } from "../lib/utils";
 import { ReceiptPreview } from "../components/ReceiptPreview";
 import { SEED_PAYMETHODS } from "../data/seeds";
+
+// ── Pointer-event drag state (works on desktop + touch/Android) ──
+interface DragState {
+  orderId: string;
+  startX: number;
+  startY: number;
+  currentX: number;
+  currentY: number;
+  isDragging: boolean; // true once moved past threshold
+  ghostEl: HTMLDivElement | null;
+}
+
+const DRAG_THRESHOLD = 8; // px before drag activates (prevents accidental drags on tap)
 
 export function OrdersScreen() {
   const { orders, setOrders, stages, shop, smsTemplates, sendSms, requirePin, currentStaff, notify, addAudit, fmt, payMethods } = useApp();
@@ -16,7 +29,106 @@ export function OrdersScreen() {
   const [collectPayMethod, setCollectPayMethod] = useState<any>(null);
   const [collectCash, setCollectCash] = useState("");
   const [dragOverStage, setDragOverStage] = useState<number | null>(null);
-  const draggedOrderId = useRef<string | null>(null);
+  const dragRef = useRef<DragState | null>(null);
+  const columnRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+
+  const setColumnRef = useCallback((stageId: number, el: HTMLDivElement | null) => {
+    if (el) columnRefs.current.set(stageId, el);
+    else columnRefs.current.delete(stageId);
+  }, []);
+
+  const getStageAtPoint = useCallback((x: number, y: number): number | null => {
+    for (const [stageId, el] of columnRefs.current.entries()) {
+      const rect = el.getBoundingClientRect();
+      if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+        return stageId;
+      }
+    }
+    return null;
+  }, []);
+
+  const handlePointerDown = useCallback((e: React.PointerEvent, orderId: string) => {
+    // Only primary button (left click / single touch)
+    if (e.button !== 0) return;
+    const target = e.currentTarget as HTMLDivElement;
+    target.setPointerCapture(e.pointerId);
+    dragRef.current = {
+      orderId,
+      startX: e.clientX,
+      startY: e.clientY,
+      currentX: e.clientX,
+      currentY: e.clientY,
+      isDragging: false,
+      ghostEl: null,
+    };
+  }, []);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    const drag = dragRef.current;
+    if (!drag) return;
+
+    drag.currentX = e.clientX;
+    drag.currentY = e.clientY;
+
+    // Check threshold
+    if (!drag.isDragging) {
+      const dx = e.clientX - drag.startX;
+      const dy = e.clientY - drag.startY;
+      if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+      drag.isDragging = true;
+
+      // Create ghost element
+      const source = e.currentTarget as HTMLDivElement;
+      const ghost = document.createElement("div");
+      ghost.style.cssText = `
+        position: fixed; pointer-events: none; z-index: 10000;
+        width: ${source.offsetWidth}px; opacity: 0.85;
+        background: var(--card); border-radius: 8px; padding: 10px;
+        border-left: 3px solid var(--accent); box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        transform: rotate(2deg); transition: none;
+      `;
+      ghost.innerHTML = source.innerHTML;
+      document.body.appendChild(ghost);
+      drag.ghostEl = ghost;
+    }
+
+    // Update ghost position
+    if (drag.ghostEl) {
+      drag.ghostEl.style.left = `${e.clientX - 60}px`;
+      drag.ghostEl.style.top = `${e.clientY - 20}px`;
+    }
+
+    // Highlight drop target
+    const hoverStage = getStageAtPoint(e.clientX, e.clientY);
+    setDragOverStage(hoverStage);
+  }, [getStageAtPoint]);
+
+  const handlePointerUp = useCallback((e: React.PointerEvent) => {
+    const drag = dragRef.current;
+    if (!drag) return;
+
+    // Clean up ghost
+    if (drag.ghostEl) {
+      drag.ghostEl.remove();
+    }
+
+    // If we were actually dragging, do the drop
+    if (drag.isDragging) {
+      const targetStage = getStageAtPoint(e.clientX, e.clientY);
+      if (targetStage !== null) {
+        const order = orders.find((o) => o.id === drag.orderId);
+        if (order && order.statusId !== targetStage) {
+          updateStatus(drag.orderId, targetStage);
+        }
+      }
+    } else {
+      // Wasn't a drag — treat as click
+      setSelectedOrder(drag.orderId);
+    }
+
+    setDragOverStage(null);
+    dragRef.current = null;
+  }, [getStageAtPoint, orders]);
 
   const activePM = (payMethods || SEED_PAYMETHODS).filter((p: any) => p.active).sort((a: any, b: any) => a.sortOrder - b.sortOrder);
 
@@ -213,18 +325,7 @@ export function OrdersScreen() {
           {stageOrders.map((stage) => (
             <div
               key={stage.id}
-              onDragOver={(e) => { e.preventDefault(); setDragOverStage(stage.id); }}
-              onDragLeave={() => setDragOverStage(null)}
-              onDrop={(e) => {
-                e.preventDefault();
-                setDragOverStage(null);
-                const orderId = draggedOrderId.current;
-                if (orderId) {
-                  const order = orders.find((o) => o.id === orderId);
-                  if (order && order.statusId !== stage.id) updateStatus(orderId, stage.id);
-                }
-                draggedOrderId.current = null;
-              }}
+              ref={(el) => setColumnRef(stage.id, el)}
               style={{
                 background: dragOverStage === stage.id ? `color-mix(in srgb, ${stage.color} 8%, var(--sidebar))` : "var(--sidebar)",
                 borderRadius: 10, padding: 10, minHeight: 200, transition: "background 0.15s",
@@ -239,11 +340,15 @@ export function OrdersScreen() {
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {stage.orders.map((order: any) => (
                   <div key={order.id}
-                    draggable
-                    onDragStart={() => { draggedOrderId.current = order.id; }}
-                    onDragEnd={() => { draggedOrderId.current = null; setDragOverStage(null); }}
-                    onClick={() => setSelectedOrder(order.id)}
-                    style={{ padding: "10px", background: "var(--card)", borderRadius: 8, cursor: "grab", borderLeft: `3px solid ${stage.color}`, transition: "all 0.15s" }}>
+                    onPointerDown={(e) => handlePointerDown(e, order.id)}
+                    onPointerMove={handlePointerMove}
+                    onPointerUp={handlePointerUp}
+                    onPointerCancel={(e) => {
+                      if (dragRef.current?.ghostEl) dragRef.current.ghostEl.remove();
+                      dragRef.current = null;
+                      setDragOverStage(null);
+                    }}
+                    style={{ padding: "10px", background: "var(--card)", borderRadius: 8, cursor: "grab", borderLeft: `3px solid ${stage.color}`, transition: "all 0.15s", touchAction: "none", userSelect: "none" }}>
                     <div style={{ fontWeight: 700, fontSize: 12, color: "var(--text)", marginBottom: 3 }}>{order.orderNum}</div>
                     <div style={{ fontSize: 11, color: "var(--subtext)", marginBottom: 4 }}>{order.customerName}</div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
