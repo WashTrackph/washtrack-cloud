@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useApp } from "../context/AppContext";
 import { getOverstay, openReceiptWindow, printBluetoothReceipt, hasBtPrinter } from "../lib/utils";
 import { ReceiptPreview } from "../components/ReceiptPreview";
@@ -15,6 +15,8 @@ export function OrdersScreen() {
   const [showCollectPay, setShowCollectPay] = useState(false);
   const [collectPayMethod, setCollectPayMethod] = useState<any>(null);
   const [collectCash, setCollectCash] = useState("");
+  const [dragOverStage, setDragOverStage] = useState<number | null>(null);
+  const draggedOrderId = useRef<string | null>(null);
 
   const activePM = (payMethods || SEED_PAYMETHODS).filter((p: any) => p.active).sort((a: any, b: any) => a.sortOrder - b.sortOrder);
 
@@ -209,7 +211,26 @@ export function OrdersScreen() {
       {view === "kanban" ? (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 12, height: "calc(100% - 60px)", overflow: "auto" }}>
           {stageOrders.map((stage) => (
-            <div key={stage.id} style={{ background: "var(--sidebar)", borderRadius: 10, padding: 10, minHeight: 200 }}>
+            <div
+              key={stage.id}
+              onDragOver={(e) => { e.preventDefault(); setDragOverStage(stage.id); }}
+              onDragLeave={() => setDragOverStage(null)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setDragOverStage(null);
+                const orderId = draggedOrderId.current;
+                if (orderId) {
+                  const order = orders.find((o) => o.id === orderId);
+                  if (order && order.statusId !== stage.id) updateStatus(orderId, stage.id);
+                }
+                draggedOrderId.current = null;
+              }}
+              style={{
+                background: dragOverStage === stage.id ? `color-mix(in srgb, ${stage.color} 8%, var(--sidebar))` : "var(--sidebar)",
+                borderRadius: 10, padding: 10, minHeight: 200, transition: "background 0.15s",
+                outline: dragOverStage === stage.id ? `2px dashed ${stage.color}` : "none",
+              }}
+            >
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
                 <span style={{ fontSize: 16 }}>{stage.icon}</span>
                 <span style={{ fontSize: 12, fontWeight: 700, color: stage.color }}>{stage.label}</span>
@@ -217,8 +238,12 @@ export function OrdersScreen() {
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {stage.orders.map((order: any) => (
-                  <div key={order.id} onClick={() => setSelectedOrder(order.id)}
-                    style={{ padding: "10px", background: "var(--card)", borderRadius: 8, cursor: "pointer", borderLeft: `3px solid ${stage.color}`, transition: "all 0.15s" }}>
+                  <div key={order.id}
+                    draggable
+                    onDragStart={() => { draggedOrderId.current = order.id; }}
+                    onDragEnd={() => { draggedOrderId.current = null; setDragOverStage(null); }}
+                    onClick={() => setSelectedOrder(order.id)}
+                    style={{ padding: "10px", background: "var(--card)", borderRadius: 8, cursor: "grab", borderLeft: `3px solid ${stage.color}`, transition: "all 0.15s" }}>
                     <div style={{ fontWeight: 700, fontSize: 12, color: "var(--text)", marginBottom: 3 }}>{order.orderNum}</div>
                     <div style={{ fontSize: 11, color: "var(--subtext)", marginBottom: 4 }}>{order.customerName}</div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
