@@ -360,6 +360,7 @@ export function SettingsScreen() {
         <div>
           <label style={{ display: "block", fontSize: 11, color: "var(--subtext)", marginBottom: 4 }}>{staffEditId ? "New PIN (leave blank to keep)" : "PIN (4 digits) *"}</label>
           <input
+            type="password"
             value={staffForm.pin}
             onChange={(e) => setStaffForm((p) => ({ ...p, pin: e.target.value.replace(/\D/g, "").slice(0, 4) }))}
             placeholder={staffEditId ? "••••" : "0000"}
