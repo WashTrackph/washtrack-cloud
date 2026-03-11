@@ -157,8 +157,14 @@ export function OrdersScreen() {
   const updateStatus = (orderId: string, newStatusId: number) => {
     const stage = stages.find((s) => s.id === newStatusId);
     if (!stage) return;
-    setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, statusId: newStatusId, statusLabel: stage.label, statusUpdatedAt: Date.now() } : o));
     const order = orders.find((o) => o.id === orderId);
+    if (newStatusId === 6 && order && order.paid === false) {
+      setSelectedOrder(orderId);
+      setShowCollectPay(true);
+      notify("Payment required before pickup", "error");
+      return;
+    }
+    setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, statusId: newStatusId, statusLabel: stage.label, statusUpdatedAt: Date.now() } : o));
     addAudit("STATUS_CHANGED", `${order?.orderNum} \u2192 ${stage.label}`);
     if (newStatusId === 5 && shop.autoSmsReady && order && order.customerPhone && !order.readySmsSent) {
       sendSms(order.customerPhone, smsTemplates.ready, { name: order.customerName, order: order.orderNum, shop: shop.name }, orderId);
@@ -293,7 +299,7 @@ export function OrdersScreen() {
             <div style={{ marginTop: 16 }}>
               {showVoidFor === order.id ? (
                 <div>
-                  <input value={voidReason} onChange={(e) => setVoidReason(e.target.value)} placeholder="Void reason (required)\u2026" className="input" style={{ marginBottom: 8 }} />
+                  <input value={voidReason} onChange={(e) => setVoidReason(e.target.value)} placeholder="Void reason (required)…" className="input" style={{ marginBottom: 8 }} />
                   <div style={{ display: "flex", gap: 8 }}>
                     <button onClick={() => voidOrder(order)} style={{ flex: 1, padding: "8px", borderRadius: 8, border: "1px solid var(--danger)", background: "color-mix(in srgb, var(--danger) 8%, transparent)", color: "var(--danger)", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Confirm Void</button>
                     <button onClick={() => setShowVoidFor(null)} style={{ flex: 1, padding: "8px", borderRadius: 8, border: "1px solid var(--border-dark)", background: "transparent", color: "var(--subtext)", cursor: "pointer", fontSize: 13 }}>Cancel</button>
@@ -349,17 +355,17 @@ export function OrdersScreen() {
                       dragRef.current = null;
                       setDragOverStage(null);
                     }}
-                    style={{ padding: "10px", background: "var(--card)", borderRadius: 8, cursor: "grab", borderLeft: `3px solid ${stage.color}`, transition: "all 0.15s", touchAction: "none", userSelect: "none" }}>
-                    <div style={{ fontWeight: 700, fontSize: 12, color: "var(--text)", marginBottom: 3 }}>{order.orderNum}</div>
+                    style={{ padding: "10px", background: order.paid === false ? "var(--warning-bg-dark)" : "var(--card)", borderRadius: 8, cursor: "grab", borderLeft: `3px solid ${order.paid === false ? "var(--warning)" : stage.color}`, transition: "all 0.15s", touchAction: "none", userSelect: "none", border: order.paid === false ? "1px solid var(--warning)" : "none" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+                      <span style={{ fontWeight: 700, fontSize: 12, color: "var(--text)" }}>{order.orderNum}</span>
+                      {order.paid === false && <span style={{ fontSize: 9, fontWeight: 800, color: "var(--warning-light)", background: "var(--warning-bg-dark)", padding: "1px 6px", borderRadius: 4, textTransform: "uppercase", letterSpacing: 0.5, border: "1px solid var(--warning)" }}>Unpaid</span>}
+                    </div>
                     <div style={{ fontSize: 11, color: "var(--subtext)", marginBottom: 4 }}>{order.customerName}</div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <span style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)" }}>{fmt(order.total)}</span>
                       <span style={{ fontSize: 10, color: "var(--muted)" }}>{Math.floor((Date.now() - order.createdAt) / 3600000)}h ago</span>
                     </div>
-                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                      {order.express && <span style={{ fontSize: 10, color: "var(--warning)" }}>{"\u26A1"} Express</span>}
-                      {order.paid === false && <span style={{ fontSize: 10, color: "var(--warning)", fontWeight: 700 }}>{"\uD83D\uDD52"} Unpaid</span>}
-                    </div>
+                    {order.express && <div style={{ marginTop: 4 }}><span style={{ fontSize: 10, color: "var(--warning)" }}>{"\u26A1"} Express</span></div>}
                   </div>
                 ))}
                 {stage.orders.length === 0 && <div style={{ textAlign: "center", padding: "20px 0", fontSize: 12, color: "var(--border-dark)" }}>Empty</div>}

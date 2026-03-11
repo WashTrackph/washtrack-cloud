@@ -172,7 +172,17 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
         {step === "customer" && (
           <div>
             <h3 style={{ margin: "0 0 12px", color: "var(--text)", fontSize: 15 }}>Find or Add Customer</h3>
-            <input value={customerSearch} onChange={(e) => setCustomerSearch(e.target.value)} placeholder="Search by name or phone\u2026" className="input" style={{ marginBottom: 12 }} />
+            <button onClick={() => { setNewCustomerMode(true); setSelectedCustomer(null); }}
+              style={{ width: "100%", padding: "10px 14px", borderRadius: 8, border: "1px dashed var(--border-dark)", background: "transparent", color: "var(--accent)", cursor: "pointer", fontSize: 13, marginBottom: 12 }}>
+              + New Customer
+            </button>
+            {newCustomerMode && (
+              <div style={{ marginBottom: 12, padding: 16, background: "var(--card)", borderRadius: 8, border: "1px solid var(--border)" }}>
+                <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Full Name *" className="input" style={{ marginBottom: 8 }} autoFocus />
+                <input value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder="Phone (09XXXXXXXXX)" className="input" />
+              </div>
+            )}
+            <input value={customerSearch} onChange={(e) => setCustomerSearch(e.target.value)} placeholder="Search by name or phone…" className="input" style={{ marginBottom: 12 }} />
             {filteredCustomers.map((c) => (
               <div key={c.id} onClick={() => { setSelectedCustomer(c); setNewCustomerMode(false); setStep("items"); }}
                 style={{ padding: "10px 14px", borderRadius: 8, marginBottom: 6, cursor: "pointer",
@@ -182,16 +192,6 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
                 <div style={{ fontSize: 12, color: "var(--muted)" }}>{c.phone} {"\u00B7"} {c.visits} visits {"\u00B7"} {fmt(c.totalSpend)}</div>
               </div>
             ))}
-            <button onClick={() => { setNewCustomerMode(true); setSelectedCustomer(null); setStep("items"); }}
-              style={{ width: "100%", padding: "10px 14px", borderRadius: 8, border: "1px dashed var(--border-dark)", background: "transparent", color: "var(--accent)", cursor: "pointer", fontSize: 13, marginTop: 4 }}>
-              + New Customer
-            </button>
-            {newCustomerMode && (
-              <div style={{ marginTop: 12, padding: 16, background: "var(--card)", borderRadius: 8, border: "1px solid var(--border)" }}>
-                <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Full Name *" className="input" style={{ marginBottom: 8 }} />
-                <input value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder="Phone (09XXXXXXXXX)" className="input" />
-              </div>
-            )}
             {(selectedCustomer || newName) && (
               <button onClick={() => setStep("items")} className="btn-primary" style={{ width: "100%", marginTop: 16 }}>Continue {"\u2192"}</button>
             )}
@@ -247,7 +247,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
             </div>
             <div style={{ marginBottom: 16 }}>
               <label style={{ fontSize: 12, color: "var(--subtext)" }}>Notes</label>
-              <input value={notes} onChange={(e) => setNotes(e.target.value)} className="input" placeholder="Special instructions\u2026" />
+              <input value={notes} onChange={(e) => setNotes(e.target.value)} className="input" placeholder="Special instructions…" />
             </div>
             <div style={{ padding: 16, background: "var(--card)", borderRadius: 10, border: "1px solid var(--border)", marginBottom: 16 }}>
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--subtext)", marginBottom: 4 }}>
