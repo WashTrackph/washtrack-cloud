@@ -5,8 +5,8 @@ export const SEED_SHOP: Shop = {
   address: "123 Rizal St, Brgy. San Isidro, Quezon City",
   phone: "0917-555-1234",
   logo: null,
-  ownerPin: "7291",   // Change these on first use
-  managerPin: "4083", // Change these on first use
+  ownerPin: "1234",
+  managerPin: "5678",
   currency: "\u20B1",
   locale: "en-PH",
   cashDenominations: [100, 200, 500, 1000],
@@ -59,9 +59,9 @@ export const SEED_SMS_TEMPLATES: SmsTemplates = {
 };
 
 export const SEED_STAFF: Staff[] = [
-  { id: "u1", name: "Owner",  role: "OWNER",   pin: "7291", active: true, avatar: "O" },
-  { id: "u2", name: "Maria",  role: "MANAGER", pin: "4083", active: true, avatar: "M" },
-  { id: "u3", name: "Juan",   role: "STAFF",   pin: "3617", active: true, avatar: "J" },
+  { id: "u1", name: "Owner",  role: "OWNER",   pin: "1234", active: true, avatar: "O" },
+  { id: "u2", name: "Maria",  role: "MANAGER", pin: "5678", active: true, avatar: "M" },
+  { id: "u3", name: "Juan",   role: "STAFF",   pin: "0000", active: true, avatar: "J" },
 ];
 
 export const SEED_CUSTOMERS: Customer[] = [
