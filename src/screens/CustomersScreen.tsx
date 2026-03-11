@@ -53,7 +53,7 @@ export function CustomersScreen() {
   return (
     <div style={{ padding: 24 }}>
       <h2 style={{ margin: "0 0 20px", fontSize: 20, fontWeight: 800, color: "var(--text)" }}>Customers</h2>
-      <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search customers\u2026" className="input" style={{ marginBottom: 16 }} />
+      <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search customers…" className="input" style={{ marginBottom: 16 }} />
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 12 }}>
         {filtered.map((c) => {
           const daysSince = c.lastVisit ? Math.floor((Date.now() - c.lastVisit) / 86400000) : 999;
