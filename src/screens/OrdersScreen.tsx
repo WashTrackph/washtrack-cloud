@@ -46,7 +46,7 @@ export function OrdersScreen() {
     setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, statusId: newStatusId, statusLabel: stage.label, statusUpdatedAt: Date.now() } : o));
     const order = orders.find((o) => o.id === orderId);
     addAudit("STATUS_CHANGED", `${order?.orderNum} \u2192 ${stage.label}`);
-    if (newStatusId === 5 && shop.autoSmsReady && order) {
+    if (newStatusId === 5 && shop.autoSmsReady && order && order.customerPhone) {
       sendSms(order.customerPhone, smsTemplates.ready, { name: order.customerName, order: order.orderNum, shop: shop.name }, orderId);
       notify(`SMS sent to ${order.customerName}`);
     }

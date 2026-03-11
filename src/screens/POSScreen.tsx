@@ -84,7 +84,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
   const removeCartItem = (id: string) => setCartItems((prev) => prev.filter((i) => i.id !== id));
 
   const completeOrder = (payLater = false) => {
-    if (!selectedCustomer && (!newName || !newPhone)) { notify("Customer info required", "error"); return; }
+    if (!selectedCustomer && !newName) { notify("Customer name required", "error"); return; }
     if (cartItems.length === 0) { notify("Add at least one service", "error"); return; }
     if (!payLater && !selectedPayMethod) { notify("Please select a payment method", "error"); return; }
 
@@ -138,7 +138,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
       }
     }
 
-    if (shop.autoSmsReceipt) {
+    if (shop.autoSmsReceipt && customer.phone) {
       const totalKg = cartItems.filter((i: any) => i.pricingType === "PER_KG").reduce((s: number, i: any) => s + i.kg, 0);
       sendSms(customer.phone, smsTemplates.receipt, { name: customer.name, order: orderNum, shop: shop.name, kg: totalKg, total }, order.id);
     }
@@ -189,10 +189,10 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
             {newCustomerMode && (
               <div style={{ marginTop: 12, padding: 16, background: "var(--card)", borderRadius: 8, border: "1px solid var(--border)" }}>
                 <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Full Name *" className="input" style={{ marginBottom: 8 }} />
-                <input value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder="Phone (09XXXXXXXXX) *" className="input" />
+                <input value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder="Phone (09XXXXXXXXX)" className="input" />
               </div>
             )}
-            {(selectedCustomer || (newName && newPhone)) && (
+            {(selectedCustomer || newName) && (
               <button onClick={() => setStep("items")} className="btn-primary" style={{ width: "100%", marginTop: 16 }}>Continue {"\u2192"}</button>
             )}
           </div>
@@ -303,7 +303,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
       <div style={{ width: 280, background: "var(--sidebar)", display: "flex", flexDirection: "column", padding: 16 }}>
         <div style={{ marginBottom: 12 }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: "var(--text)" }}>{selectedCustomer ? selectedCustomer.name : newName || "\u2014"}</div>
-          <div style={{ fontSize: 12, color: "var(--muted)" }}>{selectedCustomer ? selectedCustomer.phone : newPhone || "New Customer"}</div>
+          <div style={{ fontSize: 12, color: "var(--muted)" }}>{selectedCustomer ? (selectedCustomer.phone || "No phone") : (newPhone || "New Customer")}</div>
         </div>
         {express && <div style={{ background: "var(--warning-bg-dark)", border: "1px solid var(--warning)", borderRadius: 6, padding: "4px 10px", fontSize: 12, color: "var(--warning-light)", marginBottom: 10 }}>{"\u26A1"} Express pricing active</div>}
         <div style={{ flex: 1, overflow: "auto" }}>

@@ -106,7 +106,7 @@ export function PromoBlastScreen() {
     const recipientIds: string[] = [];
 
     for (const cust of selectedList) {
-      if (!cust.promoOptIn) { skippedCount++; continue; }
+      if (!cust.promoOptIn || !cust.phone) { skippedCount++; continue; }
       try {
         const result = await sendSms(cust.phone, smsTemplates.promo, { name: cust.name, shop: shop.name, address: shop.address, message }, null, promoId);
         if (result.status === "FAILED") { skippedCount++; continue; }
