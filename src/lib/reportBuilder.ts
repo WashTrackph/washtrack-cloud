@@ -10,8 +10,16 @@ import type {
 
 export type ReportPeriod = "today" | "week" | "month";
 
+export interface ReportShop {
+  name: string;
+  address: string;
+  phone: string;
+  currency: string;
+  locale: string;
+}
+
 export interface ReportData {
-  shop: Shop;
+  shop: ReportShop;
   period: ReportPeriod;
   periodLabel: string;
   periodFrom: number;
@@ -364,8 +372,16 @@ export function buildReportData(
     desc: a.desc,
   }));
 
+  const safeShop: ReportShop = {
+    name: shop.name,
+    address: shop.address,
+    phone: shop.phone,
+    currency: shop.currency,
+    locale: shop.locale,
+  };
+
   return {
-    shop,
+    shop: safeShop,
     period,
     periodLabel: label,
     periodFrom: from,
