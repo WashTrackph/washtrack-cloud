@@ -243,7 +243,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
             </div>
             <div style={{ marginBottom: 12 }}>
               <label style={{ fontSize: 12, color: "var(--subtext)" }}>Discount ({shop.currency})</label>
-              <input type="number" value={discount} onChange={(e) => setDiscount(parseInt(e.target.value) || 0)} className="input" placeholder="0" />
+              <input type="number" min="0" value={discount} onChange={(e) => setDiscount(Math.max(0, parseInt(e.target.value) || 0))} className="input" placeholder="0" />
             </div>
             <div style={{ marginBottom: 16 }}>
               <label style={{ fontSize: 12, color: "var(--subtext)" }}>Notes</label>

@@ -248,8 +248,8 @@ export function buildReportData(
       const svc = services.find(s => s.id === i.serviceId);
       svcMap[i.serviceId] = { name: i.serviceName, color: svc?.color || i.color, qty: 0, kg: 0, revenue: 0 };
     }
-    svcMap[i.serviceId].qty += 1;
-    svcMap[i.serviceId].kg += i.pricingType === "PER_KG" ? i.kg : (i.pricingType === "FIXED_LOAD" ? i.minKg : 0);
+    svcMap[i.serviceId].qty += i.pricingType === "PER_KG" ? 1 : (i.qty || 1);
+    svcMap[i.serviceId].kg += i.pricingType === "PER_KG" ? i.kg : (i.pricingType === "FIXED_LOAD" ? (i.minKg * (i.qty || 1)) : 0);
     svcMap[i.serviceId].revenue += i.subtotal;
   }));
   const serviceBreakdown = Object.values(svcMap).sort((a, b) => b.revenue - a.revenue);

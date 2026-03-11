@@ -188,7 +188,12 @@ export function AppProvider({ children }: AppProviderProps) {
     const entry: SmsLogEntry = { id: genId(), phone, message: msg, orderId, promoId: promoId || null, status: isMock ? "MOCK" : "SENDING", messageId: null, network: null, at: Date.now() };
     setSmsLog((prev) => [entry, ...prev]);
 
-    if (!isMock && (window as any).__TAURI_INTERNALS__) {
+    if (!isMock) {
+      if (!(window as any).__TAURI_INTERNALS__) {
+        const mockEntry = { ...entry, status: "MOCK" };
+        setSmsLog((prev) => prev.map((e) => e.id === entry.id ? mockEntry : e));
+        return mockEntry;
+      }
       try {
         const { invoke } = await import("@tauri-apps/api/core");
         const result = await invoke("send_sms", {
