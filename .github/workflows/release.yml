@@ -1,12 +1,62 @@
-name: Release Android APK
+name: Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          release-type: node
+
+  build-windows:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Install frontend dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build Windows installer
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ needs.release-please.outputs.tag_name }}
+          releaseName: WashTrack POS ${{ needs.release-please.outputs.version }}
+          releaseBody: 'See [CHANGELOG](https://github.com/WashTrackph/Washtrack/blob/main/CHANGELOG.md) for details.'
+          releaseDraft: false
+
   build-android:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -54,21 +104,19 @@ jobs:
         env:
           NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.0.12077973
 
-      - name: Get version from tag
-        id: version
-        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
-
-      - name: Find APK
+      - name: Find and rename APK
         id: apk
         run: |
           APK_PATH=$(find src-tauri/gen/android/app/build/outputs/apk -name "*.apk" -type f | head -1)
-          echo "APK_PATH=$APK_PATH" >> $GITHUB_OUTPUT
+          VERSION=${{ needs.release-please.outputs.version }}
+          RENAMED="src-tauri/gen/android/app/build/outputs/apk/WashTrackPOS-v${VERSION}.apk"
+          mv "$APK_PATH" "$RENAMED"
+          echo "APK_PATH=$RENAMED" >> $GITHUB_OUTPUT
 
-      - name: Create GitHub Release
+      - name: Upload APK to release
         uses: softprops/action-gh-release@v2
         with:
-          name: WashTrack POS v${{ steps.version.outputs.VERSION }}
-          draft: true
+          tag_name: ${{ needs.release-please.outputs.tag_name }}
           files: ${{ steps.apk.outputs.APK_PATH }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
