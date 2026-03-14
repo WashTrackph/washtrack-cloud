@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.3.1-rc.1](https://github.com/WashTrackph/Washtrack/compare/v1.3.0-rc.1...v1.3.1-rc.1) (2026-03-14)
+
+
+### Bug Fixes
+
+* pass shop to getOverstay on HomeScreen, remove orphaned reportEmail field ([36e7b53](https://github.com/WashTrackph/Washtrack/commit/36e7b53d9040027f700da8470c0c03b69c70481a))
+* wire up disconnected features and remove dead code ([33ba679](https://github.com/WashTrackph/Washtrack/commit/33ba679324056dd079ae0b6a84b53b5dc8bd0cbc))
+* wire up disconnected features and remove dead code ([4c0c2eb](https://github.com/WashTrackph/Washtrack/commit/4c0c2eb03da620890ccb858dc55b98bbe8d7168c))
+
 ## [1.3.0-rc.1](https://github.com/WashTrackph/Washtrack/compare/v1.2.0-rc.1...v1.3.0-rc.1) (2026-03-14)
 
 
