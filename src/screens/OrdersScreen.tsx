@@ -274,6 +274,7 @@ export function OrdersScreen() {
           {order.paid !== false && (
             <div style={{ marginTop: 8, fontSize: 12, color: "var(--muted)" }}>
               Paid via {order.paymentMethod}{order.paidAt ? ` \u2014 ${new Date(order.paidAt).toLocaleString()}` : ""}
+              {order.pickedUpAt && <> &middot; Picked up {new Date(order.pickedUpAt).toLocaleString()}</>}
             </div>
           )}
           <button onClick={() => {
@@ -363,7 +364,11 @@ export function OrdersScreen() {
                     <div style={{ fontSize: 11, color: "var(--subtext)", marginBottom: 4 }}>{order.customerName}</div>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <span style={{ fontSize: 12, fontWeight: 700, color: "var(--accent)" }}>{fmt(order.total)}</span>
-                      <span style={{ fontSize: 10, color: "var(--muted)" }}>{Math.floor((Date.now() - order.createdAt) / 3600000)}h ago</span>
+                      {(() => {
+                        const overstay = getOverstay(order, shop);
+                        const hrs = Math.floor((Date.now() - order.createdAt) / 3600000);
+                        return <span style={{ fontSize: 10, color: overstay?.color || "var(--muted)", fontWeight: overstay ? 700 : 400 }}>{hrs}h ago</span>;
+                      })()}
                     </div>
                     {order.express && <div style={{ marginTop: 4 }}><span style={{ fontSize: 10, color: "var(--warning)" }}>{"\u26A1"} Express</span></div>}
                   </div>

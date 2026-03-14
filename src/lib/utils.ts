@@ -5,10 +5,6 @@ export function formatCurrency(amount: number, shop: Shop): string {
   return `${shop.currency}${amount.toLocaleString(shop.locale || "en-PH")}`;
 }
 
-export function fmtDate(ts: number, shop: Shop, opts?: Intl.DateTimeFormatOptions): string {
-  return new Date(ts).toLocaleDateString(shop.locale || "en-PH", opts);
-}
-
 export function fmtDateTime(ts: number, shop: Shop): string {
   return new Date(ts).toLocaleString(shop.locale || "en-PH");
 }
