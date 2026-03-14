@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.3.0-rc.1](https://github.com/WashTrackph/Washtrack/compare/v1.2.0-rc.1...v1.3.0-rc.1) (2026-03-14)
+
+
+### Features
+
+* add email report scheduler module ([23b21ae](https://github.com/WashTrackph/Washtrack/commit/23b21aed689f7da514a1268d679fad45ad461f0e))
+* add end-of-shift email trigger on logout ([0d44324](https://github.com/WashTrackph/Washtrack/commit/0d44324c1a5b2c91f83900f7e9718ef3ab498c51))
+* add manual Email Report button to ReportsScreen ([bc1d808](https://github.com/WashTrackph/Washtrack/commit/bc1d808f3f4a2d9363f9d43f41fd3d5c352c46f4))
+* integrate email scheduler into AppContext with 5-min interval ([b1a5a00](https://github.com/WashTrackph/Washtrack/commit/b1a5a00bb4faba7a91221835c4ceb71826f497d0))
+
+
+### Bug Fixes
+
+* add customer deletion with cascading order and SMS log removal ([902efd1](https://github.com/WashTrackph/Washtrack/commit/902efd14e2f8bd598479d347d153894ecbc44655))
+
 ## [1.2.0-rc.1](https://github.com/WashTrackph/Washtrack/compare/v1.1.0-rc.1...v1.2.0-rc.1) (2026-03-11)
 
 
