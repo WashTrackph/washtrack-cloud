@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import { DB, initDatabase } from "../lib/db";
 import { genId, applyTheme, calcPrice, genOrderNum, formatCurrency } from "../lib/utils";
 import { isLegacyPin, createHashedPin } from "../lib/crypto";
@@ -11,6 +11,7 @@ import type {
   Shop, Service, Stage, SmsTemplates, Staff, Customer, Order,
   InventoryItem, SupplyRule, PayMethod, SmsLogEntry, AuditLogEntry, ThemePreset, EmailConfig, Promotion,
 } from "../lib/types";
+import { checkAndSendReports, sendReport, EMPTY_LAST_SENT, type LastEmailSent } from "../lib/emailScheduler";
 
 interface AppContextValue {
   shop: Shop;
@@ -53,6 +54,7 @@ interface AppContextValue {
   checkSmsStatus: (entry: SmsLogEntry) => Promise<void>;
   refreshAllSmsStatuses: () => Promise<void>;
   requirePin: (role: string, onSuccess: () => void, message?: string) => void;
+  sendReportEmail: (period: "today" | "week" | "month") => Promise<void>;
   modal: any;
   setModal: React.Dispatch<React.SetStateAction<any>>;
   calcPrice: (service: Service, kg: number, express: boolean) => number;
@@ -97,6 +99,7 @@ export function AppProvider({ children }: AppProviderProps) {
   const [payMethods, setPayMethods] = useState<PayMethod[]>(SEED_PAYMETHODS);
   const [emailConfig, setEmailConfig] = useState<EmailConfig>(SEED_EMAIL_CONFIG);
   const [promotions, setPromotions] = useState<Promotion[]>([]);
+  const [lastEmailSent, setLastEmailSent] = useState<LastEmailSent>(EMPTY_LAST_SENT);
 
   // UI State
   const [notification, setNotification] = useState<{ msg: string; type: string; id: number } | null>(null);
@@ -131,6 +134,7 @@ export function AppProvider({ children }: AppProviderProps) {
       const savedSupplyRules = await DB.get("wt:supplyrules");
       const savedEmailConfig = await DB.get("wt:emailconfig");
       const savedPromotions = await DB.get("wt:promotions");
+      const savedLastEmailSent = await DB.get("wt:lastEmailSent");
 
       if (savedOrders) setOrders(savedOrders);
       if (savedCustomers) setCustomers(savedCustomers);
@@ -147,6 +151,7 @@ export function AppProvider({ children }: AppProviderProps) {
       if (savedSupplyRules) setSupplyRules(savedSupplyRules);
       if (savedEmailConfig) setEmailConfig({ ...SEED_EMAIL_CONFIG, ...savedEmailConfig });
       if (savedPromotions) setPromotions(savedPromotions);
+      if (savedLastEmailSent) setLastEmailSent(savedLastEmailSent);
       const savedTheme = await DB.get("wt:theme");
       if (savedTheme) { setThemeRaw(savedTheme); applyTheme(savedTheme); }
       else { applyTheme(DEFAULT_THEME); }
@@ -202,6 +207,7 @@ export function AppProvider({ children }: AppProviderProps) {
   useEffect(() => { if (initialized) DB.set("wt:supplyrules", supplyRules); }, [supplyRules, initialized]);
   useEffect(() => { if (initialized) DB.set("wt:emailconfig", emailConfig); }, [emailConfig, initialized]);
   useEffect(() => { if (initialized) DB.set("wt:promotions", promotions); }, [promotions, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:lastEmailSent", lastEmailSent); }, [lastEmailSent, initialized]);
 
   // ── Helpers ──
   const notify = useCallback((msg: string, type = "success") => {
@@ -308,6 +314,57 @@ export function AppProvider({ children }: AppProviderProps) {
     setPinModal({ role, onSuccess, message });
   };
 
+  // ── Email Scheduler (5-min interval) ──
+  const schedulerRef = useRef({
+    shop, emailConfig, orders, customers, staff, services, payMethods,
+    stages, inventory, smsLog, auditLog, lastSent: lastEmailSent,
+  });
+  useEffect(() => {
+    schedulerRef.current = {
+      shop, emailConfig, orders, customers, staff, services, payMethods,
+      stages, inventory, smsLog, auditLog, lastSent: lastEmailSent,
+    };
+  }, [shop, emailConfig, orders, customers, staff, services, payMethods, stages, inventory, smsLog, auditLog, lastEmailSent]);
+
+  useEffect(() => {
+    if (!initialized) return;
+    const runCheck = async () => {
+      const state = schedulerRef.current;
+      if (!state.emailConfig.enabled || !state.emailConfig.testVerified) return;
+      try {
+        const result = await checkAndSendReports(state);
+        if (result.sent.length > 0) {
+          setLastEmailSent(result.updatedLastSent);
+          result.sent.forEach(s => addAudit("EMAIL_REPORT", `Auto-sent: ${s}`));
+          notify(`Report emailed: ${result.sent.join(", ")}`);
+        }
+        result.errors.forEach(e => {
+          addAudit("EMAIL_FAIL", e);
+        });
+      } catch { /* silent - don't crash the app */ }
+    };
+    runCheck();
+    const interval = setInterval(runCheck, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, [initialized]);
+
+  const sendReportEmail = useCallback(async (period: "today" | "week" | "month") => {
+    if (!emailConfig.enabled || !emailConfig.testVerified) {
+      notify("Email not configured or not verified. Check Settings > Email.", "error");
+      return;
+    }
+    try {
+      await sendReport(period, {
+        shop, emailConfig, orders, customers, staff, services, payMethods, stages, inventory, smsLog, auditLog,
+      });
+      notify("Report emailed successfully!");
+      addAudit("EMAIL_REPORT", `Manual send: ${period === "today" ? "Daily" : period === "week" ? "Weekly" : "Monthly"} report`);
+    } catch (err: any) {
+      notify(`Email failed: ${err?.message || err}`, "error");
+      addAudit("EMAIL_FAIL", `Manual send failed: ${err?.message || err}`);
+    }
+  }, [shop, emailConfig, orders, customers, staff, services, payMethods, stages, inventory, smsLog, auditLog, notify, addAudit]);
+
   const ctx: AppContextValue = {
     shop, setShop, services, setServices, stages, setStages,
     smsTemplates, setSmsTemplates, staff, setStaff,
@@ -316,7 +373,7 @@ export function AppProvider({ children }: AppProviderProps) {
     inventory, setInventory, payMethods, setPayMethods, supplyRules, setSupplyRules,
     emailConfig, setEmailConfig, promotions, setPromotions,
     currentStaff, setCurrentStaff, pinModal, setPinModal,
-    notify, addAudit, sendSms, checkSmsStatus, refreshAllSmsStatuses, requirePin,
+    notify, addAudit, sendSms, checkSmsStatus, refreshAllSmsStatuses, requirePin, sendReportEmail,
     modal, setModal, calcPrice, genId, genOrderNum, fmt, theme, setTheme,
   };
 

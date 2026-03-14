@@ -9,7 +9,7 @@ const MAX_ATTEMPTS = 3;
 const LOCKOUT_SECONDS = 30;
 
 function AppInner() {
-  const { staff, shop, currentStaff, setCurrentStaff, pinModal, setPinModal, notify } = useApp();
+  const { staff, shop, currentStaff, setCurrentStaff, pinModal, setPinModal, notify, sendReportEmail, emailConfig } = useApp();
 
   const [screen, setScreen] = useState("login");
   const [pinBuffer, setPinBuffer] = useState("");
@@ -81,6 +81,10 @@ function AppInner() {
 
   const handlePinBackspace = () => !isLocked && setPinBuffer((p) => p.slice(0, -1));
   const handleLogout = () => {
+    // Send end-of-shift report if enabled (fire-and-forget, don't block logout)
+    if (shop.autoEmailEndOfShift && emailConfig.enabled && emailConfig.testVerified) {
+      sendReportEmail("today").catch(() => {});
+    }
     setCurrentStaff(null);
     setScreen("login");
     setSelectedStaff(null);
