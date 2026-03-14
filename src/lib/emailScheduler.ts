@@ -67,7 +67,7 @@ async function sendViaTauri(
     throw new Error("Email sending requires Tauri (not available in browser dev mode)");
   }
   const { invoke } = await import("@tauri-apps/api/core");
-  const sendTo = emailConfig.reportTo || shop.reportEmail || emailConfig.email;
+  const sendTo = emailConfig.reportTo || emailConfig.email;
   await invoke("send_email", {
     payload: {
       smtp_host: emailConfig.smtpHost,

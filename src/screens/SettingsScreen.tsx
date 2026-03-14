@@ -473,16 +473,6 @@ export function SettingsScreen() {
                 {"\uD83D\uDCE7"} Email Report Settings
               </h4>
               <div style={{ marginBottom: 12 }}>
-                <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>Owner Email Address</label>
-                <input
-                  type="email"
-                  value={shop.reportEmail || ""}
-                  onChange={(e) => setShop((p) => ({ ...p, reportEmail: e.target.value }))}
-                  placeholder="owner@example.com"
-                  className="input"
-                />
-              </div>
-              <div style={{ marginBottom: 12 }}>
                 <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 8 }}>Auto-Send Schedule</label>
                 {([
                   { key: "autoEmailEndOfShift" as const, label: "End of Shift", icon: "\uD83C\uDF19" },

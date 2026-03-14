@@ -19,7 +19,6 @@ export interface Shop {
   autoSmsReceipt: boolean;
   smsApiKey: string;
   smsSenderName: string;
-  reportEmail: string;
   autoEmailEndOfShift: boolean;
   autoEmailDaily: boolean;
   autoEmailWeekly: boolean;

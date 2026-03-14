@@ -142,7 +142,7 @@ export function PromoBlastScreen() {
             <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, var(--accent), var(--accent2))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, fontWeight: 800, flexShrink: 0 }}>{"\uD83D\uDCE2"}</div>
             <div>
               <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>{promo.name}</h2>
-              <div style={{ fontSize: 13, color: "var(--muted)" }}>by {promo.createdBy} &middot; {new Date(promo.createdAt).toLocaleDateString()}</div>
+              <div style={{ fontSize: 13, color: "var(--muted)" }}>by {promo.createdBy} &middot; {new Date(promo.createdAt).toLocaleDateString()} &middot; Filter: {promo.filter === "all" ? "All Opted-In" : promo.filter === "inactive30" ? "Inactive 30+ Days" : promo.filter === "loyal" ? "Loyal (Top 25%)" : promo.filter || "Custom"}</div>
             </div>
           </div>
 

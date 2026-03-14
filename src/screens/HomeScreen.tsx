@@ -10,7 +10,7 @@ export function HomeScreen({ setScreen }: { setScreen: (s: string) => void }) {
   const readyOrders = orders.filter((o) => !o.voided && o.statusId === 5);
   const overdueOrders = orders.filter((o) => {
     if (o.voided || o.statusId !== 5) return false;
-    return (Date.now() - o.statusUpdatedAt) > 48 * 3600000;
+    return (Date.now() - o.statusUpdatedAt) > (shop.overstayAlertHrs || 48) * 3600000;
   });
 
   const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - 6); weekStart.setHours(0, 0, 0, 0);
@@ -21,7 +21,7 @@ export function HomeScreen({ setScreen }: { setScreen: (s: string) => void }) {
   const lowStock = inventory.filter((i) => i.qty > 0 && i.qty <= i.minQty);
 
   const overstayOrders = orders
-    .map((o) => ({ ...o, overstay: getOverstay(o) }))
+    .map((o) => ({ ...o, overstay: getOverstay(o, shop) }))
     .filter((o) => o.overstay)
     .sort((a, b) => (b.overstay?.hrs || 0) - (a.overstay?.hrs || 0))
     .slice(0, 5);
@@ -102,7 +102,9 @@ export function HomeScreen({ setScreen }: { setScreen: (s: string) => void }) {
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {readyOrders.slice(0, 5).map((o) => {
                 const hoursWaiting = Math.floor((Date.now() - o.statusUpdatedAt) / 3600000);
-                const aging = hoursWaiting >= 48 ? "red" : hoursWaiting >= 24 ? "orange" : "green";
+                const warnHrs = shop.overstayWarnHrs || 24;
+                const alertHrs = shop.overstayAlertHrs || 48;
+                const aging = hoursWaiting >= alertHrs ? "red" : hoursWaiting >= warnHrs ? "orange" : "green";
                 const agingColors: any = { green: "var(--success)", orange: "var(--warning)", red: "var(--danger)" };
                 return (
                   <div key={o.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "8px 12px", background: "var(--bg)", borderRadius: 8, borderLeft: `3px solid ${agingColors[aging]}` }}>
