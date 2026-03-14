@@ -2,9 +2,23 @@ import { useState } from "react";
 import { useApp } from "../context/AppContext";
 
 export function CustomersScreen() {
-  const { customers, orders, notify, fmt } = useApp();
+  const { customers, setCustomers, orders, setOrders, smsLog, setSmsLog, notify, fmt, requirePin, addAudit } = useApp();
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const handleDelete = (customerId: string, customerName: string) => {
+    requirePin("OWNER", () => {
+      const orderIds = new Set(orders.filter(o => o.customerId === customerId).map(o => o.id));
+      setOrders(prev => prev.filter(o => o.customerId !== customerId));
+      setSmsLog(prev => prev.filter(e => !e.orderId || !orderIds.has(e.orderId)));
+      setCustomers(prev => prev.filter(c => c.id !== customerId));
+      addAudit("CUSTOMER_DELETE", `Deleted customer "${customerName}" and ${orderIds.size} order(s)`);
+      notify(`Deleted ${customerName} and ${orderIds.size} order(s)`);
+      setSelected(null);
+      setConfirmDelete(false);
+    }, `Delete customer "${customerName}" and all their orders? This cannot be undone.`);
+  };
 
   const filtered = customers.filter((c) =>
     c.name.toLowerCase().includes(search.toLowerCase()) || c.phone.includes(search)
@@ -45,6 +59,33 @@ export function CustomersScreen() {
               <span style={{ fontWeight: 700, color: "var(--accent)" }}>{fmt(o.total)}</span>
             </div>
           ))}
+
+          <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid var(--border)" }}>
+            {!confirmDelete ? (
+              <button
+                onClick={() => setConfirmDelete(true)}
+                style={{ padding: "8px 16px", borderRadius: 6, border: "1px solid var(--danger)", background: "transparent", color: "var(--danger)", cursor: "pointer", fontSize: 13, fontWeight: 600 }}
+              >
+                Delete Customer
+              </button>
+            ) : (
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <span style={{ fontSize: 13, color: "var(--danger)", fontWeight: 600 }}>Delete {customer.name} and all orders?</span>
+                <button
+                  onClick={() => handleDelete(customer.id, customer.name)}
+                  style={{ padding: "8px 16px", borderRadius: 6, border: "none", background: "var(--danger)", color: "#fff", cursor: "pointer", fontSize: 13, fontWeight: 600 }}
+                >
+                  Confirm
+                </button>
+                <button
+                  onClick={() => setConfirmDelete(false)}
+                  style={{ padding: "8px 16px", borderRadius: 6, border: "1px solid var(--border-dark)", background: "transparent", color: "var(--muted)", cursor: "pointer", fontSize: 13 }}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
