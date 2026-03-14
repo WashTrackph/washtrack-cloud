@@ -17,7 +17,6 @@ export const SEED_SHOP: Shop = {
   autoSmsReceipt: true,
   smsApiKey: "",
   smsSenderName: "SEMAPHORE",
-  reportEmail: "",
   autoEmailEndOfShift: false,
   autoEmailDaily: false,
   autoEmailWeekly: false,

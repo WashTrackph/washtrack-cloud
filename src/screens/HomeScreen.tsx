@@ -21,7 +21,7 @@ export function HomeScreen({ setScreen }: { setScreen: (s: string) => void }) {
   const lowStock = inventory.filter((i) => i.qty > 0 && i.qty <= i.minQty);
 
   const overstayOrders = orders
-    .map((o) => ({ ...o, overstay: getOverstay(o) }))
+    .map((o) => ({ ...o, overstay: getOverstay(o, shop) }))
     .filter((o) => o.overstay)
     .sort((a, b) => (b.overstay?.hrs || 0) - (a.overstay?.hrs || 0))
     .slice(0, 5);
