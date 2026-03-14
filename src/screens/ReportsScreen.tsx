@@ -2,8 +2,19 @@ import { useState } from "react";
 import { useApp } from "../context/AppContext";
 
 export function ReportsScreen() {
-  const { orders, services, customers, shop, notify, fmt } = useApp();
+  const { orders, services, customers, shop, notify, fmt, sendReportEmail, emailConfig } = useApp();
   const [range, setRange] = useState("today");
+  const [emailing, setEmailing] = useState(false);
+
+  const handleEmailReport = async () => {
+    setEmailing(true);
+    try {
+      const period = range === "today" ? "today" : range === "week" ? "week" : "month";
+      await sendReportEmail(period as "today" | "week" | "month");
+    } finally {
+      setEmailing(false);
+    }
+  };
 
   const now = Date.now();
   const ranges: Record<string, number> = {
@@ -34,6 +45,21 @@ export function ReportsScreen() {
           {([["today", "Today"], ["week", "7 Days"], ["month", "30 Days"]] as const).map(([v, l]) => (
             <button key={v} onClick={() => setRange(v)} style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid var(--border-dark)", background: range === v ? "var(--accent-bg)" : "transparent", color: range === v ? "var(--accent)" : "var(--muted)", cursor: "pointer", fontSize: 13 }}>{l}</button>
           ))}
+          <button
+            onClick={handleEmailReport}
+            disabled={emailing || !emailConfig.enabled || !emailConfig.testVerified}
+            style={{
+              padding: "6px 14px", borderRadius: 6, border: "1px solid var(--border-dark)",
+              background: emailing ? "var(--border)" : "var(--accent-bg)",
+              color: emailing ? "var(--muted)" : "var(--accent)",
+              cursor: (emailing || !emailConfig.enabled || !emailConfig.testVerified) ? "not-allowed" : "pointer",
+              fontSize: 13, fontWeight: 600, marginLeft: 8,
+              opacity: (!emailConfig.enabled || !emailConfig.testVerified) ? 0.4 : 1,
+            }}
+            title={!emailConfig.enabled ? "Enable email in Settings first" : !emailConfig.testVerified ? "Verify email in Settings first" : "Email this report"}
+          >
+            {emailing ? "Sending..." : "\uD83D\uDCE7 Email Report"}
+          </button>
         </div>
       </div>
 
