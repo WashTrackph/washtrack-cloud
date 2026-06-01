@@ -21,6 +21,10 @@ export const SEED_SHOP: Shop = {
   autoEmailDaily: false,
   autoEmailWeekly: false,
   autoEmailMonthly: false,
+  autoEmailPeriodic: false,
+  periodicIntervalHours: 4,
+  workHoursStart: "08:00",
+  workHoursEnd: "22:00",
   shiftEndTime: "22:00",
 };
 

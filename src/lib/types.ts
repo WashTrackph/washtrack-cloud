@@ -23,6 +23,10 @@ export interface Shop {
   autoEmailDaily: boolean;
   autoEmailWeekly: boolean;
   autoEmailMonthly: boolean;
+  autoEmailPeriodic: boolean;
+  periodicIntervalHours: number;   // e.g. 4 = every 4 hours
+  workHoursStart: string;          // "HH:MM" — don't send before this
+  workHoursEnd: string;            // "HH:MM" — don't send after this
   shiftEndTime: string;
   smsMockMode?: boolean;
   btPrinterAddress?: string;

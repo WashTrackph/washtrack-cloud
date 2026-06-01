@@ -497,6 +497,69 @@ export function SettingsScreen() {
                   </div>
                 ))}
               </div>
+              {/* Periodic interval row */}
+              <div
+                onClick={() => setShop((p) => ({ ...p, autoEmailPeriodic: !p.autoEmailPeriodic }))}
+                style={{
+                  display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: 8, cursor: "pointer", marginBottom: 12,
+                  border: `1px solid ${shop.autoEmailPeriodic ? "var(--accent)" : "var(--border)"}`,
+                  background: shop.autoEmailPeriodic ? "color-mix(in srgb, var(--accent) 8%, var(--card))" : "var(--card)",
+                }}
+              >
+                <span>⏱</span>
+                <span style={{ flex: 1, fontSize: 13, color: "var(--text)" }}>Every few hours (during work hours)</span>
+                <div style={{ width: 34, height: 18, borderRadius: 9, background: shop.autoEmailPeriodic ? "var(--accent)" : "var(--border-dark)", position: "relative", flexShrink: 0 }}>
+                  <div style={{ position: "absolute", top: 2, left: shop.autoEmailPeriodic ? 18 : 2, width: 14, height: 14, borderRadius: "50%", background: "var(--white)", transition: "left 0.2s" }} />
+                </div>
+              </div>
+
+              {shop.autoEmailPeriodic && (
+                <div style={{ padding: "12px 14px", background: "var(--card)", borderRadius: 10, border: "1px solid var(--border)", marginBottom: 12 }}>
+                  <div style={{ marginBottom: 12 }}>
+                    <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>Send every</label>
+                    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                      {[1, 2, 3, 4, 6, 8].map((h) => (
+                        <button
+                          key={h}
+                          onClick={(e) => { e.stopPropagation(); setShop((p) => ({ ...p, periodicIntervalHours: h })); }}
+                          style={{
+                            padding: "6px 14px", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", border: "none",
+                            background: (shop.periodicIntervalHours || 4) === h ? "var(--accent)" : "var(--bg)",
+                            color: (shop.periodicIntervalHours || 4) === h ? "#fff" : "var(--subtext)",
+                          }}
+                        >
+                          {h}h
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", gap: 16 }}>
+                    <div>
+                      <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 4 }}>Work hours start</label>
+                      <input
+                        type="time"
+                        value={shop.workHoursStart || "08:00"}
+                        onChange={(e) => setShop((p) => ({ ...p, workHoursStart: e.target.value }))}
+                        className="input"
+                        style={{ maxWidth: 120 }}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 4 }}>Work hours end</label>
+                      <input
+                        type="time"
+                        value={shop.workHoursEnd || "22:00"}
+                        onChange={(e) => setShop((p) => ({ ...p, workHoursEnd: e.target.value }))}
+                        className="input"
+                        style={{ maxWidth: 120 }}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div>
                 <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>Shift End Time</label>
                 <input

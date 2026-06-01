@@ -8,13 +8,14 @@ import { buildReportHTML } from "./reportTemplate";
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export interface LastEmailSent {
-  daily: number;    // timestamp of last daily send
-  weekly: number;   // timestamp of last weekly send
-  monthly: number;  // timestamp of last monthly send
-  shift: number;    // timestamp of last end-of-shift send
+  daily: number;
+  weekly: number;
+  monthly: number;
+  shift: number;
+  periodic: number;  // timestamp of last periodic interval send
 }
 
-export const EMPTY_LAST_SENT: LastEmailSent = { daily: 0, weekly: 0, monthly: 0, shift: 0 };
+export const EMPTY_LAST_SENT: LastEmailSent = { daily: 0, weekly: 0, monthly: 0, shift: 0, periodic: 0 };
 
 interface SchedulerState {
   shop: Shop;
@@ -53,6 +54,28 @@ function isMonthlyDue(lastSent: number): boolean {
   const now = new Date();
   if (now.getDate() !== 1) return false;
   return lastSent < startOfDay();
+}
+
+function parseHHMM(hhmm: string): { h: number; m: number } {
+  const [h, m] = (hhmm || "00:00").split(":").map(Number);
+  return { h: h || 0, m: m || 0 };
+}
+
+function isWithinWorkHours(start: string, end: string): boolean {
+  const now = new Date();
+  const nowMins = now.getHours() * 60 + now.getMinutes();
+  const { h: sh, m: sm } = parseHHMM(start);
+  const { h: eh, m: em } = parseHHMM(end);
+  const startMins = sh * 60 + sm;
+  const endMins   = eh * 60 + em;
+  return nowMins >= startMins && nowMins < endMins;
+}
+
+function isPeriodicDue(lastSent: number, intervalHours: number, workStart: string, workEnd: string): boolean {
+  if (!isWithinWorkHours(workStart, workEnd)) return false;
+  if (lastSent === 0) return true;
+  const msSinceLastSend = Date.now() - lastSent;
+  return msSinceLastSend >= intervalHours * 60 * 60 * 1000;
 }
 
 // ─── Send Email via Tauri ────────────────────────────────────────────────────
@@ -155,6 +178,22 @@ export async function checkAndSendReports(state: SchedulerState): Promise<Schedu
       sent.push("Monthly report");
     } catch (err: any) {
       errors.push(`Monthly report failed: ${err?.message || err}`);
+    }
+  }
+
+  // Periodic (every N hours during work hours)
+  if (shop.autoEmailPeriodic && isPeriodicDue(
+    lastSent.periodic ?? 0,
+    shop.periodicIntervalHours || 4,
+    shop.workHoursStart || "08:00",
+    shop.workHoursEnd || "22:00",
+  )) {
+    try {
+      await sendReport("today", reportState);
+      updatedLastSent.periodic = Date.now();
+      sent.push(`Periodic report (every ${shop.periodicIntervalHours || 4}h)`);
+    } catch (err: any) {
+      errors.push(`Periodic report failed: ${err?.message || err}`);
     }
   }
 
