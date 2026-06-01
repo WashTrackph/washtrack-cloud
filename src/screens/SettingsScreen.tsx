@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { exportBackup, importBackup } from "../lib/backup";
 import { useApp } from "../context/AppContext";
 import { ThemeCustomizer } from "../components/ThemeCustomizer";
 import { createHashedPin } from "../lib/crypto";
@@ -9,7 +10,7 @@ import {
 } from "../data/seeds";
 import type { Service, Staff, SupplyRule, SmsTemplates, EmailProvider } from "../lib/types";
 
-type TabId = "shop" | "theme" | "services" | "workflow" | "sms" | "email" | "staff" | "inventory" | "supplies" | "logs" | "smslog" | "printer";
+type TabId = "shop" | "theme" | "services" | "workflow" | "sms" | "email" | "staff" | "inventory" | "supplies" | "logs" | "smslog" | "printer" | "backup";
 
 const TABS: { id: TabId; icon: string; label: string }[] = [
   { id: "shop",      icon: "\uD83C\uDFEA", label: "Shop" },
@@ -24,6 +25,7 @@ const TABS: { id: TabId; icon: string; label: string }[] = [
   { id: "logs",      icon: "\uD83D\uDCDC", label: "Audit Log" },
   { id: "smslog",    icon: "\uD83D\uDCF1", label: "SMS Log" },
   { id: "printer",   icon: "\uD83D\uDDA8\uFE0F", label: "Printer" },
+  { id: "backup",    icon: "\uD83D\uDCBE", label: "Backup" },
 ];
 
 const PRICING_OPTIONS: { value: Service["pricingType"]; label: string }[] = [
@@ -1652,6 +1654,139 @@ export function SettingsScreen() {
             )}
           </div>
         )}
+
+        {/* BACKUP & RESTORE */}
+        {tab === "backup" && <BackupTab notify={notify} />}
+      </div>
+    </div>
+  );
+}
+
+// ─── Backup Tab ───────────────────────────────────────────────────────────────
+function BackupTab({ notify }: { notify: (msg: string, type?: string) => void }) {
+  const [exporting, setExporting] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [confirmRestore, setConfirmRestore] = useState(false);
+
+  async function handleExport() {
+    setExporting(true);
+    try {
+      await exportBackup();
+      notify("Backup saved successfully!");
+    } catch (e: any) {
+      notify(`Export failed: ${e?.message || e}`, "error");
+    } finally {
+      setExporting(false);
+    }
+  }
+
+  async function handleImport() {
+    setImporting(true);
+    setConfirmRestore(false);
+    try {
+      const result = await importBackup();
+      if (!result.ok) {
+        notify(result.message, "error");
+      } else {
+        notify(result.message);
+        setTimeout(() => window.location.reload(), 1500);
+      }
+    } catch (e: any) {
+      notify(`Restore failed: ${e?.message || e}`, "error");
+    } finally {
+      setImporting(false);
+    }
+  }
+
+  return (
+    <div>
+      <h3 style={{ margin: "0 0 6px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>💾 Backup & Restore</h3>
+      <p style={{ margin: "0 0 24px", fontSize: 13, color: "var(--subtext)" }}>
+        Keep your data safe. Export a backup file and store it on USB, Google Drive, or email it to yourself.
+        If the device is ever damaged or replaced, restore from that file.
+      </p>
+
+      {/* Export */}
+      <div style={{ padding: 20, background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, marginBottom: 16 }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+          <div style={{ fontSize: 32 }}>📤</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>Export Backup</div>
+            <div style={{ fontSize: 13, color: "var(--subtext)", marginBottom: 14, lineHeight: 1.5 }}>
+              Saves all your data — orders, customers, staff, services, inventory, settings — into a single <code>.json</code> file.
+            </div>
+            <button
+              onClick={handleExport}
+              disabled={exporting}
+              style={{
+                padding: "10px 20px", borderRadius: 8, border: "none", cursor: exporting ? "default" : "pointer",
+                background: exporting ? "var(--border)" : "var(--accent)", color: "#fff",
+                fontWeight: 700, fontSize: 14, opacity: exporting ? 0.7 : 1,
+              }}
+            >
+              {exporting ? "Saving…" : "Save Backup File"}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Restore */}
+      <div style={{ padding: 20, background: "var(--card)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 12 }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+          <div style={{ fontSize: 32 }}>📥</div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>Restore from Backup</div>
+            <div style={{ fontSize: 13, color: "var(--subtext)", marginBottom: 14, lineHeight: 1.5 }}>
+              Loads a previously exported backup file. <strong style={{ color: "var(--danger)" }}>This will overwrite all current data</strong> and reload the app.
+            </div>
+
+            {!confirmRestore ? (
+              <button
+                onClick={() => setConfirmRestore(true)}
+                style={{
+                  padding: "10px 20px", borderRadius: 8, border: "1px solid var(--danger)", cursor: "pointer",
+                  background: "transparent", color: "var(--danger)", fontWeight: 700, fontSize: 14,
+                }}
+              >
+                Restore Backup…
+              </button>
+            ) : (
+              <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+                <span style={{ fontSize: 13, color: "var(--danger)", fontWeight: 600 }}>Are you sure? Current data will be replaced.</span>
+                <button
+                  onClick={handleImport}
+                  disabled={importing}
+                  style={{
+                    padding: "9px 18px", borderRadius: 8, border: "none", cursor: importing ? "default" : "pointer",
+                    background: "var(--danger)", color: "#fff", fontWeight: 700, fontSize: 13, opacity: importing ? 0.7 : 1,
+                  }}
+                >
+                  {importing ? "Restoring…" : "Yes, Restore"}
+                </button>
+                <button
+                  onClick={() => setConfirmRestore(false)}
+                  style={{
+                    padding: "9px 18px", borderRadius: 8, border: "1px solid var(--border)", cursor: "pointer",
+                    background: "transparent", color: "var(--subtext)", fontWeight: 600, fontSize: 13,
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Tips */}
+      <div style={{ marginTop: 20, padding: 16, background: "color-mix(in srgb, var(--accent) 6%, var(--bg))", borderRadius: 10, border: "1px solid color-mix(in srgb, var(--accent) 20%, transparent)" }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "var(--accent)", marginBottom: 8 }}>💡 Backup Tips</div>
+        <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, color: "var(--subtext)", lineHeight: 1.8 }}>
+          <li>Export a backup at the end of each week</li>
+          <li>Store it on Google Drive, USB, or email it to yourself</li>
+          <li>Backup file includes all orders, customers, staff, and settings</li>
+          <li>To move to a new device: export on the old device, install WashTrack, then restore</li>
+        </ul>
       </div>
     </div>
   );
