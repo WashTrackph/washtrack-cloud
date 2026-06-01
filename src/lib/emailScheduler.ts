@@ -56,6 +56,15 @@ function isMonthlyDue(lastSent: number): boolean {
   return lastSent < startOfDay();
 }
 
+function isShiftEndDue(lastSent: number, shiftEndTime: string): boolean {
+  const now = new Date();
+  const nowMins = now.getHours() * 60 + now.getMinutes();
+  const { h, m } = parseHHMM(shiftEndTime);
+  const shiftMins = h * 60 + m;
+  // It's at or past shift end time today, and we haven't sent today yet
+  return nowMins >= shiftMins && lastSent < startOfDay();
+}
+
 function parseHHMM(hhmm: string): { h: number; m: number } {
   const [h, m] = (hhmm || "00:00").split(":").map(Number);
   return { h: h || 0, m: m || 0 };
@@ -147,6 +156,17 @@ export async function checkAndSendReports(state: SchedulerState): Promise<Schedu
     services: state.services, payMethods: state.payMethods, stages: state.stages,
     inventory: state.inventory, smsLog: state.smsLog, auditLog: state.auditLog,
   };
+
+  // End of shift (time-based — fires once at/after shiftEndTime each day)
+  if (shop.autoEmailEndOfShift && isShiftEndDue(lastSent.shift ?? 0, shop.shiftEndTime || "22:00")) {
+    try {
+      await sendReport("today", reportState);
+      updatedLastSent.shift = Date.now();
+      sent.push("End-of-shift report");
+    } catch (err: any) {
+      errors.push(`End-of-shift report failed: ${err?.message || err}`);
+    }
+  }
 
   // Daily
   if (shop.autoEmailDaily && isDailyDue(lastSent.daily)) {
