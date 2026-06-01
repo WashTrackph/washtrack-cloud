@@ -52,7 +52,11 @@ export function PinModalOverlay({ pinModal, setPinModal, staff, shop, notify }: 
       checking.current = true;
       (async () => {
         let valid = false;
-        if (pinModal.role === "OWNER") {
+        if (pinModal.role === "SETTINGS") {
+          valid = shop.settingsPin
+            ? await checkPin(next, shop.settingsPin)
+            : await checkPin(next, shop.ownerPin);
+        } else if (pinModal.role === "OWNER") {
           valid = await checkPin(next, shop.ownerPin);
         } else if (pinModal.role === "MANAGER") {
           valid = await checkPin(next, shop.managerPin) || await checkPin(next, shop.ownerPin);

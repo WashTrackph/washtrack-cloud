@@ -574,6 +574,28 @@ export function SettingsScreen() {
               </div>
             </div>
 
+            {/* Settings PIN */}
+            <div style={{ marginTop: 20, padding: 18, background: "var(--bg)", borderRadius: 10, border: "1px solid var(--border)" }}>
+              <h4 style={{ margin: "0 0 6px", fontSize: 14, fontWeight: 700, color: "var(--text)" }}>🔒 Settings PIN</h4>
+              <p style={{ margin: "0 0 12px", fontSize: 12, color: "var(--subtext)", lineHeight: 1.5 }}>
+                A separate PIN just for Settings. If not set, the Owner PIN is used as fallback.
+              </p>
+              <SettingsPinField
+                currentPin={shop.settingsPin || ""}
+                onSave={async (pin) => {
+                  const hashed = await createHashedPin(pin);
+                  setShop((p) => ({ ...p, settingsPin: hashed }));
+                  notify("Settings PIN updated");
+                  addAudit("SETTINGS_CHANGED", "Settings PIN updated");
+                }}
+                onClear={() => {
+                  setShop((p) => ({ ...p, settingsPin: undefined }));
+                  notify("Settings PIN removed — Owner PIN will be used");
+                  addAudit("SETTINGS_CHANGED", "Settings PIN removed");
+                }}
+              />
+            </div>
+
             <button
               onClick={() => { notify("Shop settings saved"); addAudit("SETTINGS_CHANGED", "Shop identity updated"); }}
               className="btn-primary"
@@ -1788,6 +1810,78 @@ function BackupTab({ notify }: { notify: (msg: string, type?: string) => void })
           <li>To move to a new device: export on the old device, install WashTrack, then restore</li>
         </ul>
       </div>
+    </div>
+  );
+}
+
+// ─── Settings PIN Field ───────────────────────────────────────────────────────
+function SettingsPinField({ currentPin, onSave, onClear }: {
+  currentPin: string;
+  onSave: (pin: string) => void;
+  onClear: () => void;
+}) {
+  const [pin, setPin] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
+
+  const isSet = !!currentPin;
+
+  function handleSave() {
+    if (!/^\d{4}$/.test(pin)) { setError("PIN must be exactly 4 digits"); return; }
+    if (pin !== confirm) { setError("PINs don't match"); return; }
+    setError("");
+    setPin("");
+    setConfirm("");
+    onSave(pin);
+  }
+
+  return (
+    <div>
+      {isSet && (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 12px", borderRadius: 8, background: "color-mix(in srgb, var(--success) 8%, transparent)", border: "1px solid color-mix(in srgb, var(--success) 30%, transparent)", marginBottom: 12 }}>
+          <span style={{ fontSize: 13, fontWeight: 600, color: "var(--success)" }}>✓ Settings PIN is set</span>
+          <button onClick={onClear} style={{ fontSize: 12, color: "var(--danger)", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>Remove</button>
+        </div>
+      )}
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+        <div>
+          <label style={{ display: "block", fontSize: 11, color: "var(--subtext)", marginBottom: 4 }}>{isSet ? "New PIN" : "PIN (4 digits)"}</label>
+          <input
+            type="password"
+            inputMode="numeric"
+            maxLength={4}
+            value={pin}
+            onChange={(e) => { setPin(e.target.value.replace(/\D/g, "").slice(0, 4)); setError(""); }}
+            placeholder="••••"
+            className="input"
+            style={{ maxWidth: 100, letterSpacing: 4, textAlign: "center" }}
+          />
+        </div>
+        <div>
+          <label style={{ display: "block", fontSize: 11, color: "var(--subtext)", marginBottom: 4 }}>Confirm PIN</label>
+          <input
+            type="password"
+            inputMode="numeric"
+            maxLength={4}
+            value={confirm}
+            onChange={(e) => { setConfirm(e.target.value.replace(/\D/g, "").slice(0, 4)); setError(""); }}
+            placeholder="••••"
+            className="input"
+            style={{ maxWidth: 100, letterSpacing: 4, textAlign: "center" }}
+          />
+        </div>
+        <div style={{ display: "flex", alignItems: "flex-end" }}>
+          <button
+            onClick={handleSave}
+            disabled={pin.length < 4 || confirm.length < 4}
+            className="btn-primary"
+            style={{ padding: "8px 16px", fontSize: 13, opacity: pin.length < 4 || confirm.length < 4 ? 0.5 : 1 }}
+          >
+            {isSet ? "Update PIN" : "Set PIN"}
+          </button>
+        </div>
+      </div>
+      {error && <p style={{ margin: "6px 0 0", fontSize: 12, color: "var(--danger)", fontWeight: 600 }}>{error}</p>}
     </div>
   );
 }

@@ -47,7 +47,7 @@ export function MainLayout({ screen, setScreen, handleLogout }: MainLayoutProps)
           {navItems.map((item: any) => (
             <button key={item.id} onClick={() => {
               if (item.id === "settings") {
-                requirePin("OWNER", () => setScreen("settings"), "Enter PIN to access Settings");
+                requirePin("SETTINGS", () => setScreen("settings"), "Enter Settings PIN");
               } else {
                 setScreen(item.id);
               }
