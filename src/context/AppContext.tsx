@@ -44,6 +44,10 @@ interface AppContextValue {
   setEmailConfig: React.Dispatch<React.SetStateAction<EmailConfig>>;
   promotions: Promotion[];
   setPromotions: React.Dispatch<React.SetStateAction<Promotion[]>>;
+  licenseKey: string;
+  setLicenseKey: (key: string) => void;
+  trialStartDate: string;
+  setTrialStartDate: (date: string) => void;
   currentStaff: Staff | null;
   setCurrentStaff: React.Dispatch<React.SetStateAction<Staff | null>>;
   pinModal: any;
@@ -100,6 +104,8 @@ export function AppProvider({ children }: AppProviderProps) {
   const [emailConfig, setEmailConfig] = useState<EmailConfig>(SEED_EMAIL_CONFIG);
   const [promotions, setPromotions] = useState<Promotion[]>([]);
   const [lastEmailSent, setLastEmailSent] = useState<LastEmailSent>(EMPTY_LAST_SENT);
+  const [licenseKey, setLicenseKeyRaw] = useState('');
+  const [trialStartDate, setTrialStartDateRaw] = useState('');
 
   // UI State
   const [notification, setNotification] = useState<{ msg: string; type: string; id: number } | null>(null);
@@ -135,6 +141,8 @@ export function AppProvider({ children }: AppProviderProps) {
       const savedEmailConfig = await DB.get("wt:emailconfig");
       const savedPromotions = await DB.get("wt:promotions");
       const savedLastEmailSent = await DB.get("wt:lastEmailSent");
+      const savedLicenseKey = await DB.get("wt:licenseKey");
+      const savedTrialStartDate = await DB.get("wt:trialStartDate");
 
       if (savedOrders) setOrders(savedOrders);
       if (savedCustomers) setCustomers(savedCustomers);
@@ -152,6 +160,8 @@ export function AppProvider({ children }: AppProviderProps) {
       if (savedEmailConfig) setEmailConfig({ ...SEED_EMAIL_CONFIG, ...savedEmailConfig });
       if (savedPromotions) setPromotions(savedPromotions);
       if (savedLastEmailSent) setLastEmailSent(savedLastEmailSent);
+      if (savedLicenseKey) setLicenseKeyRaw(savedLicenseKey);
+      if (savedTrialStartDate) setTrialStartDateRaw(savedTrialStartDate);
       const savedTheme = await DB.get("wt:theme");
       if (savedTheme) { setThemeRaw(savedTheme); applyTheme(savedTheme); }
       else { applyTheme(DEFAULT_THEME); }
@@ -208,6 +218,8 @@ export function AppProvider({ children }: AppProviderProps) {
   useEffect(() => { if (initialized) DB.set("wt:emailconfig", emailConfig); }, [emailConfig, initialized]);
   useEffect(() => { if (initialized) DB.set("wt:promotions", promotions); }, [promotions, initialized]);
   useEffect(() => { if (initialized) DB.set("wt:lastEmailSent", lastEmailSent); }, [lastEmailSent, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:licenseKey", licenseKey); }, [licenseKey, initialized]);
+  useEffect(() => { if (initialized) DB.set("wt:trialStartDate", trialStartDate); }, [trialStartDate, initialized]);
 
   // ── Helpers ──
   const notify = useCallback((msg: string, type = "success") => {
@@ -365,6 +377,16 @@ export function AppProvider({ children }: AppProviderProps) {
     }
   }, [shop, emailConfig, orders, customers, staff, services, payMethods, stages, inventory, smsLog, auditLog, notify, addAudit]);
 
+  const setLicenseKey = useCallback((key: string) => {
+    setLicenseKeyRaw(key);
+    DB.set("wt:licenseKey", key);
+  }, []);
+
+  const setTrialStartDate = useCallback((date: string) => {
+    setTrialStartDateRaw(date);
+    DB.set("wt:trialStartDate", date);
+  }, []);
+
   const ctx: AppContextValue = {
     shop, setShop, services, setServices, stages, setStages,
     smsTemplates, setSmsTemplates, staff, setStaff,
@@ -372,6 +394,7 @@ export function AppProvider({ children }: AppProviderProps) {
     smsLog, setSmsLog, auditLog, setAuditLog, orderCounter, setOrderCounter,
     inventory, setInventory, payMethods, setPayMethods, supplyRules, setSupplyRules,
     emailConfig, setEmailConfig, promotions, setPromotions,
+    licenseKey, setLicenseKey, trialStartDate, setTrialStartDate,
     currentStaff, setCurrentStaff, pinModal, setPinModal,
     notify, addAudit, sendSms, checkSmsStatus, refreshAllSmsStatuses, requirePin, sendReportEmail,
     modal, setModal, calcPrice, genId, genOrderNum, fmt, theme, setTheme,

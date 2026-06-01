@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { AppProvider, useApp } from "./context/AppContext";
+import { LicenseGate } from "./components/LicenseGate";
 import { PinModalOverlay } from "./components/PinModalOverlay";
 import { LoginScreen } from "./screens/LoginScreen";
 import { MainLayout } from "./screens/MainLayout";
@@ -9,7 +10,7 @@ const MAX_ATTEMPTS = 3;
 const LOCKOUT_SECONDS = 30;
 
 function AppInner() {
-  const { staff, shop, currentStaff, setCurrentStaff, pinModal, setPinModal, notify, sendReportEmail, emailConfig } = useApp();
+  const { staff, shop, currentStaff, setCurrentStaff, pinModal, setPinModal, notify, sendReportEmail, emailConfig, licenseKey, setLicenseKey, trialStartDate, setTrialStartDate } = useApp();
 
   const [screen, setScreen] = useState("login");
   const [pinBuffer, setPinBuffer] = useState("");
@@ -92,6 +93,12 @@ function AppInner() {
   };
 
   return (
+    <LicenseGate
+      licenseKey={licenseKey}
+      trialStartDate={trialStartDate}
+      onActivate={setLicenseKey}
+      onTrialStart={setTrialStartDate}
+    >
     <div style={{ fontFamily: "'DM Sans', sans-serif", background: "var(--bg)", minHeight: "100vh", color: "var(--text)", position: "relative" }}>
       {pinModal && (
         <PinModalOverlay
@@ -125,6 +132,7 @@ function AppInner() {
         />
       )}
     </div>
+    </LicenseGate>
   );
 }
 
