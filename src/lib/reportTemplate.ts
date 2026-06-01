@@ -140,6 +140,10 @@ export function buildReportHTML(data: ReportData): string {
 <!-- ═══ 4. CUSTOMER INSIGHTS ═══ -->
 <div style="padding:24px 32px;border-bottom:1px solid #F1F5F9;">
   <div style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#64748B;margin-bottom:16px;">&#x1F465; Customer Insights</div>
+  <div style="display:inline-block;background:linear-gradient(135deg,#EFF6FF,#DBEAFE);border:1px solid #BFDBFE;border-radius:10px;padding:12px 20px;margin-bottom:14px;">
+    <span style="font-size:26px;font-weight:800;color:#1E40AF;">${data.customers.totalInDatabase}</span>
+    <span style="font-size:12px;color:#3B82F6;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-left:8px;">Total Customers in Database</span>
+  </div>
   <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
     <tr>
       ${_kpiCellSimple(String(data.customers.served), "Customers Served")}

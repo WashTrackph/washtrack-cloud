@@ -63,6 +63,7 @@ export interface ReportData {
 
   // 4. Customer insights
   customers: {
+    totalInDatabase: number;
     served: number;
     newCount: number;
     returning: number;
@@ -395,7 +396,7 @@ export function buildReportData(
     paymentBreakdown,
     serviceBreakdown,
     serviceTotal,
-    customers: { served, newCount, returning, repeatRate, top5 },
+    customers: { totalInDatabase: customers.length, served, newCount, returning, repeatRate, top5 },
     staffPerformance,
     pipeline,
     overstayAlerts,
