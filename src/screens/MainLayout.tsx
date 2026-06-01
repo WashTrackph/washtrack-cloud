@@ -16,7 +16,7 @@ interface MainLayoutProps {
 }
 
 export function MainLayout({ screen, setScreen, handleLogout }: MainLayoutProps) {
-  const { currentStaff, orders, inventory } = useApp();
+  const { currentStaff, orders, inventory, requirePin } = useApp();
   const activeOrders = orders.filter((o) => !o.voided && o.statusId < 6).length;
   const readyOrders = orders.filter((o) => !o.voided && o.statusId === 5).length;
   const lowStockCount = inventory.filter((i) => i.qty <= i.minQty).length;
@@ -45,7 +45,13 @@ export function MainLayout({ screen, setScreen, handleLogout }: MainLayoutProps)
         </div>
         <div style={{ flex: 1, padding: "8px 8px" }}>
           {navItems.map((item: any) => (
-            <button key={item.id} onClick={() => setScreen(item.id)}
+            <button key={item.id} onClick={() => {
+              if (item.id === "settings") {
+                requirePin("OWNER", () => setScreen("settings"), "Enter PIN to access Settings");
+              } else {
+                setScreen(item.id);
+              }
+            }}
               style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: 8, border: "none", background: screen === item.id ? "color-mix(in srgb, var(--accent) 15%, var(--sidebar))" : "transparent", color: screen === item.id ? "var(--accent)" : "var(--subtext)", cursor: "pointer", fontSize: 13, fontWeight: screen === item.id ? 700 : 500, textAlign: "left", marginBottom: 2, transition: "all 0.15s", position: "relative" }}>
               <span style={{ fontSize: 16 }}>{item.icon}</span>
               {item.label}
