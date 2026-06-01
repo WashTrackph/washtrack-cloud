@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { exportBackup, importBackup } from "../lib/backup";
+import { getLicenseInfo, validateLicenseKey, generateLicenseKey, addMonths } from "../lib/license";
 import { useApp } from "../context/AppContext";
 import { ThemeCustomizer } from "../components/ThemeCustomizer";
 import { createHashedPin } from "../lib/crypto";
@@ -10,7 +11,7 @@ import {
 } from "../data/seeds";
 import type { Service, Staff, SupplyRule, SmsTemplates, EmailProvider } from "../lib/types";
 
-type TabId = "shop" | "theme" | "services" | "workflow" | "sms" | "email" | "staff" | "inventory" | "supplies" | "logs" | "smslog" | "printer" | "backup";
+type TabId = "shop" | "theme" | "services" | "workflow" | "sms" | "email" | "staff" | "inventory" | "supplies" | "logs" | "smslog" | "printer" | "backup" | "license";
 
 const TABS: { id: TabId; icon: string; label: string }[] = [
   { id: "shop",      icon: "\uD83C\uDFEA", label: "Shop" },
@@ -26,6 +27,7 @@ const TABS: { id: TabId; icon: string; label: string }[] = [
   { id: "smslog",    icon: "\uD83D\uDCF1", label: "SMS Log" },
   { id: "printer",   icon: "\uD83D\uDDA8\uFE0F", label: "Printer" },
   { id: "backup",    icon: "\uD83D\uDCBE", label: "Backup" },
+  { id: "license",   icon: "\uD83D\uDD11", label: "License" },
 ];
 
 const PRICING_OPTIONS: { value: Service["pricingType"]; label: string }[] = [
@@ -66,6 +68,7 @@ export function SettingsScreen() {
     supplyRules, setSupplyRules, payMethods, setPayMethods,
     emailConfig, setEmailConfig,
     smsLog, setSmsLog, auditLog, setAuditLog, currentStaff, notify, addAudit, fmt, genId, theme, setTheme, promotions, checkSmsStatus, refreshAllSmsStatuses,
+    licenseKey, setLicenseKey, trialStartDate, setTrialStartDate,
   } = useApp();
 
   const [tab, setTab] = useState<TabId>("shop");
@@ -1679,6 +1682,17 @@ export function SettingsScreen() {
 
         {/* BACKUP & RESTORE */}
         {tab === "backup" && <BackupTab notify={notify} />}
+
+        {/* LICENSE */}
+        {tab === "license" && (
+          <LicenseTab
+            licenseKey={licenseKey}
+            trialStartDate={trialStartDate}
+            onActivate={(key) => { setLicenseKey(key); notify("License activated!"); }}
+            onTrialStart={setTrialStartDate}
+            notify={notify}
+          />
+        )}
       </div>
     </div>
   );
@@ -1810,6 +1824,142 @@ function BackupTab({ notify }: { notify: (msg: string, type?: string) => void })
           <li>To move to a new device: export on the old device, install WashTrack, then restore</li>
         </ul>
       </div>
+    </div>
+  );
+}
+
+// ─── License Tab ──────────────────────────────────────────────────────────────
+function LicenseTab({ licenseKey, trialStartDate, onActivate, onTrialStart, notify }: {
+  licenseKey: string;
+  trialStartDate: string;
+  onActivate: (key: string) => void;
+  onTrialStart: (date: string) => void;
+  notify: (msg: string, type?: string) => void;
+}) {
+  const [keyInput, setKeyInput] = useState("");
+  const [error, setError] = useState("");
+
+  if (!trialStartDate) onTrialStart(new Date().toISOString());
+
+  const info = getLicenseInfo(licenseKey, trialStartDate);
+
+  const statusColor =
+    info.status === "active"         ? "var(--success)" :
+    info.status === "expiring_soon"  ? "#F59E0B" :
+    info.status === "trial"          ? "var(--accent)" :
+    "var(--danger)";
+
+  const statusBg =
+    info.status === "active"         ? "color-mix(in srgb, var(--success) 8%, var(--card))" :
+    info.status === "expiring_soon"  ? "color-mix(in srgb, #F59E0B 8%, var(--card))" :
+    info.status === "trial"          ? "color-mix(in srgb, var(--accent) 8%, var(--card))" :
+    "color-mix(in srgb, var(--danger) 8%, var(--card))";
+
+  const statusLabel =
+    info.status === "active"         ? "✓ Active" :
+    info.status === "expiring_soon"  ? "⚠ Expiring Soon" :
+    info.status === "trial"          ? "⏱ Free Trial" :
+    info.status === "trial_expired"  ? "✕ Trial Expired" :
+    info.status === "expired"        ? "✕ Expired" :
+    "✕ Invalid";
+
+  function handleActivate() {
+    const trimmed = keyInput.trim();
+    if (!trimmed) { setError("Please enter a license key."); return; }
+    const { ok } = validateLicenseKey(trimmed);
+    if (!ok) { setError("Invalid key — check and try again."); return; }
+    setError("");
+    setKeyInput("");
+    onActivate(trimmed.toUpperCase());
+  }
+
+  // Dev helper shown only in browser (not Tauri)
+  const isBrowser = !(window as any).__TAURI_INTERNALS__;
+
+  return (
+    <div>
+      <h3 style={{ margin: "0 0 6px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>🔑 License</h3>
+      <p style={{ margin: "0 0 20px", fontSize: 13, color: "var(--subtext)" }}>
+        Your WashTrack license status and activation.
+      </p>
+
+      {/* Status card */}
+      <div style={{ padding: 20, borderRadius: 14, background: statusBg, border: `1px solid ${statusColor}40`, marginBottom: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 12 }}>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: statusColor, marginBottom: 4 }}>
+              {statusLabel}
+            </div>
+            <div style={{ fontSize: 13, color: "var(--subtext)", lineHeight: 1.5 }}>{info.message}</div>
+            {licenseKey && info.status !== "invalid" && (
+              <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 6, fontFamily: "monospace", letterSpacing: 1 }}>
+                Key: {licenseKey.slice(0, 10)}••••••
+              </div>
+            )}
+          </div>
+          <div style={{ textAlign: "center", minWidth: 80 }}>
+            <div style={{ fontSize: 36, fontWeight: 800, color: statusColor, lineHeight: 1 }}>
+              {info.daysLeft > 0 ? info.daysLeft : 0}
+            </div>
+            <div style={{ fontSize: 11, color: "var(--subtext)", textTransform: "uppercase", letterSpacing: 0.5 }}>days left</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Key entry */}
+      <div style={{ padding: 18, background: "var(--card)", border: "1px solid var(--border)", borderRadius: 12, marginBottom: 20 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>
+          {licenseKey && info.status !== "invalid" ? "Update License Key" : "Enter License Key"}
+        </div>
+        <div style={{ fontSize: 12, color: "var(--subtext)", marginBottom: 12 }}>
+          Contact WashTrack support to get a key. Paste it below to activate.
+        </div>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <input
+            value={keyInput}
+            onChange={(e) => { setKeyInput(e.target.value.toUpperCase()); setError(""); }}
+            placeholder="WT-XXX-YYYYMMDD-XXXXXX"
+            className="input"
+            style={{ flex: 1, minWidth: 200, letterSpacing: 1, fontFamily: "monospace" }}
+            onKeyDown={(e) => e.key === "Enter" && handleActivate()}
+          />
+          <button
+            onClick={handleActivate}
+            disabled={!keyInput.trim()}
+            className="btn-primary"
+            style={{ opacity: keyInput.trim() ? 1 : 0.5 }}
+          >
+            Activate
+          </button>
+        </div>
+        {error && <p style={{ margin: "6px 0 0", fontSize: 12, color: "var(--danger)", fontWeight: 600 }}>{error}</p>}
+      </div>
+
+      {/* Dev key generator — only visible in browser mode */}
+      {isBrowser && (
+        <div style={{ padding: 16, background: "var(--bg)", border: "1px dashed var(--border)", borderRadius: 10 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: "var(--muted)", marginBottom: 8 }}>🛠 Developer Tools (browser only)</div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {[
+              { label: "1 Month",  months: 1 },
+              { label: "3 Months", months: 3 },
+              { label: "6 Months", months: 6 },
+              { label: "1 Year",   months: 12 },
+            ].map(({ label, months }) => {
+              const key = generateLicenseKey(addMonths(new Date(), months), "DEV");
+              return (
+                <button
+                  key={months}
+                  onClick={() => { onActivate(key); notify(`Dev key activated: ${label}`); }}
+                  style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--card)", color: "var(--subtext)", fontSize: 12, cursor: "pointer", fontWeight: 600 }}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
