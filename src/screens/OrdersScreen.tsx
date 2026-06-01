@@ -20,6 +20,7 @@ const DRAG_THRESHOLD = 8; // px before drag activates (prevents accidental drags
 export function OrdersScreen() {
   const { orders, setOrders, stages, shop, smsTemplates, sendSms, requirePin, currentStaff, notify, addAudit, fmt, payMethods } = useApp();
   const [view, setView] = useState("kanban");
+  const [search, setSearch] = useState("");
   const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
   const [voidReason, setVoidReason] = useState("");
   const [showVoidFor, setShowVoidFor] = useState<string | null>(null);
@@ -149,9 +150,17 @@ export function OrdersScreen() {
   };
 
   const activeOrders = orders.filter((o) => !o.voided);
+  const q = search.trim().toLowerCase();
+  const filteredOrders = q
+    ? activeOrders.filter((o) =>
+        o.customerName.toLowerCase().includes(q) ||
+        o.orderNum.toLowerCase().includes(q) ||
+        (o.customerPhone || "").includes(q)
+      )
+    : activeOrders;
   const stageOrders = stages.slice(0, 5).map((stage) => ({
     ...stage,
-    orders: activeOrders.filter((o) => o.statusId === stage.id),
+    orders: filteredOrders.filter((o) => o.statusId === stage.id),
   }));
 
   const updateStatus = (orderId: string, newStatusId: number) => {
@@ -321,7 +330,23 @@ export function OrdersScreen() {
     <div style={{ padding: 24, height: "100%", overflow: "auto" }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
         <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "var(--text)" }}>Orders</h2>
-        <div style={{ display: "flex", gap: 8 }}>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <div style={{ position: "relative" }}>
+            <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", fontSize: 14, color: "var(--muted)", pointerEvents: "none" }}>\uD83D\uDD0D</span>
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search name, order #, phone\u2026"
+              style={{
+                paddingLeft: 32, paddingRight: search ? 28 : 10, paddingTop: 7, paddingBottom: 7,
+                borderRadius: 8, border: "1px solid var(--border)", background: "var(--card)",
+                color: "var(--text)", fontSize: 13, width: 220, outline: "none",
+              }}
+            />
+            {search && (
+              <button onClick={() => setSearch("")} style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: 14, padding: 0, lineHeight: 1 }}>\u2715</button>
+            )}
+          </div>
           {(["kanban", "list"] as const).map((v) => (
             <button key={v} onClick={() => setView(v)} style={{ padding: "6px 14px", borderRadius: 6, border: "1px solid var(--border-dark)", background: view === v ? "var(--accent-bg)" : "transparent", color: view === v ? "var(--accent)" : "var(--muted)", cursor: "pointer", fontSize: 13 }}>{v === "kanban" ? "\u229E Board" : "\u2261 List"}</button>
           ))}
