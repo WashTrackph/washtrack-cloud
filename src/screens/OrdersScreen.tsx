@@ -336,7 +336,7 @@ export function OrdersScreen() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search name, order #, phone\u2026"
+              placeholder="Search name, order #, phone..."
               style={{
                 paddingLeft: 32, paddingRight: search ? 28 : 10, paddingTop: 7, paddingBottom: 7,
                 borderRadius: 8, border: "1px solid var(--border)", background: "var(--card)",
