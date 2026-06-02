@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WashTrack Key Generator — SterlingDev</title>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0B0F1A;
+    color: #F1F5F9;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  /* ── Nav ── */
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 860px; margin: 0 auto 28px;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 10px; }
+  .nav-brand .icon { font-size: 28px; }
+  .nav-brand .name { font-size: 16px; font-weight: 800; color: #F1F5F9; }
+  .nav-brand .by { font-size: 11px; color: #475569; }
+  .tabs { display: flex; gap: 6px; background: #131B2E; border-radius: 12px; padding: 4px; border: 1px solid #1E293B; }
+  .tab-btn {
+    padding: 8px 18px; border-radius: 9px; border: none;
+    background: transparent; color: #64748B;
+    font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s;
+  }
+  .tab-btn.active { background: linear-gradient(135deg, #38BDF8, #6366F1); color: #fff; }
+
+  /* ── Pages ── */
+  .page { display: none; max-width: 860px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* ── Cards ── */
+  .card {
+    background: #131B2E; border: 1px solid rgba(56,189,248,0.15);
+    border-radius: 20px; padding: 32px 36px;
+    max-width: 520px; margin: 0 auto;
+  }
+  label { display: block; font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  input, select {
+    width: 100%; padding: 11px 14px;
+    background: #0F172A; border: 1px solid #1E293B;
+    border-radius: 10px; color: #F1F5F9;
+    font-size: 14px; font-family: inherit;
+    outline: none; transition: border 0.15s; margin-bottom: 16px;
+  }
+  input:focus, select:focus { border-color: #38BDF8; }
+  select option { background: #0F172A; }
+
+  .duration-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 16px; }
+  .dur-btn {
+    padding: 10px 0; border-radius: 10px; border: 1px solid #1E293B;
+    background: #0F172A; color: #94A3B8; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.15s; text-align: center;
+  }
+  .dur-btn:hover { border-color: #38BDF8; color: #38BDF8; }
+  .dur-btn.active { background: linear-gradient(135deg,#38BDF8,#6366F1); border-color: transparent; color: #fff; }
+
+  .generate-btn {
+    width: 100%; padding: 13px 0;
+    background: linear-gradient(135deg,#38BDF8,#6366F1);
+    border: none; border-radius: 12px; color: #fff;
+    font-size: 15px; font-weight: 800; cursor: pointer; transition: opacity 0.15s;
+  }
+  .generate-btn:hover { opacity: 0.9; }
+
+  .result-box { margin-top: 20px; background: #0F172A; border: 1px solid #1E293B; border-radius: 12px; padding: 20px; display: none; }
+  .result-box.show { display: block; }
+  .result-label { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .key-display {
+    font-family: 'Courier New', monospace; font-size: 19px; font-weight: 800;
+    color: #38BDF8; letter-spacing: 2px; text-align: center; padding: 14px;
+    background: #131B2E; border-radius: 8px; border: 1px dashed rgba(56,189,248,0.3);
+    margin-bottom: 10px; word-break: break-all;
+  }
+  .meta { font-size: 12px; color: #64748B; text-align: center; margin-bottom: 12px; line-height: 1.7; }
+  .meta span { color: #94A3B8; font-weight: 600; }
+  .copy-btn {
+    width: 100%; padding: 11px 0;
+    background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3);
+    border-radius: 10px; color: #38BDF8; font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .copy-btn:hover { background: rgba(56,189,248,0.2); }
+  .copy-btn.copied { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); color: #10B981; }
+
+  .warning {
+    background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 10px; padding: 12px 16px; margin-bottom: 20px;
+    font-size: 12px; color: #F87171; line-height: 1.6;
+  }
+  .warning strong { display: block; margin-bottom: 2px; }
+
+  /* ── Customers page ── */
+  .customers-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px; gap: 12px; flex-wrap: wrap;
+  }
+  .customers-header h2 { font-size: 18px; font-weight: 800; }
+  .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+  .sort-select {
+    padding: 8px 12px; background: #131B2E; border: 1px solid #1E293B;
+    border-radius: 10px; color: #94A3B8; font-size: 13px; font-family: inherit;
+    outline: none; cursor: pointer; margin-bottom: 0;
+    width: auto;
+  }
+  .export-btn {
+    padding: 8px 16px; background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.3); border-radius: 10px;
+    color: #10B981; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+  }
+  .export-btn:hover { background: rgba(16,185,129,0.2); }
+  .import-btn {
+    padding: 8px 16px; background: rgba(99,102,241,0.1);
+    border: 1px solid rgba(99,102,241,0.3); border-radius: 10px;
+    color: #818CF8; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+  }
+  .import-btn:hover { background: rgba(99,102,241,0.2); }
+
+  .search-input {
+    padding: 8px 14px; background: #131B2E; border: 1px solid #1E293B;
+    border-radius: 10px; color: #F1F5F9; font-size: 13px; font-family: inherit;
+    outline: none; width: 200px; margin-bottom: 0;
+  }
+  .search-input:focus { border-color: #38BDF8; }
+
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px;
+  }
+  .stat-card {
+    background: #131B2E; border: 1px solid #1E293B; border-radius: 12px; padding: 16px;
+    text-align: center;
+  }
+  .stat-num { font-size: 26px; font-weight: 800; color: #38BDF8; }
+  .stat-label { font-size: 11px; color: #475569; margin-top: 2px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+
+  .table-wrap { background: #131B2E; border: 1px solid #1E293B; border-radius: 16px; overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 700;
+    color: #475569; text-transform: uppercase; letter-spacing: 0.5px;
+    background: #0F172A; border-bottom: 1px solid #1E293B;
+  }
+  tbody tr { border-bottom: 1px solid #1E293B; transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(56,189,248,0.04); }
+  tbody td { padding: 13px 16px; font-size: 13px; color: #94A3B8; vertical-align: middle; }
+  tbody td.name { color: #F1F5F9; font-weight: 600; }
+  tbody td.key-cell { font-family: monospace; font-size: 12px; color: #38BDF8; }
+
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .badge-active { background: rgba(16,185,129,0.15); color: #10B981; border: 1px solid rgba(16,185,129,0.3); }
+  .badge-expiring { background: rgba(245,158,11,0.15); color: #F59E0B; border: 1px solid rgba(245,158,11,0.3); }
+  .badge-expired { background: rgba(239,68,68,0.15); color: #F87171; border: 1px solid rgba(239,68,68,0.3); }
+
+  .action-btn {
+    padding: 4px 10px; border-radius: 6px; border: 1px solid #1E293B;
+    background: transparent; color: #64748B; font-size: 12px; cursor: pointer;
+    transition: all 0.15s; margin-left: 4px;
+  }
+  .action-btn:hover { border-color: #38BDF8; color: #38BDF8; }
+  .action-btn.danger:hover { border-color: #F87171; color: #F87171; }
+
+  .empty-state {
+    text-align: center; padding: 60px 20px; color: #475569;
+  }
+  .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; padding: 24px;
+  }
+  .modal {
+    background: #131B2E; border: 1px solid #1E293B; border-radius: 20px;
+    padding: 28px; width: 100%; max-width: 400px;
+  }
+  .modal h3 { font-size: 16px; font-weight: 800; margin-bottom: 16px; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+  .btn-cancel {
+    flex: 1; padding: 11px 0; border-radius: 10px; border: 1px solid #1E293B;
+    background: transparent; color: #94A3B8; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .btn-confirm {
+    flex: 1; padding: 11px 0; border-radius: 10px; border: none;
+    background: linear-gradient(135deg,#38BDF8,#6366F1); color: #fff;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+  .btn-danger {
+    flex: 1; padding: 11px 0; border-radius: 10px; border: none;
+    background: #EF4444; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<div class="nav">
+  <div class="nav-brand">
+    <div class="icon">🧺</div>
+    <div>
+      <div class="name">WashTrack</div>
+      <div class="by">Key Generator · SterlingDev</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('generator')">🔑 Generator</button>
+    <button class="tab-btn" onclick="switchTab('customers')">👥 Customers</button>
+  </div>
+</div>
+
+<!-- ── PAGE 1: Generator ───────────────────────────────────────────────────── -->
+<div class="page active" id="page-generator">
+  <div class="card">
+    <div class="warning">
+      <strong>⚠️ Keep this file private</strong>
+      Do not share this page with customers. Only you should generate keys.
+    </div>
+
+    <label>Shop Code (2–3 letters)</label>
+    <input type="text" id="shopCode" placeholder="e.g. JOE, MLN, ABC" maxlength="3" />
+
+    <label>Customer / Shop Name</label>
+    <input type="text" id="customerName" placeholder="e.g. Maria's Laundry Shop" />
+
+    <label>Contact (phone or Facebook — optional)</label>
+    <input type="text" id="customerContact" placeholder="e.g. 0917-555-1234" />
+
+    <label>Duration</label>
+    <div class="duration-grid">
+      <button class="dur-btn" onclick="selectDuration(1,this)">1 Month</button>
+      <button class="dur-btn active" onclick="selectDuration(3,this)">3 Months</button>
+      <button class="dur-btn" onclick="selectDuration(6,this)">6 Months</button>
+      <button class="dur-btn" onclick="selectDuration(12,this)">1 Year</button>
+    </div>
+
+    <button class="generate-btn" onclick="generate()">Generate License Key</button>
+
+    <div class="result-box" id="resultBox">
+      <div class="result-label">License Key</div>
+      <div class="key-display" id="keyDisplay"></div>
+      <div class="meta" id="keyMeta"></div>
+      <button class="copy-btn" id="copyBtn" onclick="copyKey()">📋 Copy Key</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE 2: Customers ──────────────────────────────────────────────────── -->
+<div class="page" id="page-customers">
+  <div class="customers-header">
+    <h2>👥 Customer Licenses</h2>
+    <div class="header-actions">
+      <input class="search-input" type="text" id="searchInput" placeholder="🔍 Search..." oninput="renderCustomers()" />
+      <select class="sort-select" id="sortSelect" onchange="renderCustomers()">
+        <option value="expiry_asc">Expiring Soonest</option>
+        <option value="expiry_desc">Expiring Latest</option>
+        <option value="name_asc">Name A–Z</option>
+        <option value="name_desc">Name Z–A</option>
+        <option value="newest">Newest Added</option>
+        <option value="oldest">Oldest Added</option>
+      </select>
+      <button class="import-btn" onclick="importData()">📥 Import</button>
+      <button class="export-btn" onclick="exportExcel()">📊 Export Excel</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="statTotal">0</div>
+      <div class="stat-label">Total Customers</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#10B981" id="statActive">0</div>
+      <div class="stat-label">Active</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#F59E0B" id="statExpiring">0</div>
+      <div class="stat-label">Expiring Soon</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#F87171" id="statExpired">0</div>
+      <div class="stat-label">Expired</div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Shop Name</th>
+          <th>Contact</th>
+          <th>License Key</th>
+          <th>Duration</th>
+          <th>Expiry Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="customerTableBody"></tbody>
+    </table>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <div class="icon">🔑</div>
+      <p>No customers yet. Generate a key to get started.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Renew Modal -->
+<div class="modal-overlay" id="renewModal" style="display:none">
+  <div class="modal">
+    <h3>🔄 Renew License</h3>
+    <label>Duration</label>
+    <div class="duration-grid" style="margin-bottom:0">
+      <button class="dur-btn" onclick="selectRenewDuration(1,this)">1 Month</button>
+      <button class="dur-btn active" onclick="selectRenewDuration(3,this)">3 Months</button>
+      <button class="dur-btn" onclick="selectRenewDuration(6,this)">6 Months</button>
+      <button class="dur-btn" onclick="selectRenewDuration(12,this)">1 Year</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeRenewModal()">Cancel</button>
+      <button class="btn-confirm" onclick="confirmRenew()">Generate New Key</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="deleteModal" style="display:none">
+  <div class="modal">
+    <h3>🗑️ Remove Customer</h3>
+    <p style="font-size:13px;color:#94A3B8;line-height:1.6">Are you sure you want to remove <strong id="deleteCustomerName" style="color:#F1F5F9"></strong>? This won't deactivate their key.</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn-danger" onclick="confirmDelete()">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- Renew Result Modal -->
+<div class="modal-overlay" id="renewResultModal" style="display:none">
+  <div class="modal">
+    <h3>✅ New Key Generated</h3>
+    <p style="font-size:12px;color:#64748B;margin-bottom:12px">Send this key to your customer:</p>
+    <div class="key-display" id="renewKeyDisplay" style="font-size:15px;margin-bottom:12px"></div>
+    <div class="meta" id="renewKeyMeta"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="document.getElementById('renewResultModal').style.display='none'">Close</button>
+      <button class="btn-confirm" onclick="copyRenewKey()">📋 Copy Key</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── License logic ────────────────────────────────────────────────────────────
+  const SECRET = 'WT-PH-2025-SterlingDev-XK92';
+  function djb2(str) {
+    let h = 5381;
+    for (let i = 0; i < str.length; i++) { h = ((h << 5) + h) ^ str.charCodeAt(i); h = h >>> 0; }
+    return h.toString(16).toUpperCase().padStart(8,'0');
+  }
+  function checksum(code, date) { return djb2(code + date + SECRET).slice(0,6); }
+  function addMonths(from, months) {
+    const d = new Date(from);
+    d.setMonth(d.getMonth() + months);
+    return d;
+  }
+  function generateKey(expiryDate, shopCode) {
+    const date = new Date(expiryDate).toISOString().slice(0,10).replace(/-/g,'');
+    const code = shopCode.toUpperCase().replace(/[^A-Z0-9]/g,'').padEnd(3,'X').slice(0,3);
+    return `WT-${code}-${date}-${checksum(code,date)}`;
+  }
+  function getStatus(expiryDate) {
+    const days = Math.ceil((new Date(expiryDate) - new Date()) / 86400000);
+    if (days > 7)  return { label: 'Active',        cls: 'badge-active',    days };
+    if (days >= 0) return { label: 'Expiring Soon', cls: 'badge-expiring',  days };
+    if (days >= -5)return { label: 'Grace Period',  cls: 'badge-expiring',  days };
+    return           { label: 'Expired',       cls: 'badge-expired',   days };
+  }
+
+  // ── Storage ──────────────────────────────────────────────────────────────────
+  let customers = JSON.parse(localStorage.getItem('wt_customers') || '[]');
+  function save() { localStorage.setItem('wt_customers', JSON.stringify(customers)); }
+
+  // ── Tab switching ────────────────────────────────────────────────────────────
+  function switchTab(tab) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + tab).classList.add('active');
+    event.target.classList.add('active');
+    if (tab === 'customers') renderCustomers();
+  }
+
+  // ── Generator ────────────────────────────────────────────────────────────────
+  let selectedMonths = 3;
+  let currentKey = '';
+  let currentCustomer = null;
+
+  function selectDuration(months, btn) {
+    selectedMonths = months;
+    document.querySelectorAll('.duration-grid .dur-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function generate() {
+    const code    = document.getElementById('shopCode').value.trim().toUpperCase();
+    const name    = document.getElementById('customerName').value.trim();
+    const contact = document.getElementById('customerContact').value.trim();
+    if (!code || code.length < 2) { alert('Please enter a shop code (2–3 letters)'); document.getElementById('shopCode').focus(); return; }
+    if (!name) { alert('Please enter the customer name'); document.getElementById('customerName').focus(); return; }
+
+    const expiry = addMonths(new Date(), selectedMonths);
+    const key    = generateKey(expiry, code);
+    currentKey   = key;
+
+    // Save to customers
+    const existing = customers.findIndex(c => c.code === code);
+    currentCustomer = { id: Date.now(), code, name, contact, key, months: selectedMonths, expiry: expiry.toISOString(), addedAt: new Date().toISOString() };
+    if (existing >= 0) { customers[existing] = { ...customers[existing], ...currentCustomer, addedAt: customers[existing].addedAt }; }
+    else { customers.unshift(currentCustomer); }
+    save();
+
+    // Show result
+    document.getElementById('keyDisplay').textContent = key;
+    document.getElementById('keyMeta').innerHTML =
+      `Customer: <span>${name}</span><br>` +
+      `Expires: <span>${expiry.toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'})}</span> · ` +
+      `Duration: <span>${selectedMonths} month${selectedMonths>1?'s':''}</span>`;
+    document.getElementById('resultBox').classList.add('show');
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '📋 Copy Key'; btn.classList.remove('copied');
+  }
+
+  function copyKey() {
+    navigator.clipboard.writeText(currentKey).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✅ Copied!'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = '📋 Copy Key'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  // Auto-uppercase shop code
+  document.getElementById('shopCode').addEventListener('input', function() {
+    this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.getElementById('page-generator').classList.contains('active')) generate(); });
+
+  // ── Customers page ───────────────────────────────────────────────────────────
+  function renderCustomers() {
+    const q    = (document.getElementById('searchInput')?.value || '').toLowerCase();
+    const sort = document.getElementById('sortSelect')?.value || 'expiry_asc';
+
+    let list = [...customers].filter(c =>
+      !q || c.name.toLowerCase().includes(q) || c.code.toLowerCase().includes(q) || (c.contact||'').includes(q)
+    );
+
+    list.sort((a,b) => {
+      if (sort === 'expiry_asc')  return new Date(a.expiry) - new Date(b.expiry);
+      if (sort === 'expiry_desc') return new Date(b.expiry) - new Date(a.expiry);
+      if (sort === 'name_asc')    return a.name.localeCompare(b.name);
+      if (sort === 'name_desc')   return b.name.localeCompare(a.name);
+      if (sort === 'newest')      return new Date(b.addedAt) - new Date(a.addedAt);
+      if (sort === 'oldest')      return new Date(a.addedAt) - new Date(b.addedAt);
+      return 0;
+    });
+
+    // Stats
+    const all = customers;
+    document.getElementById('statTotal').textContent    = all.length;
+    document.getElementById('statActive').textContent   = all.filter(c => getStatus(c.expiry).days > 7).length;
+    document.getElementById('statExpiring').textContent = all.filter(c => { const d = getStatus(c.expiry).days; return d >= -5 && d <= 7; }).length;
+    document.getElementById('statExpired').textContent  = all.filter(c => getStatus(c.expiry).days < -5).length;
+
+    const tbody = document.getElementById('customerTableBody');
+    const empty = document.getElementById('emptyState');
+
+    if (list.length === 0) {
+      tbody.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    tbody.innerHTML = list.map((c, i) => {
+      const st      = getStatus(c.expiry);
+      const expDate = new Date(c.expiry).toLocaleDateString('en-PH',{year:'numeric',month:'short',day:'numeric'});
+      const daysStr = st.days > 0 ? `${st.days}d left` : st.days === 0 ? 'today' : `${Math.abs(st.days)}d ago`;
+      return `
+        <tr>
+          <td style="color:#475569">${i+1}</td>
+          <td class="name">${c.name}</td>
+          <td>${c.contact || '<span style="color:#334155">—</span>'}</td>
+          <td class="key-cell">${c.key}</td>
+          <td>${c.months}mo</td>
+          <td>${expDate}<br><span style="font-size:11px;color:#475569">${daysStr}</span></td>
+          <td><span class="badge ${st.cls}">${st.label}</span></td>
+          <td>
+            <button class="action-btn" onclick="copyCustomerKey('${c.key}', this)">Copy</button>
+            <button class="action-btn" onclick="openRenewModal(${c.id})">Renew</button>
+            <button class="action-btn danger" onclick="openDeleteModal(${c.id}, '${c.name.replace(/'/g,"\\'")}')">✕</button>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  function copyCustomerKey(key, btn) {
+    navigator.clipboard.writeText(key).then(() => {
+      btn.textContent = '✅'; setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+
+  // ── Renew ────────────────────────────────────────────────────────────────────
+  let renewId = null, renewMonths = 3, renewKey = '';
+  function openRenewModal(id) {
+    renewId = id; renewMonths = 3;
+    document.querySelectorAll('#renewModal .dur-btn').forEach((b,i) => b.classList.toggle('active', i===1));
+    document.getElementById('renewModal').style.display = 'flex';
+  }
+  function selectRenewDuration(months, btn) {
+    renewMonths = months;
+    document.querySelectorAll('#renewModal .dur-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  function closeRenewModal() { document.getElementById('renewModal').style.display = 'none'; }
+  function confirmRenew() {
+    const c = customers.find(x => x.id === renewId);
+    if (!c) return;
+    const expiry = addMonths(new Date(), renewMonths);
+    renewKey = generateKey(expiry, c.code);
+    c.key = renewKey; c.expiry = expiry.toISOString(); c.months = renewMonths;
+    save(); closeRenewModal(); renderCustomers();
+    document.getElementById('renewKeyDisplay').textContent = renewKey;
+    document.getElementById('renewKeyMeta').innerHTML =
+      `<span>${c.name}</span> · expires <span>${expiry.toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'})}</span>`;
+    document.getElementById('renewResultModal').style.display = 'flex';
+  }
+  function copyRenewKey() {
+    navigator.clipboard.writeText(renewKey).then(() => {
+      const btn = document.querySelector('#renewResultModal .btn-confirm');
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => btn.textContent = '📋 Copy Key', 2000);
+    });
+  }
+
+  // ── Delete ───────────────────────────────────────────────────────────────────
+  let deleteId = null;
+  function openDeleteModal(id, name) {
+    deleteId = id;
+    document.getElementById('deleteCustomerName').textContent = name;
+    document.getElementById('deleteModal').style.display = 'flex';
+  }
+  function closeDeleteModal() { document.getElementById('deleteModal').style.display = 'none'; }
+  function confirmDelete() {
+    customers = customers.filter(c => c.id !== deleteId);
+    save(); closeDeleteModal(); renderCustomers();
+  }
+
+  // ── Export Excel ─────────────────────────────────────────────────────────────
+  function exportExcel() {
+    if (customers.length === 0) { alert('No customers to export.'); return; }
+    const rows = customers.map((c, i) => {
+      const st = getStatus(c.expiry);
+      return {
+        '#': i + 1,
+        'Shop Name': c.name,
+        'Shop Code': c.code,
+        'Contact': c.contact || '',
+        'License Key': c.key,
+        'Duration (months)': c.months,
+        'Expiry Date': new Date(c.expiry).toLocaleDateString('en-PH', {year:'numeric',month:'long',day:'numeric'}),
+        'Status': st.label,
+        'Days Remaining': st.days,
+        'Date Added': new Date(c.addedAt).toLocaleDateString('en-PH', {year:'numeric',month:'long',day:'numeric'}),
+      };
+    });
+    const ws = XLSX.utils.json_to_sheet(rows);
+    ws['!cols'] = [
+      {wch:4},{wch:28},{wch:10},{wch:20},{wch:26},{wch:16},{wch:20},{wch:14},{wch:14},{wch:18}
+    ];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Customers');
+    const date = new Date().toISOString().slice(0,10);
+    XLSX.writeFile(wb, `WashTrack-Customers-${date}.xlsx`);
+  }
+
+  // ── Import (JSON backup) ──────────────────────────────────────────────────────
+  function importData() {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = '.json';
+    input.onchange = async () => {
+      try {
+        const text = await input.files[0].text();
+        const data = JSON.parse(text);
+        if (!Array.isArray(data)) { alert('Invalid file format.'); return; }
+        if (confirm(`Import ${data.length} customers? This will merge with existing data.`)) {
+          data.forEach(c => { if (!customers.find(x => x.id === c.id)) customers.unshift(c); });
+          save(); renderCustomers();
+          alert(`Imported successfully!`);
+        }
+      } catch { alert('Could not read file.'); }
+    };
+    input.click();
+  }
+
+  // Also add JSON export for backup between devices
+  function exportJSON() {
+    const blob = new Blob([JSON.stringify(customers, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `WashTrack-Customers-Backup-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+  }
+
+  // Initial render
+  renderCustomers();
+</script>
+</body>
+</html>
