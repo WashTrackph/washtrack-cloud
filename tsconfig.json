@@ -17,7 +17,10 @@
     "noFallthroughCasesInSwitch": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "paths": {
+      "@tauri-apps/api/core": ["./node_modules/@tauri-apps/api/core.d.ts"]
+    }
   },
   "include": ["src"]
 }

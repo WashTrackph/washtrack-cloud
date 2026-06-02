@@ -70,7 +70,7 @@ export async function exportBackup(): Promise<void> {
 
 // ─── Restore ─────────────────────────────────────────────────────────────────
 export async function importBackup(): Promise<{ ok: boolean; message: string }> {
-  let json: string;
+  let json: string = "";
 
   // Try native file picker first
   if ("showOpenFilePicker" in window) {
@@ -87,7 +87,7 @@ export async function importBackup(): Promise<{ ok: boolean; message: string }> 
     }
   } else {
     // Fallback: hidden <input type="file">
-    json = await new Promise((resolve, reject) => {
+    json = await new Promise<string>((resolve, reject) => {
       const input = document.createElement("input");
       input.type = "file";
       input.accept = ".json,application/json";

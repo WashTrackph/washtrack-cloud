@@ -584,7 +584,7 @@ export function SettingsScreen() {
                 A separate PIN just for Settings. If not set, the Owner PIN is used as fallback.
               </p>
               <SettingsPinField
-                currentPin={shop.settingsPin || ""}
+                currentPin={shop.settingsPin}
                 onSave={async (pin) => {
                   const hashed = await createHashedPin(pin);
                   setShop((p) => ({ ...p, settingsPin: hashed }));
@@ -1966,7 +1966,7 @@ function LicenseTab({ licenseKey, trialStartDate, onActivate, onTrialStart, noti
 
 // ─── Settings PIN Field ───────────────────────────────────────────────────────
 function SettingsPinField({ currentPin, onSave, onClear }: {
-  currentPin: string;
+  currentPin: string | object | undefined;
   onSave: (pin: string) => void;
   onClear: () => void;
 }) {

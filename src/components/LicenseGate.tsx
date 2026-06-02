@@ -4,48 +4,42 @@ import { getLicenseInfo, isLicenseAllowed, validateLicenseKey, type LicenseInfo 
 interface LicenseGateProps {
   children: React.ReactNode;
   licenseKey: string;
-  trialStartDate: string;
   onActivate: (key: string) => void;
-  onTrialStart: (date: string) => void;
 }
 
-export function LicenseGate({ children, licenseKey, trialStartDate, onActivate, onTrialStart }: LicenseGateProps) {
-  const [info, setInfo]           = useState<LicenseInfo | null>(null);
-  const [keyInput, setKeyInput]   = useState('');
-  const [keyError, setKeyError]   = useState('');
+export function LicenseGate({ children, licenseKey, onActivate }: LicenseGateProps) {
+  const [info, setInfo]             = useState<LicenseInfo | null>(null);
+  const [keyInput, setKeyInput]     = useState('');
+  const [keyError, setKeyError]     = useState('');
   const [keySuccess, setKeySuccess] = useState('');
   const [activating, setActivating] = useState(false);
 
   useEffect(() => {
-    if (!trialStartDate) {
-      onTrialStart(new Date().toISOString());
-    }
-  }, []); // eslint-disable-line
-
-  useEffect(() => {
-    setInfo(getLicenseInfo(licenseKey, trialStartDate));
-  }, [licenseKey, trialStartDate]);
+    setInfo(getLicenseInfo(licenseKey, ''));
+  }, [licenseKey]);
 
   if (!info) return null;
 
+  // ── ALLOWED ───────────────────────────────────────────────────────────────
   if (isLicenseAllowed(info)) {
     return (
       <>
-        {(info.status === 'expiring_soon' || info.status === 'trial') && info.daysLeft <= 7 && (
+        {/* Expiry warning banner — show when 7 days or less remain */}
+        {info.status === 'expiring_soon' && (
           <div style={{
             position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 9999,
-            background: info.daysLeft <= 0 ? 'rgba(239,68,68,0.95)' : 'rgba(245,158,11,0.95)',
+            background: 'rgba(245,158,11,0.95)',
             color: '#fff', padding: '10px 20px',
             display: 'flex', alignItems: 'center', gap: 12,
             backdropFilter: 'blur(8px)',
             fontFamily: "var(--font-dm-sans), 'DM Sans', sans-serif",
           }}>
-            <span style={{ fontSize: 18 }}>{info.daysLeft <= 0 ? '🚨' : '⚠️'}</span>
+            <span style={{ fontSize: 18 }}>⚠️</span>
             <span style={{ flex: 1, fontSize: 13, fontWeight: 600 }}>{info.message}</span>
             <button
               onClick={() => setActivating(true)}
               style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid rgba(255,255,255,0.5)', background: 'rgba(255,255,255,0.15)', color: '#fff', fontWeight: 700, fontSize: 13, cursor: 'pointer', fontFamily: 'inherit' }}>
-              Enter Key
+              Enter New Key
             </button>
           </div>
         )}
@@ -68,7 +62,9 @@ export function LicenseGate({ children, licenseKey, trialStartDate, onActivate, 
     );
   }
 
-  // ── HARD LOCKOUT ──────────────────────────────────────────────────────────
+  // ── NO KEY / EXPIRED — SHOW ENTRY SCREEN ─────────────────────────────────
+  const isExpired = info.status === 'expired';
+
   return (
     <div style={{
       height: '100vh', display: 'flex', flexDirection: 'column',
@@ -78,23 +74,25 @@ export function LicenseGate({ children, licenseKey, trialStartDate, onActivate, 
       padding: 24, textAlign: 'center',
     }}>
       <div style={{ marginBottom: 32 }}>
-        <div style={{ fontSize: 56, marginBottom: 8 }}>🔐</div>
-        <div style={{ fontSize: 22, fontWeight: 800, color: '#F1F5F9', letterSpacing: -0.5 }}>WashTrack</div>
+        <div style={{ fontSize: 56, marginBottom: 8 }}>🧺</div>
+        <div style={{ fontSize: 22, fontWeight: 800, color: '#F1F5F9', letterSpacing: -0.5 }}>WashTrack POS</div>
         <div style={{ fontSize: 12, color: '#64748B', marginTop: 2 }}>by SterlingDev</div>
       </div>
 
       <div style={{
-        background: '#131B2E', border: '1px solid rgba(239,68,68,0.4)', borderRadius: 20,
+        background: '#131B2E',
+        border: `1px solid ${isExpired ? 'rgba(239,68,68,0.4)' : 'rgba(56,189,248,0.3)'}`,
+        borderRadius: 20,
         padding: '28px 32px', maxWidth: 420, width: '100%',
-        boxShadow: '0 0 60px rgba(239,68,68,0.1)',
+        boxShadow: isExpired ? '0 0 60px rgba(239,68,68,0.1)' : '0 0 60px rgba(56,189,248,0.08)',
       }}>
-        <div style={{ fontSize: 13, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: '#F87171', marginBottom: 10 }}>
-          {info.status === 'trial_expired' ? '⏱ Trial Expired' : '📋 License Expired'}
+        <div style={{ fontSize: 13, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: isExpired ? '#F87171' : '#38BDF8', marginBottom: 10 }}>
+          {isExpired ? '📋 License Expired' : '🔑 Enter License Key'}
         </div>
         <p style={{ fontSize: 15, color: '#94A3B8', margin: '0 0 24px', lineHeight: 1.6 }}>
-          {info.status === 'trial_expired'
-            ? 'Your 30-day free trial has ended. To continue using WashTrack, please purchase a license.'
-            : `Your WashTrack license expired ${Math.abs(info.daysLeft)} day${Math.abs(info.daysLeft) === 1 ? '' : 's'} ago. Please contact WashTrack to renew.`}
+          {isExpired
+            ? `Your license expired ${Math.abs(info.daysLeft)} day${Math.abs(info.daysLeft) === 1 ? '' : 's'} ago. Contact WashTrack to get a new key.`
+            : 'Enter the license key provided by WashTrack to activate your copy.'}
         </p>
 
         <div style={{ marginBottom: 12 }}>
@@ -102,6 +100,10 @@ export function LicenseGate({ children, licenseKey, trialStartDate, onActivate, 
             value={keyInput}
             onChange={e => { setKeyInput(e.target.value); setKeyError(''); }}
             placeholder="WT-XXX-YYYYMMDD-XXXXXX"
+            autoFocus
+            onKeyDown={e => {
+              if (e.key === 'Enter') handleActivate();
+            }}
             style={{
               width: '100%', boxSizing: 'border-box',
               background: '#0F172A', border: `1px solid ${keyError ? '#EF4444' : '#1E293B'}`,
@@ -115,14 +117,7 @@ export function LicenseGate({ children, licenseKey, trialStartDate, onActivate, 
         {keySuccess && <p style={{ color: '#4ADE80', fontSize: 13, margin: '0 0 10px', fontWeight: 600 }}>{keySuccess}</p>}
 
         <button
-          onClick={() => {
-            const trimmed = keyInput.trim();
-            if (!trimmed) { setKeyError('Please enter your license key.'); return; }
-            const { ok } = validateLicenseKey(trimmed);
-            if (!ok) { setKeyError('Invalid key. Check the key and try again.'); return; }
-            onActivate(trimmed.toUpperCase());
-            setKeySuccess('✅ License activated! Loading...');
-          }}
+          onClick={handleActivate}
           style={{
             width: '100%', padding: '13px 0',
             background: keyInput.trim() ? 'linear-gradient(135deg, #38BDF8, #6366F1)' : '#1E293B',
@@ -131,17 +126,25 @@ export function LicenseGate({ children, licenseKey, trialStartDate, onActivate, 
             fontWeight: 800, fontSize: 15, cursor: keyInput.trim() ? 'pointer' : 'default',
             fontFamily: 'inherit', transition: 'all 0.15s',
           }}>
-          Activate License
+          Activate
         </button>
       </div>
 
       <div style={{ marginTop: 28, fontSize: 13, color: '#475569', lineHeight: 1.8 }}>
-        <p style={{ margin: 0, fontWeight: 600, color: '#64748B' }}>Need a license key?</p>
-        <p style={{ margin: 0 }}>Contact WashTrack Support</p>
+        <p style={{ margin: 0, fontWeight: 600, color: '#64748B' }}>Don't have a key yet?</p>
         <p style={{ margin: '4px 0 0', color: '#38BDF8', fontWeight: 600 }}>Facebook: WashTrack PH · by SterlingDev</p>
       </div>
     </div>
   );
+
+  function handleActivate() {
+    const trimmed = keyInput.trim();
+    if (!trimmed) { setKeyError('Please enter your license key.'); return; }
+    const { ok } = validateLicenseKey(trimmed);
+    if (!ok) { setKeyError('Invalid key. Please check and try again.'); return; }
+    onActivate(trimmed.toUpperCase());
+    setKeySuccess('✅ License activated! Loading...');
+  }
 }
 
 function KeyEntryModal({
@@ -160,7 +163,7 @@ function KeyEntryModal({
     const trimmed = keyInput.trim();
     if (!trimmed) { setKeyError('Please enter your license key.'); return; }
     const { ok } = validateLicenseKey(trimmed);
-    if (!ok) { setKeyError('Invalid key. Check the key and try again.'); return; }
+    if (!ok) { setKeyError('Invalid key. Please check and try again.'); return; }
     onActivate(trimmed.toUpperCase());
   }
 
@@ -176,7 +179,7 @@ function KeyEntryModal({
         borderRadius: 20, padding: 28, width: '100%', maxWidth: 400,
         boxShadow: '0 20px 60px rgba(0,0,0,0.6)',
       }}>
-        <h3 style={{ margin: '0 0 6px', fontSize: 18, fontWeight: 800, color: 'var(--text)' }}>🔑 Enter License Key</h3>
+        <h3 style={{ margin: '0 0 6px', fontSize: 18, fontWeight: 800, color: 'var(--text)' }}>🔑 Enter New License Key</h3>
         <p style={{ margin: '0 0 18px', fontSize: 13, color: 'var(--muted)' }}>
           Contact WashTrack to get a renewal key.
         </p>

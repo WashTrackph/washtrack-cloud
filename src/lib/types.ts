@@ -19,7 +19,7 @@ export interface Shop {
   autoSmsReceipt: boolean;
   smsApiKey: string;
   smsSenderName: string;
-  settingsPin?: string;
+  settingsPin?: string | HashedPin;
   autoEmailEndOfShift: boolean;
   autoEmailDaily: boolean;
   autoEmailWeekly: boolean;
