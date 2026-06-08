@@ -179,7 +179,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
             {newCustomerMode && (
               <div style={{ marginBottom: 12, padding: 16, background: "var(--card)", borderRadius: 8, border: "1px solid var(--border)" }}>
                 <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Full Name *" className="input" style={{ marginBottom: 8 }} autoFocus />
-                <input value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder="Phone (09XXXXXXXXX)" className="input" />
+                <input value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder="Phone number" className="input" />
               </div>
             )}
             <input value={customerSearch} onChange={(e) => setCustomerSearch(e.target.value)} placeholder="Search by name or phone…" className="input" style={{ marginBottom: 12 }} />

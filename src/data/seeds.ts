@@ -1,9 +1,9 @@
 import type { Shop, PayMethod, Service, Stage, SmsTemplates, Staff, Customer, InventoryItem, SupplyRule, ThemePreset, EmailConfig, EmailProvider } from "../lib/types";
 
 export const SEED_SHOP: Shop = {
-  name: "Malinis Laundry Shop",
-  address: "123 Rizal St, Brgy. San Isidro, Quezon City",
-  phone: "0917-555-1234",
+  name: "My Laundry Shop",
+  address: "123 Main St, Your City",
+  phone: "",
   logo: null,
   ownerPin: "1234",
   managerPin: "5678",

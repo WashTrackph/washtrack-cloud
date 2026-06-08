@@ -424,8 +424,8 @@ export function SettingsScreen() {
             </h3>
             {([
               { key: "name" as const, label: "Shop Name", placeholder: "Your Laundry Shop" },
-              { key: "address" as const, label: "Address", placeholder: "Street, Barangay, City" },
-              { key: "phone" as const, label: "Contact Number", placeholder: "09XXXXXXXXX" },
+              { key: "address" as const, label: "Address", placeholder: "Street, City, State" },
+              { key: "phone" as const, label: "Contact Number", placeholder: "Your phone number" },
             ]).map((f) => (
               <div key={f.key} style={{ marginBottom: 16 }}>
                 <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>{f.label}</label>

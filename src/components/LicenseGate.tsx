@@ -132,7 +132,7 @@ export function LicenseGate({ children, licenseKey, onActivate }: LicenseGatePro
 
       <div style={{ marginTop: 28, fontSize: 13, color: '#475569', lineHeight: 1.8 }}>
         <p style={{ margin: 0, fontWeight: 600, color: '#64748B' }}>Don't have a key yet?</p>
-        <p style={{ margin: '4px 0 0', color: '#38BDF8', fontWeight: 600 }}>Facebook: WashTrack PH · by SterlingDev</p>
+        <p style={{ margin: '4px 0 0', color: '#38BDF8', fontWeight: 600 }}>Contact WashTrack to get your license key.</p>
       </div>
     </div>
   );
