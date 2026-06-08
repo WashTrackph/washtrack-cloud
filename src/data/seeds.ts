@@ -55,10 +55,10 @@ export const SEED_STAGES: Stage[] = [
 ];
 
 export const SEED_SMS_TEMPLATES: SmsTemplates = {
-  receipt:  "Hi {name}! Salamat sa iyong order sa {shop}! \uD83E\uDDFA Order #{order} - {kg}kg, Total: \u20B1{total}. I-text ka namin pag handa na. Follow us: {facebook}",
-  ready:    "Hi {name}! Handa na ang iyong labada sa {shop}! \u2705 Order #{order} ay ready na for pickup. Salamat at hanggang sa susunod! \uD83D\uDE4F",
-  reminder: "Hi {name}! Paalala lang - Order #{order} mo sa {shop} ay ready na for pickup. Please pick up at your earliest convenience. Salamat!",
-  promo:    "Hi {name}! \uD83C\uDF89 {shop} may special para sa inyo: {message}. Bisitahin kami sa {address}. Follow us: {facebook}",
+  receipt:  "Hi {name}! Thank you for your order at {shop}! \uD83E\uDDFA Order #{order} - {kg}kg, Total: \u20B1{total}. We will text you once your laundry is ready. Follow us: {facebook}",
+  ready:    "Hi {name}! Great news! Your laundry at {shop} is READY for pickup. \u2705 Order #{order}. Thank you and see you soon! \uD83D\uDE0A",
+  reminder: "Hi {name}! Just a reminder \u2014 Order #{order} at {shop} is ready for pickup. Please pick up at your earliest convenience. Thank you!",
+  promo:    "Hi {name}! \uD83C\uDF89 Special offer from {shop}: {message}. Visit us at {address}. Follow us: {facebook}",
 };
 
 export const SEED_STAFF: Staff[] = [
