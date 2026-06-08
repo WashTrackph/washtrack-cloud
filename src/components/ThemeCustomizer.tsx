@@ -56,7 +56,7 @@ export function ThemeCustomizer() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
         <div>
           <h3 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-            {"\uD83C\uDFA8"} Theme Customizer
+            {"🎨"} Theme Customizer
           </h3>
           <p style={{ margin: 0, fontSize: 13, color: "var(--muted)" }}>
             Personalize your POS with colors and styles
@@ -99,7 +99,7 @@ export function ThemeCustomizer() {
               </div>
               <div style={{ fontSize: 12, fontWeight: 700, color: preset.text, marginBottom: 2 }}>{preset.name}</div>
               <div style={{ fontSize: 10, color: preset.subtext }}>
-                {preset.mode === "dark" ? "\uD83C\uDF19 Dark" : "\u2600\uFE0F Light"}
+                {preset.mode === "dark" ? "🌙 Dark" : "\u2600\uFE0F Light"}
               </div>
               {activePreset === preset.id && (
                 <div style={{ position: "absolute", top: 6, right: 8, fontSize: 14 }}>{"\u2713"}</div>
@@ -183,7 +183,7 @@ export function ThemeCustomizer() {
                   fontWeight: custom.mode === mode ? 700 : 500,
                 }}
               >
-                {mode === "dark" ? "\uD83C\uDF19 Dark" : "\u2600\uFE0F Light"}
+                {mode === "dark" ? "🌙 Dark" : "\u2600\uFE0F Light"}
               </button>
             ))}
           </div>
@@ -224,7 +224,7 @@ export function ThemeCustomizer() {
               borderBottom: "1px solid var(--border)",
             }}
           >
-            <div style={{ fontSize: 16 }}>{"\uD83E\uDEE7"}</div>
+            <div style={{ fontSize: 16 }}>{"🫧"}</div>
             <span style={{ fontSize: 13, fontWeight: 800, color: "var(--text)" }}>WashTrack</span>
           </div>
           <div style={{ background: "var(--bg)", padding: 14, display: "flex", gap: 10 }}>

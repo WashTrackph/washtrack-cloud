@@ -228,12 +228,12 @@ export function OrdersScreen() {
           {order.paid === false && !order.voided && (
             <div style={{ marginTop: 12 }}>
               <div style={{ padding: "8px 14px", borderRadius: 8, background: "color-mix(in srgb, var(--warning) 12%, transparent)", border: "1px solid var(--warning)", marginBottom: 10 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--warning)" }}>{"\uD83D\uDD52"} Payment Pending</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: "var(--warning)" }}>{"🕒"} Payment Pending</div>
                 <div style={{ fontSize: 12, color: "var(--subtext)", marginTop: 2 }}>Customer will pay on pickup</div>
               </div>
               {!showCollectPay ? (
                 <button onClick={() => setShowCollectPay(true)} style={{ width: "100%", padding: "10px 14px", borderRadius: 8, border: "1px solid var(--success)", background: "color-mix(in srgb, var(--success) 8%, transparent)", color: "var(--success)", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>
-                  {"\uD83D\uDCB0"} Collect Payment
+                  {"💰"} Collect Payment
                 </button>
               ) : (
                 <div style={{ padding: 14, background: "var(--bg)", borderRadius: 10, border: "1px solid var(--border)" }}>
@@ -293,7 +293,7 @@ export function OrdersScreen() {
               openReceiptWindow(order, shop);
             }
           }} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", marginTop: 12, padding: "9px 0", borderRadius: 8, border: "1px solid var(--accent)", background: "color-mix(in srgb, var(--accent) 6%, transparent)", color: "var(--accent)", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>
-            {"\uD83D\uDDA8\uFE0F"} Reprint Receipt
+            {"🖨\uFE0F"} Reprint Receipt
           </button>
           {!order.voided && order.statusId < 6 && (
             <div style={{ marginTop: 16 }}>
@@ -320,7 +320,7 @@ export function OrdersScreen() {
               )}
             </div>
           )}
-          {order.voided && <div style={{ marginTop: 12, padding: 10, background: "var(--danger-bg-dark)", borderRadius: 6, fontSize: 12, color: "var(--danger-light)" }}>{"\uD83D\uDEAB"} VOIDED \u2014 {order.voidReason}</div>}
+          {order.voided && <div style={{ marginTop: 12, padding: 10, background: "var(--danger-bg-dark)", borderRadius: 6, fontSize: 12, color: "var(--danger-light)" }}>{"🚫"} VOIDED \u2014 {order.voidReason}</div>}
         </div>
       </div>
     );
@@ -411,7 +411,7 @@ export function OrdersScreen() {
               <div style={{ flex: 1 }}>
                 <span style={{ fontWeight: 700, fontSize: 13, color: "var(--text)" }}>{order.orderNum}</span>
                 {order.voided && <span style={{ marginLeft: 8, fontSize: 11, color: "var(--danger)", fontWeight: 700 }}>VOIDED</span>}
-                {!order.voided && order.paid === false && <span style={{ marginLeft: 8, fontSize: 11, color: "var(--warning)", fontWeight: 700 }}>{"\uD83D\uDD52"} Unpaid</span>}
+                {!order.voided && order.paid === false && <span style={{ marginLeft: 8, fontSize: 11, color: "var(--warning)", fontWeight: 700 }}>{"🕒"} Unpaid</span>}
               </div>
               <div style={{ fontSize: 12, color: "var(--subtext)", minWidth: 120 }}>{order.customerName}</div>
               <span style={{ padding: "2px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700, background: `${stages.find((s) => s.id === order.statusId)?.color}20`, color: stages.find((s) => s.id === order.statusId)?.color }}>{order.statusLabel}</span>

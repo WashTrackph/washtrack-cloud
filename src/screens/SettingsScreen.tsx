@@ -14,20 +14,20 @@ import type { Service, Staff, SupplyRule, SmsTemplates, EmailProvider } from "..
 type TabId = "shop" | "theme" | "services" | "workflow" | "sms" | "email" | "staff" | "inventory" | "supplies" | "logs" | "smslog" | "printer" | "backup" | "license";
 
 const TABS: { id: TabId; icon: string; label: string }[] = [
-  { id: "shop",      icon: "\uD83C\uDFEA", label: "Shop" },
-  { id: "theme",     icon: "\uD83C\uDFA8", label: "Theme" },
-  { id: "services",  icon: "\uD83E\uDDFA", label: "Services" },
-  { id: "workflow",  icon: "\uD83D\uDD04", label: "Workflow" },
-  { id: "sms",       icon: "\uD83D\uDCAC", label: "SMS" },
-  { id: "email",     icon: "\uD83D\uDCE7", label: "Email" },
-  { id: "staff",     icon: "\uD83D\uDC64", label: "Staff" },
-  { id: "inventory", icon: "\uD83D\uDCE6", label: "Inventory" },
-  { id: "supplies",  icon: "\uD83E\uDDF4", label: "Supplies" },
-  { id: "logs",      icon: "\uD83D\uDCDC", label: "Audit Log" },
-  { id: "smslog",    icon: "\uD83D\uDCF1", label: "SMS Log" },
-  { id: "printer",   icon: "\uD83D\uDDA8\uFE0F", label: "Printer" },
-  { id: "backup",    icon: "\uD83D\uDCBE", label: "Backup" },
-  { id: "license",   icon: "\uD83D\uDD11", label: "License" },
+  { id: "shop",      icon: "🏪", label: "Shop" },
+  { id: "theme",     icon: "🎨", label: "Theme" },
+  { id: "services",  icon: "🧺", label: "Services" },
+  { id: "workflow",  icon: "🔄", label: "Workflow" },
+  { id: "sms",       icon: "💬", label: "SMS" },
+  { id: "email",     icon: "📧", label: "Email" },
+  { id: "staff",     icon: "👤", label: "Staff" },
+  { id: "inventory", icon: "📦", label: "Inventory" },
+  { id: "supplies",  icon: "🧴", label: "Supplies" },
+  { id: "logs",      icon: "📜", label: "Audit Log" },
+  { id: "smslog",    icon: "📱", label: "SMS Log" },
+  { id: "printer",   icon: "🖨\uFE0F", label: "Printer" },
+  { id: "backup",    icon: "💾", label: "Backup" },
+  { id: "license",   icon: "🔑", label: "License" },
 ];
 
 const PRICING_OPTIONS: { value: Service["pricingType"]; label: string }[] = [
@@ -39,10 +39,10 @@ const PRICING_OPTIONS: { value: Service["pricingType"]; label: string }[] = [
 const ROLE_OPTIONS: Staff["role"][] = ["OWNER", "MANAGER", "STAFF"];
 
 const SMS_TEMPLATE_FIELDS: { key: keyof SmsTemplates; label: string }[] = [
-  { key: "receipt",  label: "\uD83D\uDCC4 Order Receipt" },
+  { key: "receipt",  label: "📄 Order Receipt" },
   { key: "ready",    label: "\u2705 Order Ready" },
   { key: "reminder", label: "\u23F0 Pickup Reminder" },
-  { key: "promo",    label: "\uD83D\uDCE2 Promo Blast" },
+  { key: "promo",    label: "📢 Promo Blast" },
 ];
 
 const EMPTY_SERVICE_FORM = {
@@ -420,7 +420,7 @@ export function SettingsScreen() {
         {tab === "shop" && (
           <div>
             <h3 style={{ margin: "0 0 20px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-              {"\uD83C\uDFEA"} Shop Identity
+              {"🏪"} Shop Identity
             </h3>
             {([
               { key: "name" as const, label: "Shop Name", placeholder: "Your Laundry Shop" },
@@ -487,15 +487,15 @@ export function SettingsScreen() {
             {/* Email Report Settings */}
             <div style={{ marginTop: 20, padding: 18, background: "var(--bg)", borderRadius: 10, border: "1px solid var(--border)" }}>
               <h4 style={{ margin: "0 0 14px", fontSize: 14, fontWeight: 700, color: "var(--text)" }}>
-                {"\uD83D\uDCE7"} Email Report Settings
+                {"📧"} Email Report Settings
               </h4>
               <div style={{ marginBottom: 12 }}>
                 <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 8 }}>Auto-Send Schedule</label>
                 {([
-                  { key: "autoEmailEndOfShift" as const, label: "End of Shift", icon: "\uD83C\uDF19" },
-                  { key: "autoEmailDaily" as const, label: "Daily (midnight)", icon: "\uD83D\uDCC5" },
-                  { key: "autoEmailWeekly" as const, label: "Weekly (Sunday)", icon: "\uD83D\uDCC6" },
-                  { key: "autoEmailMonthly" as const, label: "Monthly (1st)", icon: "\uD83D\uDDD3" },
+                  { key: "autoEmailEndOfShift" as const, label: "End of Shift", icon: "🌙" },
+                  { key: "autoEmailDaily" as const, label: "Daily (midnight)", icon: "📅" },
+                  { key: "autoEmailWeekly" as const, label: "Weekly (Sunday)", icon: "📆" },
+                  { key: "autoEmailMonthly" as const, label: "Monthly (1st)", icon: "🗓" },
                 ]).map((opt) => (
                   <div
                     key={opt.key}
@@ -666,7 +666,7 @@ export function SettingsScreen() {
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-                {"\uD83E\uDDFA"} Service Catalog
+                {"🧺"} Service Catalog
               </h3>
               <button
                 onClick={() => { setShowAddService(true); setSvcForm(EMPTY_SERVICE_FORM); }}
@@ -735,7 +735,7 @@ export function SettingsScreen() {
         {tab === "workflow" && (
           <div>
             <h3 style={{ margin: "0 0 20px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-              {"\uD83D\uDD04"} Workflow Stages
+              {"🔄"} Workflow Stages
             </h3>
             {stages.map((stage) => (
               <div
@@ -773,7 +773,7 @@ export function SettingsScreen() {
         {tab === "sms" && (
           <div>
             <h3 style={{ margin: "0 0 6px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-              {"\uD83D\uDCAC"} SMS Configuration
+              {"💬"} SMS Configuration
             </h3>
             <p style={{ margin: "0 0 20px", fontSize: 12, color: "var(--muted)" }}>
               Powered by Semaphore.co &mdash; Philippine SMS gateway
@@ -928,7 +928,7 @@ export function SettingsScreen() {
         {tab === "email" && (
           <div>
             <h3 style={{ margin: "0 0 20px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-              {"\uD83D\uDCE7"} Email Configuration
+              {"📧"} Email Configuration
             </h3>
 
             {/* Enable toggle */}
@@ -1096,7 +1096,7 @@ export function SettingsScreen() {
                       cursor: (emailTesting || !emailConfig.email || !emailConfig.password) ? "not-allowed" : "pointer",
                     }}
                   >
-                    {emailTesting ? "Sending..." : "\uD83D\uDCE8 Send Test Email"}
+                    {emailTesting ? "Sending..." : "📨 Send Test Email"}
                   </button>
                   <div style={{ flex: 1 }}>
                     {emailConfig.testVerified ? (
@@ -1125,7 +1125,7 @@ export function SettingsScreen() {
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-                {"\uD83D\uDC64"} Staff Management
+                {"👤"} Staff Management
               </h3>
               <button
                 onClick={() => { setShowAddStaff(true); setStaffForm(EMPTY_STAFF_FORM); }}
@@ -1194,7 +1194,7 @@ export function SettingsScreen() {
         {tab === "inventory" && (
           <div>
             <h3 style={{ margin: "0 0 6px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-              {"\uD83D\uDCE6"} Inventory Settings
+              {"📦"} Inventory Settings
             </h3>
             <p style={{ margin: "0 0 20px", fontSize: 13, color: "var(--muted)" }}>
               Configure overstay thresholds and manage stock from the dedicated Inventory screen.
@@ -1211,8 +1211,8 @@ export function SettingsScreen() {
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12 }}>
                 {([
                   { label: "\u26A0\uFE0F Warning", field: "overstayWarnHrs" as const, desc: "Yellow indicator", color: "var(--warning)" },
-                  { label: "\uD83D\uDD36 Alert", field: "overstayAlertHrs" as const, desc: "Orange indicator", color: "var(--alert)" },
-                  { label: "\uD83D\uDD34 Critical", field: "overstayCritHrs" as const, desc: "Red — escalate", color: "var(--danger)" },
+                  { label: "🔶 Alert", field: "overstayAlertHrs" as const, desc: "Orange indicator", color: "var(--alert)" },
+                  { label: "🔴 Critical", field: "overstayCritHrs" as const, desc: "Red — escalate", color: "var(--danger)" },
                 ]).map((t) => (
                   <div key={t.field} style={{ padding: "12px 14px", borderRadius: 8, background: "var(--bg)", border: `1px solid color-mix(in srgb, ${t.color} 20%, transparent)` }}>
                     <div style={{ fontSize: 13, fontWeight: 700, color: t.color, marginBottom: 4 }}>{t.label}</div>
@@ -1239,7 +1239,7 @@ export function SettingsScreen() {
             {/* Low stock quick overview */}
             <div style={{ padding: 16, borderRadius: 10, background: "var(--card)", border: "1px solid var(--border)" }}>
               <h4 style={{ margin: "0 0 12px", fontSize: 14, fontWeight: 700, color: "var(--text)" }}>
-                {"\uD83D\uDCCB"} Quick Stock Overview
+                {"📋"} Quick Stock Overview
               </h4>
               {inventory.filter((i) => i.qty <= i.minQty).length === 0 ? (
                 <div style={{ padding: "20px 0", textAlign: "center", color: "var(--success)", fontSize: 14 }}>
@@ -1268,7 +1268,7 @@ export function SettingsScreen() {
         {tab === "supplies" && (
           <div>
             <h3 style={{ margin: "0 0 6px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-              {"\uD83E\uDDF4"} Supply Auto-Deduction Rules
+              {"🧴"} Supply Auto-Deduction Rules
             </h3>
             <p style={{ margin: "0 0 20px", fontSize: 13, color: "var(--subtext)" }}>
               Each rule automatically deducts inventory when an order is completed.
@@ -1282,7 +1282,7 @@ export function SettingsScreen() {
                   {/* Header row */}
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                      <span style={{ fontSize: 22 }}>{invItem?.icon || "\uD83D\uDCE6"}</span>
+                      <span style={{ fontSize: 22 }}>{invItem?.icon || "📦"}</span>
                       <div>
                         <input
                           value={rule.name}
@@ -1445,7 +1445,7 @@ export function SettingsScreen() {
         {tab === "logs" && (
           <div>
             <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-              {"\uD83D\uDCDC"} Audit Log
+              {"📜"} Audit Log
             </h3>
             {auditLog.length === 0 ? (
               <div style={{ color: "var(--muted)", fontSize: 13 }}>No activity yet</div>
@@ -1476,7 +1476,7 @@ export function SettingsScreen() {
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-                {"\uD83D\uDCF1"} SMS Log
+                {"📱"} SMS Log
               </h3>
               <div style={{ display: "flex", gap: 6 }}>
                 {["all", "SENT", "FAILED", "MOCK", "PROMO"].map((f) => (
@@ -1500,7 +1500,7 @@ export function SettingsScreen() {
                   padding: "6px 14px", borderRadius: 6, fontSize: 11, fontWeight: 700,
                   background: "var(--accent)", color: "#fff", border: "none", cursor: "pointer",
                 }}
-              >{"\uD83D\uDD04"} Refresh Statuses</button>
+              >{"🔄"} Refresh Statuses</button>
               {smsLog.some((e) => e.status === "MOCK") && (
                 <button
                   onClick={() => {
@@ -1517,7 +1517,7 @@ export function SettingsScreen() {
             {(() => {
               const filtered = smsLogFilter === "all" ? smsLog : smsLogFilter === "PROMO" ? smsLog.filter((e) => e.promoId) : smsLog.filter((e) => e.status.toUpperCase() === smsLogFilter || (smsLogFilter === "SENT" && ["Queued", "Pending", "SENDING"].includes(e.status)));
               const statusColor = (s: string) => s === "MOCK" ? "var(--warning)" : s === "FAILED" ? "var(--danger)" : s === "SENDING" ? "var(--accent)" : "var(--success)";
-              const statusLabel = (s: string) => s === "MOCK" ? "\uD83E\uDDEA MOCK" : s === "FAILED" ? "\u2717 FAILED" : s === "SENDING" ? "\u23F3 SENDING" : `\u2713 ${s.toUpperCase()}`;
+              const statusLabel = (s: string) => s === "MOCK" ? "🧪 MOCK" : s === "FAILED" ? "\u2717 FAILED" : s === "SENDING" ? "\u23F3 SENDING" : `\u2713 ${s.toUpperCase()}`;
               return filtered.length === 0 ? (
                 <div style={{ color: "var(--muted)", fontSize: 13 }}>
                   {smsLogFilter === "all" ? "No SMS sent yet" : `No ${smsLogFilter} messages`}
@@ -1542,7 +1542,7 @@ export function SettingsScreen() {
                           <button
                             onClick={async (e) => { e.stopPropagation(); await checkSmsStatus(entry); notify("Status refreshed"); }}
                             style={{ padding: "2px 8px", borderRadius: 4, border: "1px solid var(--border-dark)", background: "transparent", color: "var(--subtext)", cursor: "pointer", fontSize: 10, fontWeight: 600 }}
-                          >{"\uD83D\uDD04"} Check</button>
+                          >{"🔄"} Check</button>
                         )}
                       </div>
                     </div>
@@ -1561,7 +1561,7 @@ export function SettingsScreen() {
         {tab === "printer" && (
           <div>
             <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
-              {"\uD83D\uDDA8\uFE0F"} Bluetooth Thermal Printer
+              {"🖨\uFE0F"} Bluetooth Thermal Printer
             </h3>
 
             {/* Current printer */}

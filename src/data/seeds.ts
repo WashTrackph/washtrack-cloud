@@ -29,10 +29,10 @@ export const SEED_SHOP: Shop = {
 };
 
 export const SEED_PAYMETHODS: PayMethod[] = [
-  { id: "pm1", label: "Cash",        icon: "\uD83D\uDCB5", isCash: true,  color: "#10B981", active: true, sortOrder: 0 },
-  { id: "pm2", label: "GCash",       icon: "\uD83D\uDCF1", isCash: false, color: "#3B82F6", active: true, sortOrder: 1 },
-  { id: "pm3", label: "Maya",        icon: "\uD83D\uDC9C", isCash: false, color: "#8B5CF6", active: true, sortOrder: 2 },
-  { id: "pm4", label: "Credit Card", icon: "\uD83D\uDCB3", isCash: false, color: "#F59E0B", active: true, sortOrder: 3 },
+  { id: "pm1", label: "Cash",        icon: "💵", isCash: true,  color: "#10B981", active: true, sortOrder: 0 },
+  { id: "pm2", label: "GCash",       icon: "📱", isCash: false, color: "#3B82F6", active: true, sortOrder: 1 },
+  { id: "pm3", label: "Maya",        icon: "💜", isCash: false, color: "#8B5CF6", active: true, sortOrder: 2 },
+  { id: "pm4", label: "Credit Card", icon: "💳", isCash: false, color: "#F59E0B", active: true, sortOrder: 3 },
 ];
 
 export const SEED_SERVICES: Service[] = [
@@ -46,19 +46,19 @@ export const SEED_SERVICES: Service[] = [
 ];
 
 export const SEED_STAGES: Stage[] = [
-  { id: 1, label: "Received",   icon: "\uD83D\uDCE5", color: "#6B7280", order: 0 },
-  { id: 2, label: "Washing",    icon: "\uD83E\uDEE7", color: "#3B82F6", order: 1 },
-  { id: 3, label: "Drying",     icon: "\uD83D\uDCA8", color: "#F59E0B", order: 2 },
-  { id: 4, label: "Folding",    icon: "\uD83D\uDC55", color: "#8B5CF6", order: 3 },
+  { id: 1, label: "Received",   icon: "📥", color: "#6B7280", order: 0 },
+  { id: 2, label: "Washing",    icon: "🫧", color: "#3B82F6", order: 1 },
+  { id: 3, label: "Drying",     icon: "💨", color: "#F59E0B", order: 2 },
+  { id: 4, label: "Folding",    icon: "👕", color: "#8B5CF6", order: 3 },
   { id: 5, label: "Ready",      icon: "\u2705",        color: "#10B981", order: 4 },
-  { id: 6, label: "Picked Up",  icon: "\uD83C\uDF89", color: "#6B7280", order: 5 },
+  { id: 6, label: "Picked Up",  icon: "🎉", color: "#6B7280", order: 5 },
 ];
 
 export const SEED_SMS_TEMPLATES: SmsTemplates = {
-  receipt:  "Hi {name}! Thank you for your order at {shop}! \uD83E\uDDFA Order #{order} - {kg}kg, Total: \u20B1{total}. We will text you once your laundry is ready. Follow us: {facebook}",
-  ready:    "Hi {name}! Great news! Your laundry at {shop} is READY for pickup. \u2705 Order #{order}. Thank you and see you soon! \uD83D\uDE0A",
+  receipt:  "Hi {name}! Thank you for your order at {shop}! 🧺 Order #{order} - {kg}kg, Total: \u20B1{total}. We will text you once your laundry is ready. Follow us: {facebook}",
+  ready:    "Hi {name}! Great news! Your laundry at {shop} is READY for pickup. \u2705 Order #{order}. Thank you and see you soon! 😊",
   reminder: "Hi {name}! Just a reminder \u2014 Order #{order} at {shop} is ready for pickup. Please pick up at your earliest convenience. Thank you!",
-  promo:    "Hi {name}! \uD83C\uDF89 Special offer from {shop}: {message}. Visit us at {address}. Follow us: {facebook}",
+  promo:    "Hi {name}! 🎉 Special offer from {shop}: {message}. Visit us at {address}. Follow us: {facebook}",
 };
 
 export const SEED_STAFF: Staff[] = [
@@ -75,14 +75,14 @@ export const SEED_CUSTOMERS: Customer[] = [
 ];
 
 export const SEED_INVENTORY: InventoryItem[] = [
-  { id: "inv1", name: "Detergent (Ariel 2kg)",     category: "Consumable", unit: "bag",    qty: 24, minQty: 5,  costPerUnit: 95,  icon: "\uD83E\uDDF4", lastRestocked: Date.now() - 86400000 * 3 },
-  { id: "inv2", name: "Fabric Softener (Downy 1L)", category: "Consumable", unit: "bottle", qty: 12, minQty: 4,  costPerUnit: 85,  icon: "\uD83E\uDEE7", lastRestocked: Date.now() - 86400000 * 5 },
-  { id: "inv3", name: "Bleach (Pride 1L)",           category: "Consumable", unit: "bottle", qty: 8,  minQty: 4,  costPerUnit: 35,  icon: "\uD83E\uDDEA", lastRestocked: Date.now() - 86400000 * 7 },
-  { id: "inv4", name: "Plastic Bags (Large)",        category: "Packaging",  unit: "pc",     qty: 150,minQty: 30, costPerUnit: 2,   icon: "\uD83D\uDECD", lastRestocked: Date.now() - 86400000 * 2 },
-  { id: "inv5", name: "Laundry Pins",                category: "Equipment",  unit: "pack",   qty: 3,  minQty: 5,  costPerUnit: 45,  icon: "\uD83D\uDCCC", lastRestocked: Date.now() - 86400000 * 20 },
-  { id: "inv6", name: "Hangers (Metal)",             category: "Equipment",  unit: "pc",     qty: 80, minQty: 20, costPerUnit: 8,   icon: "\uD83E\uDE9D", lastRestocked: Date.now() - 86400000 * 14 },
-  { id: "inv7", name: "Receipt Paper (58mm)",        category: "Consumable", unit: "roll",   qty: 6,  minQty: 3,  costPerUnit: 25,  icon: "\uD83E\uDDFE", lastRestocked: Date.now() - 86400000 * 10 },
-  { id: "inv8", name: "Stain Remover Spray",         category: "Consumable", unit: "bottle", qty: 4,  minQty: 3,  costPerUnit: 120, icon: "\uD83D\uDCA7", lastRestocked: Date.now() - 86400000 * 8 },
+  { id: "inv1", name: "Detergent (Ariel 2kg)",     category: "Consumable", unit: "bag",    qty: 24, minQty: 5,  costPerUnit: 95,  icon: "🧴", lastRestocked: Date.now() - 86400000 * 3 },
+  { id: "inv2", name: "Fabric Softener (Downy 1L)", category: "Consumable", unit: "bottle", qty: 12, minQty: 4,  costPerUnit: 85,  icon: "🫧", lastRestocked: Date.now() - 86400000 * 5 },
+  { id: "inv3", name: "Bleach (Pride 1L)",           category: "Consumable", unit: "bottle", qty: 8,  minQty: 4,  costPerUnit: 35,  icon: "🧪", lastRestocked: Date.now() - 86400000 * 7 },
+  { id: "inv4", name: "Plastic Bags (Large)",        category: "Packaging",  unit: "pc",     qty: 150,minQty: 30, costPerUnit: 2,   icon: "🛍", lastRestocked: Date.now() - 86400000 * 2 },
+  { id: "inv5", name: "Laundry Pins",                category: "Equipment",  unit: "pack",   qty: 3,  minQty: 5,  costPerUnit: 45,  icon: "📌", lastRestocked: Date.now() - 86400000 * 20 },
+  { id: "inv6", name: "Hangers (Metal)",             category: "Equipment",  unit: "pc",     qty: 80, minQty: 20, costPerUnit: 8,   icon: "🪝", lastRestocked: Date.now() - 86400000 * 14 },
+  { id: "inv7", name: "Receipt Paper (58mm)",        category: "Consumable", unit: "roll",   qty: 6,  minQty: 3,  costPerUnit: 25,  icon: "🧾", lastRestocked: Date.now() - 86400000 * 10 },
+  { id: "inv8", name: "Stain Remover Spray",         category: "Consumable", unit: "bottle", qty: 4,  minQty: 3,  costPerUnit: 120, icon: "💧", lastRestocked: Date.now() - 86400000 * 8 },
 ];
 
 export const SEED_SUPPLY_RULES: SupplyRule[] = [

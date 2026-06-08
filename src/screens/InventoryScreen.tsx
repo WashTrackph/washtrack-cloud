@@ -35,7 +35,7 @@ export function InventoryScreen() {
 
   return (
     <div style={{ padding: 24 }}>
-      <h2 style={{ margin: "0 0 20px", fontSize: 20, fontWeight: 800, color: "var(--text)" }}>{"\uD83D\uDCE6"} Inventory</h2>
+      <h2 style={{ margin: "0 0 20px", fontSize: 20, fontWeight: 800, color: "var(--text)" }}>{"📦"} Inventory</h2>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
         {[

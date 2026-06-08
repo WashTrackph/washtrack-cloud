@@ -148,7 +148,7 @@ export function buildReceiptHTML(order: Order, shop: Shop): string {
     Thank you for choosing ${shop.name}!<br/>
     Please keep this receipt for reference.
   </div>
-  <button class="print-btn" onclick="window.print()">\uD83D\uDDA8\uFE0F Print Receipt</button>
+  <button class="print-btn" onclick="window.print()">🖨\uFE0F Print Receipt</button>
   </body></html>`;
 }
 

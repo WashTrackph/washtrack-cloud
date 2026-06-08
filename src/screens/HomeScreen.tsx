@@ -35,7 +35,7 @@ export function HomeScreen({ setScreen }: { setScreen: (s: string) => void }) {
 
       {(criticalStock.length > 0 || overstayOrders.filter((o) => o.overstay?.level === "critical").length > 0) && (
         <div style={{ marginBottom: 16, padding: "10px 16px", borderRadius: 10, background: "var(--danger-bg-dark)", border: "1px solid var(--danger)", display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ fontSize: 18 }}>{"\uD83D\uDEA8"}</span>
+          <span style={{ fontSize: 18 }}>{"🚨"}</span>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: "var(--danger-light)" }}>Action Required</div>
             <div style={{ fontSize: 12, color: "var(--danger-text)" }}>
@@ -50,9 +50,9 @@ export function HomeScreen({ setScreen }: { setScreen: (s: string) => void }) {
       {/* KPI Row */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16, marginBottom: 24 }}>
         {[
-          { label: "Today's Revenue", value: fmt(todayRevenue), sub: `${todayOrders.length} orders`, color: "var(--accent)", icon: "\uD83D\uDCB0" },
-          { label: "Week Revenue", value: fmt(weekRevenue), sub: `${weekOrders.length} orders`, color: "var(--accent2-light)", icon: "\uD83D\uDCC8" },
-          { label: "Active Orders", value: activeOrders.length, sub: "in progress", color: "var(--warning)", icon: "\uD83D\uDD04" },
+          { label: "Today's Revenue", value: fmt(todayRevenue), sub: `${todayOrders.length} orders`, color: "var(--accent)", icon: "💰" },
+          { label: "Week Revenue", value: fmt(weekRevenue), sub: `${weekOrders.length} orders`, color: "var(--accent2-light)", icon: "📈" },
+          { label: "Active Orders", value: activeOrders.length, sub: "in progress", color: "var(--warning)", icon: "🔄" },
           { label: "Ready for Pickup", value: readyOrders.length, sub: overdueOrders.length > 0 ? `${overdueOrders.length} overdue` : "awaiting customer", color: "var(--success)", icon: "\u2705" },
         ].map((k, i) => (
           <div key={i} className="card" style={{ borderLeft: `3px solid ${k.color}`, background: "var(--card)", borderTop: "1px solid var(--border)", borderRight: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
@@ -75,12 +75,12 @@ export function HomeScreen({ setScreen }: { setScreen: (s: string) => void }) {
           <span style={{ fontWeight: 700, fontSize: 15 }}>New Order</span>
         </button>
         <button onClick={() => setScreen("orders")} className="action-btn secondary">
-          <span style={{ fontSize: 28 }}>{"\uD83D\uDCCB"}</span>
+          <span style={{ fontSize: 28 }}>{"📋"}</span>
           <span style={{ fontWeight: 700, fontSize: 15 }}>Manage Orders</span>
           {activeOrders.length > 0 && <span style={{ background: "var(--danger)", color: "var(--white)", borderRadius: 12, fontSize: 12, padding: "2px 8px" }}>{activeOrders.length}</span>}
         </button>
         <button onClick={() => setScreen("inventory")} className="action-btn secondary" style={{ position: "relative" }}>
-          <span style={{ fontSize: 28 }}>{"\uD83D\uDCE6"}</span>
+          <span style={{ fontSize: 28 }}>{"📦"}</span>
           <span style={{ fontWeight: 700, fontSize: 15 }}>Inventory</span>
           {lowStock.length + criticalStock.length > 0 && (
             <span style={{ background: "var(--alert)", color: "var(--white)", borderRadius: 12, fontSize: 12, padding: "2px 8px" }}>
@@ -89,7 +89,7 @@ export function HomeScreen({ setScreen }: { setScreen: (s: string) => void }) {
           )}
         </button>
         <button onClick={() => setScreen("customers")} className="action-btn secondary">
-          <span style={{ fontSize: 28 }}>{"\uD83D\uDC65"}</span>
+          <span style={{ fontSize: 28 }}>{"👥"}</span>
           <span style={{ fontWeight: 700, fontSize: 15 }}>Customers</span>
           <span style={{ fontSize: 12, color: "var(--muted)" }}>{customers.length} registered</span>
         </button>
@@ -124,7 +124,7 @@ export function HomeScreen({ setScreen }: { setScreen: (s: string) => void }) {
         {(lowStock.length > 0 || criticalStock.length > 0) && (
           <div className="card" style={{ borderColor: "color-mix(in srgb, var(--alert) 20%, transparent)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-              <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "var(--alert)" }}>{"\uD83D\uDCE6"} Stock Alerts</h3>
+              <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "var(--alert)" }}>{"📦"} Stock Alerts</h3>
               <button onClick={() => setScreen("inventory")} style={{ background: "transparent", border: "none", color: "var(--alert)", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>View all {"\u2192"}</button>
             </div>
             {criticalStock.map((i) => (

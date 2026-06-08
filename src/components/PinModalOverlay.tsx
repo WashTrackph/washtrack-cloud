@@ -95,7 +95,7 @@ export function PinModalOverlay({ pinModal, setPinModal, staff, shop, notify }: 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center" }} onClick={() => setPinModal(null)}>
       <div style={{ background: "var(--card)", borderRadius: 16, padding: 32, width: 300, textAlign: "center", border: "1px solid var(--border)" }} onClick={(e) => e.stopPropagation()}>
-        <div style={{ fontSize: 24, marginBottom: 8 }}>{"\uD83D\uDD10"}</div>
+        <div style={{ fontSize: 24, marginBottom: 8 }}>{"🔐"}</div>
         <h3 style={{ margin: "0 0 4px", color: "var(--text)" }}>PIN Required</h3>
         <p style={{ margin: "0 0 20px", color: "var(--subtext)", fontSize: 13 }}>{pinModal.message || `Enter ${pinModal.role} PIN`}</p>
         <PinDots count={buf.length} />

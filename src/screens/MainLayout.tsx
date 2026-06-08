@@ -24,12 +24,12 @@ export function MainLayout({ screen, setScreen, handleLogout }: MainLayoutProps)
   const navItems = [
     { id: "home", icon: "\u229E", label: "Dashboard" },
     { id: "pos", icon: "\uFF0B", label: "New Order" },
-    { id: "orders", icon: "\uD83D\uDCCB", label: "Orders", badge: activeOrders || null },
-    { id: "inventory", icon: "\uD83D\uDCE6", label: "Inventory", badge: lowStockCount > 0 ? lowStockCount : null, badgeColor: "var(--alert)" },
-    { id: "customers", icon: "\uD83D\uDC65", label: "Customers" },
-    { id: "reports", icon: "\uD83D\uDCCA", label: "Reports" },
+    { id: "orders", icon: "📋", label: "Orders", badge: activeOrders || null },
+    { id: "inventory", icon: "📦", label: "Inventory", badge: lowStockCount > 0 ? lowStockCount : null, badgeColor: "var(--alert)" },
+    { id: "customers", icon: "👥", label: "Customers" },
+    { id: "reports", icon: "📊", label: "Reports" },
     ...(currentStaff?.role === "OWNER" || currentStaff?.role === "MANAGER" ? [
-      { id: "promo", icon: "\uD83D\uDCE2", label: "Promo" },
+      { id: "promo", icon: "📢", label: "Promo" },
       { id: "settings", icon: "\u2699", label: "Settings" },
     ] : []),
   ];
@@ -39,7 +39,7 @@ export function MainLayout({ screen, setScreen, handleLogout }: MainLayoutProps)
       {/* Sidebar */}
       <nav style={{ width: 200, background: "var(--sidebar)", borderRight: "1px solid var(--border)", display: "flex", flexDirection: "column", flexShrink: 0 }}>
         <div style={{ padding: "20px 16px 12px" }}>
-          <div style={{ fontSize: 20, marginBottom: 2 }}>{"\uD83E\uDEE7"}</div>
+          <div style={{ fontSize: 20, marginBottom: 2 }}>{"🫧"}</div>
           <div style={{ fontSize: 13, fontWeight: 800, color: "var(--text)", letterSpacing: -0.5 }}>WashTrack</div>
           <div style={{ fontSize: 10, color: "var(--muted-deep)" }}>POS v1.0</div>
         </div>

@@ -226,7 +226,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
 
         {step === "payment" && (
           <div>
-            <h3 style={{ margin: "0 0 16px", color: "var(--text)", fontSize: 15 }}>{"\uD83D\uDCB3"} Payment</h3>
+            <h3 style={{ margin: "0 0 16px", color: "var(--text)", fontSize: 15 }}>{"💳"} Payment</h3>
             <div style={{ marginBottom: 16 }}>
               <label style={{ fontSize: 12, color: "var(--subtext)", display: "block", marginBottom: 8, fontWeight: 600 }}>Select Payment Method</label>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
@@ -290,10 +290,10 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
               </div>
             )}
             <button onClick={() => completeOrder(false)} className="btn-success" style={{ width: "100%", fontSize: 17, padding: 16, fontWeight: 800 }}>
-              {"\u2713"} Confirm Payment + Print Receipt {"\uD83D\uDDA8\uFE0F"}
+              {"\u2713"} Confirm Payment + Print Receipt {"🖨\uFE0F"}
             </button>
             <button onClick={() => completeOrder(true)} style={{ width: "100%", marginTop: 10, fontSize: 14, padding: 14, fontWeight: 700, borderRadius: 10, border: "1px solid var(--warning)", background: "color-mix(in srgb, var(--warning) 8%, transparent)", color: "var(--warning)", cursor: "pointer" }}>
-              {"\uD83D\uDD52"} Pay Later (Collect on Pickup)
+              {"🕒"} Pay Later (Collect on Pickup)
             </button>
           </div>
         )}

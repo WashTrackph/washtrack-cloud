@@ -58,19 +58,19 @@ export function ReportsScreen() {
             }}
             title={!emailConfig.enabled ? "Enable email in Settings first" : !emailConfig.testVerified ? "Verify email in Settings first" : "Email this report"}
           >
-            {emailing ? "Sending..." : "\uD83D\uDCE7 Email Report"}
+            {emailing ? "Sending..." : "📧 Email Report"}
           </button>
         </div>
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, marginBottom: 24 }}>
         {[
-          { label: "Revenue", value: fmt(totalRevenue), icon: "\uD83D\uDCB0", color: "var(--accent)" },
-          { label: "Orders", value: totalOrders, icon: "\uD83D\uDCCB", color: "var(--accent2-light)" },
+          { label: "Revenue", value: fmt(totalRevenue), icon: "💰", color: "var(--accent)" },
+          { label: "Orders", value: totalOrders, icon: "📋", color: "var(--accent2-light)" },
           { label: "KG Processed", value: `${totalKg.toFixed(1)}kg`, icon: "\u2696", color: "var(--warning)" },
-          { label: "Avg Order", value: fmt(avgOrder), icon: "\uD83D\uDCCA", color: "var(--success)" },
-          { label: "Customers", value: customers.length, icon: "\uD83D\uDC65", color: "var(--success-light)" },
-          { label: "Services", value: services.filter((s) => s.active).length, icon: "\uD83E\uDDFA", color: "var(--pink)" },
+          { label: "Avg Order", value: fmt(avgOrder), icon: "📊", color: "var(--success)" },
+          { label: "Customers", value: customers.length, icon: "👥", color: "var(--success-light)" },
+          { label: "Services", value: services.filter((s) => s.active).length, icon: "🧺", color: "var(--pink)" },
         ].map((k, i) => (
           <div key={i} className="card" style={{ borderLeft: `3px solid ${k.color}` }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>

@@ -17,7 +17,7 @@ export function LoginScreen({ staff, selectedStaff, setSelectedStaff, pinBuffer,
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg, var(--bg) 0%, var(--sidebar) 50%, var(--bg) 100%)" }}>
       <div style={{ textAlign: "center", marginBottom: 32 }}>
-        <div style={{ fontSize: 48, marginBottom: 8 }}>{"\uD83E\uDEE7"}</div>
+        <div style={{ fontSize: 48, marginBottom: 8 }}>{"🫧"}</div>
         <h1 style={{ margin: 0, fontSize: 28, fontWeight: 800, color: "var(--text)", letterSpacing: -1 }}>{shop.name}</h1>
         <p style={{ margin: "4px 0 0", color: "var(--muted)", fontSize: 14 }}>Laundry POS System</p>
       </div>

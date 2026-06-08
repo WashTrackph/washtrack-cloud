@@ -139,7 +139,7 @@ export function PromoBlastScreen() {
         <button onClick={() => setView("dashboard")} style={{ background: "transparent", border: "none", color: "var(--muted)", cursor: "pointer", fontSize: 13, marginBottom: 16 }}>{"\u2190"} Back</button>
         <div className="card">
           <div style={{ display: "flex", gap: 16, alignItems: "center", marginBottom: 20 }}>
-            <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, var(--accent), var(--accent2))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, fontWeight: 800, flexShrink: 0 }}>{"\uD83D\uDCE2"}</div>
+            <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, var(--accent), var(--accent2))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, fontWeight: 800, flexShrink: 0 }}>{"📢"}</div>
             <div>
               <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>{promo.name}</h2>
               <div style={{ fontSize: 13, color: "var(--muted)" }}>by {promo.createdBy} &middot; {new Date(promo.createdAt).toLocaleDateString()} &middot; Filter: {promo.filter === "all" ? "All Opted-In" : promo.filter === "inactive30" ? "Inactive 30+ Days" : promo.filter === "loyal" ? "Loyal (Top 25%)" : promo.filter || "Custom"}</div>
@@ -348,10 +348,10 @@ export function PromoBlastScreen() {
       {/* KPI Row */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 16, marginBottom: 24 }}>
         {[
-          { label: "Total Campaigns", value: promotions.length, color: "var(--accent)", icon: "\uD83D\uDCE2" },
+          { label: "Total Campaigns", value: promotions.length, color: "var(--accent)", icon: "📢" },
           { label: "SMS Sent", value: totalSent, color: "var(--success)", icon: "\u2713" },
-          { label: "Mock Sent", value: totalMock, color: "var(--warning)", icon: "\uD83E\uDDEA" },
-          { label: "Total Recipients", value: totalRecipients, color: "var(--accent2-light)", icon: "\uD83D\uDC65" },
+          { label: "Mock Sent", value: totalMock, color: "var(--warning)", icon: "🧪" },
+          { label: "Total Recipients", value: totalRecipients, color: "var(--accent2-light)", icon: "👥" },
         ].map((k, i) => (
           <div key={i} className="card" style={{ borderLeft: `3px solid ${k.color}`, background: "var(--card)", borderTop: "1px solid var(--border)", borderRight: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
@@ -368,7 +368,7 @@ export function PromoBlastScreen() {
       {/* Campaign cards grid */}
       {promotions.length === 0 ? (
         <div className="card" style={{ textAlign: "center", padding: 40 }}>
-          <div style={{ fontSize: 32, marginBottom: 12 }}>{"\uD83D\uDCE2"}</div>
+          <div style={{ fontSize: 32, marginBottom: 12 }}>{"📢"}</div>
           <div style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", marginBottom: 4 }}>No campaigns yet</div>
           <div style={{ fontSize: 13, color: "var(--muted)", marginBottom: 16 }}>Create your first promo blast to reach your customers</div>
           <button onClick={openBuilder} style={{ padding: "8px 20px", borderRadius: 8, background: "var(--accent)", color: "#fff", border: "none", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>Create Campaign</button>
@@ -381,7 +381,7 @@ export function PromoBlastScreen() {
               <div key={p.id} onClick={() => openDetail(p.id)}
                 style={{ padding: 16, borderRadius: 10, background: "var(--card)", border: "1px solid var(--border)", cursor: "pointer" }}>
                 <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, var(--accent), var(--accent2))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 800, flexShrink: 0 }}>{"\uD83D\uDCE2"}</div>
+                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: "linear-gradient(135deg, var(--accent), var(--accent2))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 800, flexShrink: 0 }}>{"📢"}</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 700, fontSize: 14, color: "var(--text)" }}>{p.name}</div>
                     <div style={{ fontSize: 12, color: "var(--muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
