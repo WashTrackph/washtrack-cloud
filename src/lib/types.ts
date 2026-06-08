@@ -29,6 +29,7 @@ export interface Shop {
   workHoursStart: string;          // "HH:MM" — don't send before this
   workHoursEnd: string;            // "HH:MM" — don't send after this
   shiftEndTime: string;
+  facebook?: string;
   smsMockMode?: boolean;
   btPrinterAddress?: string;
   btPrinterName?: string;

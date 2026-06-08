@@ -234,7 +234,8 @@ export function AppProvider({ children }: AppProviderProps) {
 
   const sendSms = useCallback(async (phone: string, template: string, vars: Record<string, any>, orderId: string | null, promoId?: string | null): Promise<SmsLogEntry> => {
     let msg = template;
-    Object.entries(vars).forEach(([k, v]) => { msg = msg.replaceAll(`{${k}}`, String(v)); });
+    const allVars = { facebook: shop.facebook || shop.name, ...vars };
+    Object.entries(allVars).forEach(([k, v]) => { msg = msg.replaceAll(`{${k}}`, String(v)); });
     const isMock = shop.smsMockMode || !shop.smsApiKey;
     const entry: SmsLogEntry = { id: genId(), phone, message: msg, orderId, promoId: promoId || null, status: isMock ? "MOCK" : "SENDING", messageId: null, network: null, at: Date.now() };
     setSmsLog((prev) => [entry, ...prev]);

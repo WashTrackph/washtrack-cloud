@@ -438,6 +438,18 @@ export function SettingsScreen() {
               </div>
             ))}
 
+            {/* Facebook */}
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: "block", fontSize: 12, color: "var(--subtext)", marginBottom: 6 }}>📘 Facebook Page Link</label>
+              <input
+                value={shop.facebook || ""}
+                onChange={(e) => setShop((p) => ({ ...p, facebook: e.target.value }))}
+                placeholder="e.g. fb.com/YourLaundryShop"
+                className="input"
+              />
+              <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 3 }}>Used in SMS messages as <code style={{ color: "var(--accent)" }}>{"{facebook}"}</code></div>
+            </div>
+
             {/* SMS Toggles */}
             <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
               <div style={{ flex: 1 }}>
@@ -875,6 +887,7 @@ export function SettingsScreen() {
                   { token: "{kg}", desc: "Total kilograms" },
                   { token: "{total}", desc: "Order total" },
                   { token: "{address}", desc: "Shop address" },
+                  { token: "{facebook}", desc: "Facebook page link" },
                   { token: "{message}", desc: "Custom message" },
                 ].map((t) => (
                   <div key={t.token} style={{ fontSize: 12, color: "var(--subtext)" }}>
