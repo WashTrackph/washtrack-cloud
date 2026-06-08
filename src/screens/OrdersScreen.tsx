@@ -332,7 +332,7 @@ export function OrdersScreen() {
         <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "var(--text)" }}>Orders</h2>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <div style={{ position: "relative" }}>
-            <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", fontSize: 14, color: "var(--muted)", pointerEvents: "none" }}>\u2315</span>
+            <span style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", fontSize: 14, color: "var(--muted)", pointerEvents: "none" }}>{"\ud83d\udd0d"}</span>
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
