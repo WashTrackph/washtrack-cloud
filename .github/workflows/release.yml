@@ -131,13 +131,12 @@ jobs:
         run: npm install
 
       - name: Build Windows installer
-        uses: tauri-apps/tauri-action@v0
+        run: npx tauri build --bundles nsis
+
+      - name: Upload Windows installer to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || needs.release-please.outputs.tag_name }}
+          files: src-tauri/target/release/bundle/nsis/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          npm_execpath: npm
-        with:
-          tagName: ${{ github.event.inputs.tag || needs.release-please.outputs.tag_name }}
-          releaseName: WashTrack POS ${{ github.event.inputs.tag || needs.release-please.outputs.tag_name }}
-          releaseBody: 'See CHANGELOG for details.'
-          releaseDraft: false
-          args: --bundles nsis
