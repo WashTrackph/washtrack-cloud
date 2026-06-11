@@ -134,8 +134,10 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          npm_execpath: npm
         with:
           tagName: ${{ github.event.inputs.tag || needs.release-please.outputs.tag_name }}
-          releaseName: WashTrack POS v${{ github.event.inputs.tag || needs.release-please.outputs.version }}
+          releaseName: WashTrack POS ${{ github.event.inputs.tag || needs.release-please.outputs.tag_name }}
           releaseBody: 'See CHANGELOG for details.'
           releaseDraft: false
+          args: --bundles nsis
