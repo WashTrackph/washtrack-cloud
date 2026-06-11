@@ -59,7 +59,12 @@ export function PinModalOverlay({ pinModal, setPinModal, staff, shop, notify }: 
         } else if (pinModal.role === "OWNER") {
           valid = await checkPin(next, shop.ownerPin);
         } else if (pinModal.role === "MANAGER") {
-          valid = await checkPin(next, shop.managerPin) || await checkPin(next, shop.ownerPin);
+          // Check any active staff with MANAGER or OWNER role
+          for (const s of staff.filter((s) => s.active && (s.role === "MANAGER" || s.role === "OWNER"))) {
+            if (await checkPin(next, s.pin)) { valid = true; break; }
+          }
+          // Also allow owner PIN from shop (legacy)
+          if (!valid && shop.ownerPin) valid = await checkPin(next, shop.ownerPin);
         } else {
           for (const s of staff.filter((s) => s.active)) {
             if (await checkPin(next, s.pin)) { valid = true; break; }
