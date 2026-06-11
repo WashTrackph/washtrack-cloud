@@ -183,5 +183,5 @@ export function getLicenseInfo(licenseKey: string, trialStartDate: string): Lice
 
 // ── Is the app allowed to run? ───────────────────────────────────────────────
 export function isLicenseAllowed(info: LicenseInfo): boolean {
-  return info.status === 'active' || info.status === 'expiring_soon' || info.status === 'trial';
+  return info.status === 'active' || info.status === 'expiring_soon';
 }
