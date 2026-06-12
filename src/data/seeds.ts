@@ -1,4 +1,4 @@
-import type { Shop, PayMethod, Service, Stage, SmsTemplates, Staff, Customer, InventoryItem, SupplyRule, ThemePreset, EmailConfig, EmailProvider } from "../lib/types";
+﻿import type { Shop, PayMethod, Service, Stage, SmsTemplates, Staff, Customer, InventoryItem, SupplyRule, ThemePreset, EmailConfig, EmailProvider } from "../lib/types";
 
 export const SEED_SHOP: Shop = {
   name: "My Laundry Shop",
@@ -29,10 +29,10 @@ export const SEED_SHOP: Shop = {
 };
 
 export const SEED_PAYMETHODS: PayMethod[] = [
-  { id: "pm1", label: "Cash",        icon: "💵", isCash: true,  color: "#10B981", active: true, sortOrder: 0 },
-  { id: "pm2", label: "GCash",       icon: "📱", isCash: false, color: "#3B82F6", active: true, sortOrder: 1 },
-  { id: "pm3", label: "Maya",        icon: "💜", isCash: false, color: "#8B5CF6", active: true, sortOrder: 2 },
-  { id: "pm4", label: "Credit Card", icon: "💳", isCash: false, color: "#F59E0B", active: true, sortOrder: 3 },
+  { id: "pm1", label: "Cash",        icon: "ðŸ’µ", isCash: true,  color: "#10B981", active: true, sortOrder: 0 },
+  { id: "pm2", label: "GCash",       icon: "ðŸ“±", isCash: false, color: "#3B82F6", active: true, sortOrder: 1 },
+  { id: "pm3", label: "Maya",        icon: "ðŸ’œ", isCash: false, color: "#8B5CF6", active: true, sortOrder: 2 },
+  { id: "pm4", label: "Credit Card", icon: "ðŸ’³", isCash: false, color: "#F59E0B", active: true, sortOrder: 3 },
 ];
 
 export const SEED_SERVICES: Service[] = [
@@ -46,20 +46,21 @@ export const SEED_SERVICES: Service[] = [
 ];
 
 export const SEED_STAGES: Stage[] = [
-  { id: 1, label: "Received",   icon: "📥", color: "#6B7280", order: 0 },
-  { id: 2, label: "Washing",    icon: "🫧", color: "#3B82F6", order: 1 },
-  { id: 3, label: "Drying",     icon: "💨", color: "#F59E0B", order: 2 },
-  { id: 4, label: "Folding",    icon: "👕", color: "#8B5CF6", order: 3 },
+  { id: 1, label: "Received",   icon: "ðŸ“¥", color: "#6B7280", order: 0 },
+  { id: 2, label: "Washing",    icon: "ðŸ«§", color: "#3B82F6", order: 1 },
+  { id: 3, label: "Drying",     icon: "ðŸ’¨", color: "#F59E0B", order: 2 },
+  { id: 4, label: "Folding",    icon: "ðŸ‘•", color: "#8B5CF6", order: 3 },
   { id: 5, label: "Ready",      icon: "\u2705",        color: "#10B981", order: 4 },
-  { id: 6, label: "Out for Delivery", icon: "🚚", color: "#F97316", order: 5 },
-  { id: 7, label: "Delivered",         icon: "🎉", color: "#6B7280", order: 6 },
+  { id: 6, label: "Out for Delivery", icon: "ðŸšš", color: "#F97316", order: 5 },
+  { id: 7, label: "Delivered",         icon: "ðŸŽ‰", color: "#6B7280", order: 6 },
 ];
 
 export const SEED_SMS_TEMPLATES: SmsTemplates = {
-  receipt:  "Hi {name}! Thank you for your order at {shop}! 🧺 Order #{order} - {kg}kg, Total: \u20B1{total}. We will text you once your laundry is ready. Follow us: {facebook}",
-  ready:    "Hi {name}! Great news! Your laundry at {shop} is READY for pickup. \u2705 Order #{order}. Thank you and see you soon! 😊",
+  receipt:  "Hi {name}! Thank you for your order at {shop}! ðŸ§º Order #{order} - {kg}kg, Total: \u20B1{total}. We will text you once your laundry is ready. Follow us: {facebook}",
+  ready:    "Hi {name}! Great news! Your laundry at {shop} is READY for pickup. \u2705 Order #{order}. Thank you and see you soon! ðŸ˜Š",
   reminder: "Hi {name}! Just a reminder \u2014 Order #{order} at {shop} is ready for pickup. Please pick up at your earliest convenience. Thank you!",
-  promo:    "Hi {name}! 🎉 Special offer from {shop}: {message}. Visit us at {address}. Follow us: {facebook}",
+  promo:    "Hi {name}! ðŸŽ‰ Special offer from {shop}: {message}. Visit us at {address}. Follow us: {facebook}",
+  delivery: "Hi {name}! Your laundry from {shop} is on the way! Order #{order} is out for delivery. Please be available to receive it. Thank you!",
 };
 
 export const SEED_STAFF: Staff[] = [
@@ -76,14 +77,14 @@ export const SEED_CUSTOMERS: Customer[] = [
 ];
 
 export const SEED_INVENTORY: InventoryItem[] = [
-  { id: "inv1", name: "Detergent (Ariel 2kg)",      category: "Consumable", unit: "bag",    qty: 0, minQty: 5,  costPerUnit: 95,  icon: "🧴", lastRestocked: Date.now() },
-  { id: "inv2", name: "Fabric Softener (Downy 1L)", category: "Consumable", unit: "bottle", qty: 0, minQty: 4,  costPerUnit: 85,  icon: "🫧", lastRestocked: Date.now() },
-  { id: "inv3", name: "Bleach (Pride 1L)",           category: "Consumable", unit: "bottle", qty: 0, minQty: 4,  costPerUnit: 35,  icon: "🧪", lastRestocked: Date.now() },
-  { id: "inv4", name: "Plastic Bags (Large)",        category: "Packaging",  unit: "pc",     qty: 0, minQty: 30, costPerUnit: 2,   icon: "🛍", lastRestocked: Date.now() },
-  { id: "inv5", name: "Laundry Pins",                category: "Equipment",  unit: "pack",   qty: 0, minQty: 5,  costPerUnit: 45,  icon: "📌", lastRestocked: Date.now() },
-  { id: "inv6", name: "Hangers (Metal)",             category: "Equipment",  unit: "pc",     qty: 0, minQty: 20, costPerUnit: 8,   icon: "🪝", lastRestocked: Date.now() },
-  { id: "inv7", name: "Receipt Paper (58mm)",        category: "Consumable", unit: "roll",   qty: 0, minQty: 3,  costPerUnit: 25,  icon: "🧾", lastRestocked: Date.now() },
-  { id: "inv8", name: "Stain Remover Spray",         category: "Consumable", unit: "bottle", qty: 0, minQty: 3,  costPerUnit: 120, icon: "💧", lastRestocked: Date.now() },
+  { id: "inv1", name: "Detergent (Ariel 2kg)",      category: "Consumable", unit: "bag",    qty: 0, minQty: 5,  costPerUnit: 95,  icon: "ðŸ§´", lastRestocked: Date.now() },
+  { id: "inv2", name: "Fabric Softener (Downy 1L)", category: "Consumable", unit: "bottle", qty: 0, minQty: 4,  costPerUnit: 85,  icon: "ðŸ«§", lastRestocked: Date.now() },
+  { id: "inv3", name: "Bleach (Pride 1L)",           category: "Consumable", unit: "bottle", qty: 0, minQty: 4,  costPerUnit: 35,  icon: "ðŸ§ª", lastRestocked: Date.now() },
+  { id: "inv4", name: "Plastic Bags (Large)",        category: "Packaging",  unit: "pc",     qty: 0, minQty: 30, costPerUnit: 2,   icon: "ðŸ›", lastRestocked: Date.now() },
+  { id: "inv5", name: "Laundry Pins",                category: "Equipment",  unit: "pack",   qty: 0, minQty: 5,  costPerUnit: 45,  icon: "ðŸ“Œ", lastRestocked: Date.now() },
+  { id: "inv6", name: "Hangers (Metal)",             category: "Equipment",  unit: "pc",     qty: 0, minQty: 20, costPerUnit: 8,   icon: "ðŸª", lastRestocked: Date.now() },
+  { id: "inv7", name: "Receipt Paper (58mm)",        category: "Consumable", unit: "roll",   qty: 0, minQty: 3,  costPerUnit: 25,  icon: "ðŸ§¾", lastRestocked: Date.now() },
+  { id: "inv8", name: "Stain Remover Spray",         category: "Consumable", unit: "bottle", qty: 0, minQty: 3,  costPerUnit: 120, icon: "ðŸ’§", lastRestocked: Date.now() },
 ];
 
 export const SEED_SUPPLY_RULES: SupplyRule[] = [
@@ -107,7 +108,7 @@ export const THEME_PRESETS: ThemePreset[] = [
 
 export const DEFAULT_THEME = THEME_PRESETS[0];
 
-// ─── Email ───────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Email â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export const EMAIL_PROVIDERS: { id: EmailProvider; label: string; smtpHost: string; smtpPort: number; help: string }[] = [
   { id: "gmail",     label: "Gmail (Personal)",      smtpHost: "smtp.gmail.com",           smtpPort: 587, help: "Use an App Password: myaccount.google.com > Security > 2-Step Verification > App Passwords" },
@@ -129,3 +130,4 @@ export const SEED_EMAIL_CONFIG: EmailConfig = {
   reportTo: "",
   testVerified: false,
 };
+
