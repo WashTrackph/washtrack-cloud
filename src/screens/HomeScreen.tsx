@@ -6,7 +6,7 @@ export function HomeScreen({ setScreen }: { setScreen: (s: string) => void }) {
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const todayOrders = orders.filter((o) => !o.voided && o.createdAt >= today.getTime());
   const todayRevenue = todayOrders.reduce((s, o) => s + o.total, 0);
-  const activeOrders = orders.filter((o) => !o.voided && o.statusId < 6);
+  const activeOrders = orders.filter((o) => !o.voided && o.statusId < 7);
   const readyOrders = orders.filter((o) => !o.voided && o.statusId === 5);
   const overdueOrders = orders.filter((o) => {
     if (o.voided || o.statusId !== 5) return false;

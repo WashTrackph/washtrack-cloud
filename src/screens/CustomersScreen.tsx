@@ -37,6 +37,7 @@ export function CustomersScreen() {
             <div>
               <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>{customer.name}</h2>
               <div style={{ fontSize: 13, color: "var(--muted)" }}>{customer.phone}</div>
+              {customer.address && <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>📍 {customer.address}</div>}
             </div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 20 }}>

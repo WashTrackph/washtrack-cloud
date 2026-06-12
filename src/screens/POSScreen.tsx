@@ -15,6 +15,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
   const [newCustomerMode, setNewCustomerMode] = useState(false);
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
+  const [newAddress, setNewAddress] = useState("");
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [express, setExpress] = useState(false);
   const [discount, setDiscount] = useState(0);
@@ -90,7 +91,7 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
 
     let customer = selectedCustomer;
     if (!customer) {
-      customer = { id: genId(), name: newName, phone: newPhone, visits: 0, totalSpend: 0, lastVisit: Date.now(), promoOptIn: true };
+      customer = { id: genId(), name: newName, phone: newPhone, address: newAddress || undefined, visits: 0, totalSpend: 0, lastVisit: Date.now(), promoOptIn: true };
       setCustomers((prev) => [...prev, customer]);
     } else {
       setCustomers((prev) => prev.map((c) => c.id === customer.id
@@ -179,7 +180,8 @@ export function POSScreen({ setScreen }: { setScreen: (s: string) => void }) {
             {newCustomerMode && (
               <div style={{ marginBottom: 12, padding: 16, background: "var(--card)", borderRadius: 8, border: "1px solid var(--border)" }}>
                 <input value={newName} onChange={(e) => setNewName(e.target.value)} placeholder="Full Name *" className="input" style={{ marginBottom: 8 }} autoFocus />
-                <input value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder="Phone number" className="input" />
+                <input value={newPhone} onChange={(e) => setNewPhone(e.target.value)} placeholder="Phone number" className="input" style={{ marginBottom: 8 }} />
+                <input value={newAddress} onChange={(e) => setNewAddress(e.target.value)} placeholder="Address (optional)" className="input" />
               </div>
             )}
             <input value={customerSearch} onChange={(e) => setCustomerSearch(e.target.value)} placeholder="Search by name or phone…" className="input" style={{ marginBottom: 12 }} />

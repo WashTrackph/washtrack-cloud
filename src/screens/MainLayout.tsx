@@ -17,7 +17,7 @@ interface MainLayoutProps {
 
 export function MainLayout({ screen, setScreen, handleLogout }: MainLayoutProps) {
   const { currentStaff, orders, inventory, requirePin } = useApp();
-  const activeOrders = orders.filter((o) => !o.voided && o.statusId < 6).length;
+  const activeOrders = orders.filter((o) => !o.voided && o.statusId < 7).length;
   const readyOrders = orders.filter((o) => !o.voided && o.statusId === 5).length;
   const lowStockCount = inventory.filter((i) => i.qty <= i.minQty).length;
 

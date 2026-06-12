@@ -295,11 +295,11 @@ export function OrdersScreen() {
           }} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", marginTop: 12, padding: "9px 0", borderRadius: 8, border: "1px solid var(--accent)", background: "color-mix(in srgb, var(--accent) 6%, transparent)", color: "var(--accent)", cursor: "pointer", fontSize: 13, fontWeight: 700 }}>
             {"🖨\uFE0F"} Reprint Receipt
           </button>
-          {!order.voided && order.statusId < 6 && (
+          {!order.voided && order.statusId < 7 && (
             <div style={{ marginTop: 16 }}>
               <h4 style={{ margin: "0 0 8px", fontSize: 13, color: "var(--subtext)" }}>Update Status</h4>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                {stages.filter((s) => s.id > order.statusId && s.id <= 6).map((s) => (
+                {stages.filter((s) => s.id > order.statusId && s.id <= 7).map((s) => (
                   <button key={s.id} onClick={() => updateStatus(order.id, s.id)} style={{ padding: "6px 14px", borderRadius: 20, border: `1px solid ${s.color}`, background: `${s.color}15`, color: s.color, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>{s.icon} {s.label}</button>
                 ))}
               </div>
