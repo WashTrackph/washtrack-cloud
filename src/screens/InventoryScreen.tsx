@@ -1,11 +1,98 @@
 import { useState } from "react";
 import { useApp } from "../context/AppContext";
 
+const ICONS = ["🧴","🫧","🧪","🛍","📌","🪝","🧾","💧","🧹","🪣","🧽","🧻","📦","🔧","⚙️","🪤","🎀","🧯","🫙","🗑️"];
+const CATEGORIES = ["Consumable", "Packaging", "Equipment", "Other"];
+
+function AddSupplyModal({ onSave, onClose }: { onSave: (item: any) => void; onClose: () => void }) {
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("Consumable");
+  const [unit, setUnit] = useState("");
+  const [qty, setQty] = useState("0");
+  const [minQty, setMinQty] = useState("5");
+  const [costPerUnit, setCostPerUnit] = useState("0");
+  const [icon, setIcon] = useState("📦");
+  const [err, setErr] = useState("");
+
+  const handleSave = () => {
+    if (!name.trim()) { setErr("Name is required"); return; }
+    if (!unit.trim()) { setErr("Unit is required (e.g. bag, bottle, pc)"); return; }
+    onSave({
+      id: "inv" + Date.now(),
+      name: name.trim(),
+      category,
+      unit: unit.trim(),
+      qty: parseInt(qty) || 0,
+      minQty: parseInt(minQty) || 5,
+      costPerUnit: parseFloat(costPerUnit) || 0,
+      icon,
+      lastRestocked: Date.now(),
+    });
+  };
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}
+      onClick={onClose}>
+      <div style={{ background: "var(--card)", borderRadius: 16, padding: 28, width: "100%", maxWidth: 440, border: "1px solid var(--border)" }}
+        onClick={(e) => e.stopPropagation()}>
+        <h3 style={{ margin: "0 0 20px", fontSize: 17, fontWeight: 800, color: "var(--text)" }}>➕ Add New Supply</h3>
+
+        {/* Icon picker */}
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 6 }}>Icon</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {ICONS.map((ic) => (
+              <button key={ic} onClick={() => setIcon(ic)} style={{ fontSize: 20, padding: "4px 8px", borderRadius: 8, border: `2px solid ${icon === ic ? "var(--accent)" : "var(--border)"}`, background: icon === ic ? "color-mix(in srgb, var(--accent) 15%, var(--card))" : "transparent", cursor: "pointer" }}>{ic}</button>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+          <div style={{ gridColumn: "1 / -1" }}>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>Item Name *</div>
+            <input value={name} onChange={(e) => { setName(e.target.value); setErr(""); }} placeholder="e.g. Detergent (Ariel 2kg)" className="input" style={{ marginBottom: 0, width: "100%", boxSizing: "border-box" }} />
+          </div>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>Category</div>
+            <select value={category} onChange={(e) => setCategory(e.target.value)} className="input" style={{ marginBottom: 0, width: "100%" }}>
+              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>Unit *</div>
+            <input value={unit} onChange={(e) => { setUnit(e.target.value); setErr(""); }} placeholder="e.g. bag, bottle, pc" className="input" style={{ marginBottom: 0, width: "100%", boxSizing: "border-box" }} />
+          </div>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>Starting Qty</div>
+            <input type="number" value={qty} onChange={(e) => setQty(e.target.value)} className="input" style={{ marginBottom: 0, width: "100%", boxSizing: "border-box" }} />
+          </div>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>Low Stock Alert (min)</div>
+            <input type="number" value={minQty} onChange={(e) => setMinQty(e.target.value)} className="input" style={{ marginBottom: 0, width: "100%", boxSizing: "border-box" }} />
+          </div>
+          <div style={{ gridColumn: "1 / -1" }}>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>Cost per Unit (₱)</div>
+            <input type="number" value={costPerUnit} onChange={(e) => setCostPerUnit(e.target.value)} className="input" style={{ marginBottom: 0, width: "100%", boxSizing: "border-box" }} />
+          </div>
+        </div>
+
+        {err && <p style={{ color: "var(--danger)", fontSize: 13, margin: "0 0 12px", fontWeight: 600 }}>{err}</p>}
+
+        <div style={{ display: "flex", gap: 10 }}>
+          <button onClick={onClose} style={{ flex: 1, padding: "11px 0", borderRadius: 10, border: "1px solid var(--border)", background: "transparent", color: "var(--muted)", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Cancel</button>
+          <button onClick={handleSave} style={{ flex: 1, padding: "11px 0", borderRadius: 10, border: "none", background: "linear-gradient(135deg, var(--accent), var(--accent2))", color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>Add Supply</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function InventoryScreen() {
   const { inventory, setInventory, notify, addAudit, fmt } = useApp();
   const [filter, setFilter] = useState("all");
   const [restockId, setRestockId] = useState<string | null>(null);
   const [restockQty, setRestockQty] = useState("");
+  const [showAdd, setShowAdd] = useState(false);
 
   const filtered = inventory.filter((i) => {
     if (filter === "low") return i.qty > 0 && i.qty <= i.minQty;
@@ -25,8 +112,15 @@ export function InventoryScreen() {
     setInventory((prev) => prev.map((i) => i.id === id ? { ...i, qty: i.qty + qty, lastRestocked: Date.now() } : i));
     const item = inventory.find((i) => i.id === id);
     addAudit("INVENTORY", `Restocked ${item?.name} +${qty} ${item?.unit}`);
-    notify(`Restocked ${item?.name} \u00D7${qty}`);
+    notify(`Restocked ${item?.name} ×${qty}`);
     setRestockId(null); setRestockQty("");
+  };
+
+  const doAddSupply = (item: any) => {
+    setInventory((prev) => [...prev, item]);
+    addAudit("INVENTORY", `Added new supply: ${item.name}`);
+    notify(`${item.name} added to inventory`);
+    setShowAdd(false);
   };
 
   const totalValue = inventory.reduce((s, i) => s + i.qty * i.costPerUnit, 0);
@@ -35,7 +129,12 @@ export function InventoryScreen() {
 
   return (
     <div style={{ padding: 24 }}>
-      <h2 style={{ margin: "0 0 20px", fontSize: 20, fontWeight: 800, color: "var(--text)" }}>{"📦"} Inventory</h2>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
+        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "var(--text)" }}>{"📦"} Inventory</h2>
+        <button onClick={() => setShowAdd(true)} style={{ padding: "8px 18px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, var(--accent), var(--accent2))", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+          + Add Supply
+        </button>
+      </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 12, marginBottom: 20 }}>
         {[
@@ -86,13 +185,15 @@ export function InventoryScreen() {
                 <div style={{ marginTop: 12, padding: "12px", background: "var(--bg)", borderRadius: 8, border: "1px solid color-mix(in srgb, var(--success) 20%, transparent)", display: "flex", alignItems: "center", gap: 10 }}>
                   <span style={{ fontSize: 13, color: "var(--success-light)" }}>Add qty:</span>
                   <input type="number" value={restockQty} onChange={(e) => setRestockQty(e.target.value)} placeholder="e.g. 10" className="input" style={{ width: 100, marginBottom: 0 }} />
-                  <button onClick={() => doRestock(item.id)} className="btn-success" style={{ padding: "6px 16px", fontSize: 13 }}>{"\u2713"} Confirm</button>
+                  <button onClick={() => doRestock(item.id)} className="btn-success" style={{ padding: "6px 16px", fontSize: 13 }}>{"✓"} Confirm</button>
                 </div>
               )}
             </div>
           );
         })}
       </div>
+
+      {showAdd && <AddSupplyModal onSave={doAddSupply} onClose={() => setShowAdd(false)} />}
     </div>
   );
 }
