@@ -158,7 +158,7 @@ export function OrdersScreen() {
         (o.customerPhone || "").includes(q)
       )
     : activeOrders;
-  const stageOrders = stages.slice(0, 5).map((stage) => ({
+  const stageOrders = stages.map((stage) => ({
     ...stage,
     orders: filteredOrders.filter((o) => o.statusId === stage.id),
   }));
