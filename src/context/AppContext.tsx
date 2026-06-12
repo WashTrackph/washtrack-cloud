@@ -148,8 +148,23 @@ export function AppProvider({ children }: AppProviderProps) {
       if (savedCustomers) setCustomers(savedCustomers);
       if (savedShop) setShop({ ...SEED_SHOP, ...savedShop });
       if (savedServices) setServices(savedServices);
-      if (savedStages) setStages(savedStages);
-      if (savedSmsTemplates) setSmsTemplates(savedSmsTemplates);
+      if (savedStages) {
+        // Migration: ensure "Out for Delivery" stage exists
+        const hasDelivery = savedStages.some((s: any) => s.label === "Out for Delivery");
+        if (!hasDelivery) {
+          const migrated = savedStages.map((s: any) => s.id === 6 ? { ...s, id: 7, order: 6 } : s);
+          migrated.splice(migrated.findIndex((s: any) => s.id === 7), 0,
+            { id: 6, label: "Out for Delivery", icon: "🚚", color: "#F97316", order: 5 }
+          );
+          setStages(migrated);
+        } else {
+          setStages(savedStages);
+        }
+      }
+      if (savedSmsTemplates) {
+        // Migration: ensure delivery template exists
+        setSmsTemplates({ ...SEED_SMS_TEMPLATES, ...savedSmsTemplates });
+      }
       if (savedStaff) setStaff(savedStaff);
       if (savedSms) setSmsLog(savedSms);
       if (savedAudit) setAuditLog(savedAudit);

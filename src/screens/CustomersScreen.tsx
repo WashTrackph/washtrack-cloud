@@ -6,6 +6,10 @@ export function CustomersScreen() {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [editPhone, setEditPhone] = useState("");
+  const [editAddress, setEditAddress] = useState("");
 
   const handleDelete = (customerId: string, customerName: string) => {
     requirePin("OWNER", () => {
@@ -34,10 +38,34 @@ export function CustomersScreen() {
         <div className="card">
           <div style={{ display: "flex", gap: 16, alignItems: "center", marginBottom: 20 }}>
             <div style={{ width: 56, height: 56, borderRadius: "50%", background: "linear-gradient(135deg, var(--accent), var(--accent2))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, fontWeight: 800, flexShrink: 0 }}>{customer.name[0]}</div>
-            <div>
-              <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>{customer.name}</h2>
-              <div style={{ fontSize: 13, color: "var(--muted)" }}>{customer.phone}</div>
-              {customer.address && <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>📍 {customer.address}</div>}
+            <div style={{ flex: 1 }}>
+              {editing ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <input value={editName} onChange={(e) => setEditName(e.target.value)} placeholder="Name" className="input" style={{ marginBottom: 0 }} />
+                  <input value={editPhone} onChange={(e) => setEditPhone(e.target.value)} placeholder="Phone" className="input" style={{ marginBottom: 0 }} />
+                  <input value={editAddress} onChange={(e) => setEditAddress(e.target.value)} placeholder="Address (optional)" className="input" style={{ marginBottom: 0 }} />
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button onClick={() => {
+                      if (!editName.trim()) return;
+                      setCustomers((prev) => prev.map((c) => c.id === customer.id ? { ...c, name: editName.trim(), phone: editPhone.trim(), address: editAddress.trim() || undefined } : c));
+                      addAudit("CUSTOMER_EDIT", `Edited customer "${editName.trim()}"`);
+                      notify("Customer updated");
+                      setEditing(false);
+                    }} style={{ padding: "6px 16px", borderRadius: 8, border: "none", background: "var(--accent)", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>Save</button>
+                    <button onClick={() => setEditing(false)} style={{ padding: "6px 14px", borderRadius: 8, border: "1px solid var(--border)", background: "transparent", color: "var(--muted)", fontSize: 13, cursor: "pointer" }}>Cancel</button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>{customer.name}</h2>
+                    <button onClick={() => { setEditName(customer.name); setEditPhone(customer.phone); setEditAddress(customer.address || ""); setEditing(true); }}
+                      style={{ padding: "3px 10px", borderRadius: 6, border: "1px solid var(--border)", background: "transparent", color: "var(--muted)", fontSize: 12, cursor: "pointer" }}>✏️ Edit</button>
+                  </div>
+                  <div style={{ fontSize: 13, color: "var(--muted)" }}>{customer.phone}</div>
+                  {customer.address && <div style={{ fontSize: 12, color: "var(--muted)", marginTop: 2 }}>📍 {customer.address}</div>}
+                </>
+              )}
             </div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: 20 }}>
