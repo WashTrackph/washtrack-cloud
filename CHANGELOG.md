@@ -1,5 +1,38 @@
 # Changelog
 
+## [2.1.0](https://github.com/WashTrackph/Washtrack-2.0/compare/v2.0.0...v2.1.0) (2026-06-12)
+
+
+### Features
+
+* add Delivery stage to workflow and address field for customers ([0c7c0bc](https://github.com/WashTrackph/Washtrack-2.0/commit/0c7c0bc6f07976c35d7ce8c36237db05607e39fc))
+* add delivery stage, collapsible board columns, customer editing, inventory management ([188421a](https://github.com/WashTrackph/Washtrack-2.0/commit/188421ada45239d3a635c341565e05c62304ffb7))
+* add edit supply functionality with Owner PIN protection ([92c419f](https://github.com/WashTrackph/Washtrack-2.0/commit/92c419f93dba9cc6fbca96f02980f941a6e27c3d))
+* add Facebook link field + {facebook} SMS token + friendlier default templates ([30b09b0](https://github.com/WashTrackph/Washtrack-2.0/commit/30b09b0f064260ec410aef97ced7901380b2882f))
+* add new supply button and form to inventory screen ([15e10d9](https://github.com/WashTrackph/Washtrack-2.0/commit/15e10d95694ae0ff926cca3a3981d55874ae719c))
+* add WashTrack key generator tool with customer tracker and Excel export ([01f8c05](https://github.com/WashTrackph/Washtrack-2.0/commit/01f8c05acfe9ab3d33887e9b873f1ff5389c5fd3))
+
+
+### Bug Fixes
+
+* block app without license key — remove trial from isLicenseAllowed ([d276038](https://github.com/WashTrackph/Washtrack-2.0/commit/d27603803b7f929a0c606cee093bfb2f098b24e3))
+* bump tauri-plugin-sql to 2.4.0 in both Cargo.toml and package.json to fix version mismatch ([2e9bf05](https://github.com/WashTrackph/Washtrack-2.0/commit/2e9bf05ed28e06f81a3183b4c7021e8bca2d9840))
+* check staff array for MANAGER role PIN instead of non-existent shop.managerPin ([a8333a5](https://github.com/WashTrackph/Washtrack-2.0/commit/a8333a5e1cf1efcd200f83445578744399bc70be))
+* enable Windows build on workflow_dispatch trigger ([06af778](https://github.com/WashTrackph/Washtrack-2.0/commit/06af778792dd771c43fa6f66f76d9eeb6b38b725))
+* migrate delivery stage for existing installs, add customer edit (name/phone/address) ([a373392](https://github.com/WashTrackph/Washtrack-2.0/commit/a373392f793b648ed621e4fed0c0a04026092528))
+* order search placeholder unicode escape showing as raw text ([0646e15](https://github.com/WashTrackph/Washtrack-2.0/commit/0646e1550926abee1b6a7b2dc10ae2fa78a05c3d))
+* remove all Philippine-specific placeholder text, use generic English ([24851cc](https://github.com/WashTrackph/Washtrack-2.0/commit/24851ccd60ced82d9895ca78d664c7095831bf0a))
+* replace all broken unicode surrogate escape sequences with actual emoji characters ([446fd79](https://github.com/WashTrackph/Washtrack-2.0/commit/446fd79af1b9e2b4b2591ee955532fe9892d657e))
+* replace broken unicode search icon with plain character ([211aace](https://github.com/WashTrackph/Washtrack-2.0/commit/211aace4a7385397e1239139fea158b05700ace9))
+* replace tauri-action with direct npx tauri build for Windows ([426e200](https://github.com/WashTrackph/Washtrack-2.0/commit/426e200658bffdb5facd1885655a5ee71b1e6e7e))
+* require Owner PIN to add new supply ([eac91e7](https://github.com/WashTrackph/Washtrack-2.0/commit/eac91e7452e2057f6f9cad27f2c74db67d086a81))
+* set all seed inventory quantities to 0 for fresh installs ([3596f16](https://github.com/WashTrackph/Washtrack-2.0/commit/3596f1623d4891527d336058434ba9a1c021efcf))
+* show all stages on board (was sliced to 5, hiding delivery and picked up) ([9126420](https://github.com/WashTrackph/Washtrack-2.0/commit/9126420c09b83635fd94815ff1e28ab0ac52b384))
+* switch SMS default templates to English ([b7f43c5](https://github.com/WashTrackph/Washtrack-2.0/commit/b7f43c53f66fe00352b9d8640ddcba62b37f1fad))
+* update Cargo.lock to reflect tauri-plugin-sql 2.4.0 ([59a33aa](https://github.com/WashTrackph/Washtrack-2.0/commit/59a33aab1a62cf167b0448ac01d9a8b73ba5c385))
+* use npm instead of bun for Windows build in tauri-action ([09b28d8](https://github.com/WashTrackph/Washtrack-2.0/commit/09b28d812169c41738ba2bc7238084498cfee4f2))
+* wrap search icon in JSX expression so it renders correctly ([df52509](https://github.com/WashTrackph/Washtrack-2.0/commit/df525094fba934980ebcc1b7cc3d7cb8a0b67cf6))
+
 ## [1.3.1-rc.1](https://github.com/WashTrackph/Washtrack/compare/v1.3.0-rc.1...v1.3.1-rc.1) (2026-03-14)
 
 
