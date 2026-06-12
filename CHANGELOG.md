@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/WashTrackph/Washtrack-2.0/compare/v2.1.0...v2.1.1) (2026-06-12)
+
+
+### Bug Fixes
+
+* add missing delivery SMS template to seeds ([48abb7e](https://github.com/WashTrackph/Washtrack-2.0/commit/48abb7e41056bfc80f73ad1efc45cc6c03e577d2))
+
 ## [2.1.0](https://github.com/WashTrackph/Washtrack-2.0/compare/v2.0.0...v2.1.0) (2026-06-12)
 
 
