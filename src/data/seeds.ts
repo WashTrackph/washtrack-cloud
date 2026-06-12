@@ -75,14 +75,14 @@ export const SEED_CUSTOMERS: Customer[] = [
 ];
 
 export const SEED_INVENTORY: InventoryItem[] = [
-  { id: "inv1", name: "Detergent (Ariel 2kg)",     category: "Consumable", unit: "bag",    qty: 24, minQty: 5,  costPerUnit: 95,  icon: "🧴", lastRestocked: Date.now() - 86400000 * 3 },
-  { id: "inv2", name: "Fabric Softener (Downy 1L)", category: "Consumable", unit: "bottle", qty: 12, minQty: 4,  costPerUnit: 85,  icon: "🫧", lastRestocked: Date.now() - 86400000 * 5 },
-  { id: "inv3", name: "Bleach (Pride 1L)",           category: "Consumable", unit: "bottle", qty: 8,  minQty: 4,  costPerUnit: 35,  icon: "🧪", lastRestocked: Date.now() - 86400000 * 7 },
-  { id: "inv4", name: "Plastic Bags (Large)",        category: "Packaging",  unit: "pc",     qty: 150,minQty: 30, costPerUnit: 2,   icon: "🛍", lastRestocked: Date.now() - 86400000 * 2 },
-  { id: "inv5", name: "Laundry Pins",                category: "Equipment",  unit: "pack",   qty: 3,  minQty: 5,  costPerUnit: 45,  icon: "📌", lastRestocked: Date.now() - 86400000 * 20 },
-  { id: "inv6", name: "Hangers (Metal)",             category: "Equipment",  unit: "pc",     qty: 80, minQty: 20, costPerUnit: 8,   icon: "🪝", lastRestocked: Date.now() - 86400000 * 14 },
-  { id: "inv7", name: "Receipt Paper (58mm)",        category: "Consumable", unit: "roll",   qty: 6,  minQty: 3,  costPerUnit: 25,  icon: "🧾", lastRestocked: Date.now() - 86400000 * 10 },
-  { id: "inv8", name: "Stain Remover Spray",         category: "Consumable", unit: "bottle", qty: 4,  minQty: 3,  costPerUnit: 120, icon: "💧", lastRestocked: Date.now() - 86400000 * 8 },
+  { id: "inv1", name: "Detergent (Ariel 2kg)",      category: "Consumable", unit: "bag",    qty: 0, minQty: 5,  costPerUnit: 95,  icon: "🧴", lastRestocked: Date.now() },
+  { id: "inv2", name: "Fabric Softener (Downy 1L)", category: "Consumable", unit: "bottle", qty: 0, minQty: 4,  costPerUnit: 85,  icon: "🫧", lastRestocked: Date.now() },
+  { id: "inv3", name: "Bleach (Pride 1L)",           category: "Consumable", unit: "bottle", qty: 0, minQty: 4,  costPerUnit: 35,  icon: "🧪", lastRestocked: Date.now() },
+  { id: "inv4", name: "Plastic Bags (Large)",        category: "Packaging",  unit: "pc",     qty: 0, minQty: 30, costPerUnit: 2,   icon: "🛍", lastRestocked: Date.now() },
+  { id: "inv5", name: "Laundry Pins",                category: "Equipment",  unit: "pack",   qty: 0, minQty: 5,  costPerUnit: 45,  icon: "📌", lastRestocked: Date.now() },
+  { id: "inv6", name: "Hangers (Metal)",             category: "Equipment",  unit: "pc",     qty: 0, minQty: 20, costPerUnit: 8,   icon: "🪝", lastRestocked: Date.now() },
+  { id: "inv7", name: "Receipt Paper (58mm)",        category: "Consumable", unit: "roll",   qty: 0, minQty: 3,  costPerUnit: 25,  icon: "🧾", lastRestocked: Date.now() },
+  { id: "inv8", name: "Stain Remover Spray",         category: "Consumable", unit: "bottle", qty: 0, minQty: 3,  costPerUnit: 120, icon: "💧", lastRestocked: Date.now() },
 ];
 
 export const SEED_SUPPLY_RULES: SupplyRule[] = [
