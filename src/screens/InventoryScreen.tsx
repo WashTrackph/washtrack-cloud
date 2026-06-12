@@ -4,29 +4,30 @@ import { useApp } from "../context/AppContext";
 const ICONS = ["🧴","🫧","🧪","🛍","📌","🪝","🧾","💧","🧹","🪣","🧽","🧻","📦","🔧","⚙️","🪤","🎀","🧯","🫙","🗑️"];
 const CATEGORIES = ["Consumable", "Packaging", "Equipment", "Other"];
 
-function AddSupplyModal({ onSave, onClose }: { onSave: (item: any) => void; onClose: () => void }) {
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState("Consumable");
-  const [unit, setUnit] = useState("");
-  const [qty, setQty] = useState("0");
-  const [minQty, setMinQty] = useState("5");
-  const [costPerUnit, setCostPerUnit] = useState("0");
-  const [icon, setIcon] = useState("📦");
+function SupplyModal({ initial, onSave, onClose }: { initial?: any; onSave: (item: any) => void; onClose: () => void }) {
+  const [name, setName] = useState(initial?.name ?? "");
+  const [category, setCategory] = useState(initial?.category ?? "Consumable");
+  const [unit, setUnit] = useState(initial?.unit ?? "");
+  const [qty, setQty] = useState(String(initial?.qty ?? 0));
+  const [minQty, setMinQty] = useState(String(initial?.minQty ?? 5));
+  const [costPerUnit, setCostPerUnit] = useState(String(initial?.costPerUnit ?? 0));
+  const [icon, setIcon] = useState(initial?.icon ?? "📦");
   const [err, setErr] = useState("");
+  const isEdit = !!initial;
 
   const handleSave = () => {
     if (!name.trim()) { setErr("Name is required"); return; }
     if (!unit.trim()) { setErr("Unit is required (e.g. bag, bottle, pc)"); return; }
     onSave({
-      id: "inv" + Date.now(),
+      id: initial?.id ?? "inv" + Date.now(),
       name: name.trim(),
       category,
       unit: unit.trim(),
-      qty: parseInt(qty) || 0,
+      qty: parseFloat(qty) || 0,
       minQty: parseInt(minQty) || 5,
       costPerUnit: parseFloat(costPerUnit) || 0,
       icon,
-      lastRestocked: Date.now(),
+      lastRestocked: initial?.lastRestocked ?? Date.now(),
     });
   };
 
@@ -35,9 +36,8 @@ function AddSupplyModal({ onSave, onClose }: { onSave: (item: any) => void; onCl
       onClick={onClose}>
       <div style={{ background: "var(--card)", borderRadius: 16, padding: 28, width: "100%", maxWidth: 440, border: "1px solid var(--border)" }}
         onClick={(e) => e.stopPropagation()}>
-        <h3 style={{ margin: "0 0 20px", fontSize: 17, fontWeight: 800, color: "var(--text)" }}>➕ Add New Supply</h3>
+        <h3 style={{ margin: "0 0 20px", fontSize: 17, fontWeight: 800, color: "var(--text)" }}>{isEdit ? "✏️ Edit Supply" : "➕ Add New Supply"}</h3>
 
-        {/* Icon picker */}
         <div style={{ marginBottom: 14 }}>
           <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 6 }}>Icon</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
@@ -63,7 +63,7 @@ function AddSupplyModal({ onSave, onClose }: { onSave: (item: any) => void; onCl
             <input value={unit} onChange={(e) => { setUnit(e.target.value); setErr(""); }} placeholder="e.g. bag, bottle, pc" className="input" style={{ marginBottom: 0, width: "100%", boxSizing: "border-box" }} />
           </div>
           <div>
-            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>Starting Qty</div>
+            <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 4 }}>{isEdit ? "Current Qty" : "Starting Qty"}</div>
             <input type="number" value={qty} onChange={(e) => setQty(e.target.value)} className="input" style={{ marginBottom: 0, width: "100%", boxSizing: "border-box" }} />
           </div>
           <div>
@@ -80,7 +80,7 @@ function AddSupplyModal({ onSave, onClose }: { onSave: (item: any) => void; onCl
 
         <div style={{ display: "flex", gap: 10 }}>
           <button onClick={onClose} style={{ flex: 1, padding: "11px 0", borderRadius: 10, border: "1px solid var(--border)", background: "transparent", color: "var(--muted)", fontWeight: 600, fontSize: 14, cursor: "pointer" }}>Cancel</button>
-          <button onClick={handleSave} style={{ flex: 1, padding: "11px 0", borderRadius: 10, border: "none", background: "linear-gradient(135deg, var(--accent), var(--accent2))", color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>Add Supply</button>
+          <button onClick={handleSave} style={{ flex: 1, padding: "11px 0", borderRadius: 10, border: "none", background: "linear-gradient(135deg, var(--accent), var(--accent2))", color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>{isEdit ? "Save Changes" : "Add Supply"}</button>
         </div>
       </div>
     </div>
@@ -93,6 +93,7 @@ export function InventoryScreen() {
   const [restockId, setRestockId] = useState<string | null>(null);
   const [restockQty, setRestockQty] = useState("");
   const [showAdd, setShowAdd] = useState(false);
+  const [editItem, setEditItem] = useState<any>(null);
 
   const filtered = inventory.filter((i) => {
     if (filter === "low") return i.qty > 0 && i.qty <= i.minQty;
@@ -123,6 +124,13 @@ export function InventoryScreen() {
     setShowAdd(false);
   };
 
+  const doEditSupply = (item: any) => {
+    setInventory((prev) => prev.map((i) => i.id === item.id ? item : i));
+    addAudit("INVENTORY", `Edited supply: ${item.name}`);
+    notify(`${item.name} updated`);
+    setEditItem(null);
+  };
+
   const totalValue = inventory.reduce((s, i) => s + i.qty * i.costPerUnit, 0);
   const outCount = inventory.filter((i) => i.qty === 0).length;
   const lowCount = inventory.filter((i) => i.qty > 0 && i.qty <= i.minQty).length;
@@ -131,7 +139,8 @@ export function InventoryScreen() {
     <div style={{ padding: 24 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
         <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "var(--text)" }}>{"📦"} Inventory</h2>
-        <button onClick={() => requirePin("OWNER", () => setShowAdd(true), "Enter Owner PIN to add a supply")} style={{ padding: "8px 18px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, var(--accent), var(--accent2))", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+        <button onClick={() => requirePin("OWNER", () => setShowAdd(true), "Enter Owner PIN to add a supply")}
+          style={{ padding: "8px 18px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, var(--accent), var(--accent2))", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
           + Add Supply
         </button>
       </div>
@@ -176,10 +185,16 @@ export function InventoryScreen() {
                     <span style={{ fontSize: 12, fontWeight: 700, color: st.color }}>{item.qty} {item.unit}</span>
                   </div>
                 </div>
-                <button onClick={() => { setRestockId(restockId === item.id ? null : item.id); setRestockQty(""); }}
-                  style={{ padding: "5px 12px", borderRadius: 6, border: "1px solid var(--success)", background: restockId === item.id ? "color-mix(in srgb, var(--success) 12%, transparent)" : "transparent", color: "var(--success)", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>
-                  + Restock
-                </button>
+                <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                  <button onClick={() => requirePin("OWNER", () => setEditItem(item), "Enter Owner PIN to edit")}
+                    style={{ padding: "5px 12px", borderRadius: 6, border: "1px solid var(--border)", background: "transparent", color: "var(--muted)", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>
+                    ✏️ Edit
+                  </button>
+                  <button onClick={() => { setRestockId(restockId === item.id ? null : item.id); setRestockQty(""); }}
+                    style={{ padding: "5px 12px", borderRadius: 6, border: "1px solid var(--success)", background: restockId === item.id ? "color-mix(in srgb, var(--success) 12%, transparent)" : "transparent", color: "var(--success)", cursor: "pointer", fontSize: 12, fontWeight: 700 }}>
+                    + Restock
+                  </button>
+                </div>
               </div>
               {restockId === item.id && (
                 <div style={{ marginTop: 12, padding: "12px", background: "var(--bg)", borderRadius: 8, border: "1px solid color-mix(in srgb, var(--success) 20%, transparent)", display: "flex", alignItems: "center", gap: 10 }}>
@@ -193,7 +208,8 @@ export function InventoryScreen() {
         })}
       </div>
 
-      {showAdd && <AddSupplyModal onSave={doAddSupply} onClose={() => setShowAdd(false)} />}
+      {showAdd && <SupplyModal onSave={doAddSupply} onClose={() => setShowAdd(false)} />}
+      {editItem && <SupplyModal initial={editItem} onSave={doEditSupply} onClose={() => setEditItem(null)} />}
     </div>
   );
 }
