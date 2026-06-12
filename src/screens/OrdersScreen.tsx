@@ -21,6 +21,7 @@ export function OrdersScreen() {
   const { orders, setOrders, stages, shop, smsTemplates, sendSms, requirePin, currentStaff, notify, addAudit, fmt, payMethods } = useApp();
   const [view, setView] = useState("kanban");
   const [search, setSearch] = useState("");
+  const [collapsed, setCollapsed] = useState<Set<number>>(new Set());
   const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
   const [voidReason, setVoidReason] = useState("");
   const [showVoidFor, setShowVoidFor] = useState<string | null>(null);
@@ -359,23 +360,38 @@ export function OrdersScreen() {
       </div>
 
       {view === "kanban" ? (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(5,1fr)", gap: 12, height: "calc(100% - 60px)", overflow: "auto" }}>
-          {stageOrders.map((stage) => (
+        <div style={{ display: "flex", gap: 12, height: "calc(100% - 60px)", overflowX: "auto", overflowY: "hidden", alignItems: "flex-start" }}>
+          {stageOrders.map((stage) => {
+            const isCollapsed = collapsed.has(stage.id);
+            return (
             <div
               key={stage.id}
               ref={(el) => setColumnRef(stage.id, el)}
               style={{
                 background: dragOverStage === stage.id ? `color-mix(in srgb, ${stage.color} 8%, var(--sidebar))` : "var(--sidebar)",
-                borderRadius: 10, padding: 10, minHeight: 200, transition: "background 0.15s",
+                borderRadius: 10, padding: 10, transition: "background 0.15s",
                 outline: dragOverStage === stage.id ? `2px dashed ${stage.color}` : "none",
+                minWidth: isCollapsed ? 48 : 200, width: isCollapsed ? 48 : 200, flexShrink: 0,
+                overflow: "hidden",
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
-                <span style={{ fontSize: 16 }}>{stage.icon}</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: stage.color }}>{stage.label}</span>
-                <span style={{ marginLeft: "auto", background: `${stage.color}20`, color: stage.color, borderRadius: 10, fontSize: 11, padding: "1px 7px", fontWeight: 700 }}>{stage.orders.length}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: isCollapsed ? 0 : 10, cursor: "pointer" }}
+                onClick={() => setCollapsed(prev => { const n = new Set(prev); n.has(stage.id) ? n.delete(stage.id) : n.add(stage.id); return n; })}>
+                {isCollapsed ? (
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: "100%", paddingTop: 4 }}>
+                    <span style={{ fontSize: 16 }}>{stage.icon}</span>
+                    <span style={{ background: `${stage.color}20`, color: stage.color, borderRadius: 10, fontSize: 11, padding: "1px 7px", fontWeight: 700 }}>{stage.orders.length}</span>
+                  </div>
+                ) : (
+                  <>
+                    <span style={{ fontSize: 16 }}>{stage.icon}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: stage.color }}>{stage.label}</span>
+                    <span style={{ marginLeft: "auto", background: `${stage.color}20`, color: stage.color, borderRadius: 10, fontSize: 11, padding: "1px 7px", fontWeight: 700 }}>{stage.orders.length}</span>
+                    <span style={{ fontSize: 10, color: "var(--muted)" }}>‹</span>
+                  </>
+                )}
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {!isCollapsed && <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {stage.orders.map((order: any) => (
                   <div key={order.id}
                     onPointerDown={(e) => handlePointerDown(e, order.id)}
@@ -404,9 +420,10 @@ export function OrdersScreen() {
                   </div>
                 ))}
                 {stage.orders.length === 0 && <div style={{ textAlign: "center", padding: "20px 0", fontSize: 12, color: "var(--border-dark)" }}>Empty</div>}
-              </div>
+              </div>}
             </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <div>
