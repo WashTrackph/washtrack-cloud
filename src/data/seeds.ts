@@ -52,7 +52,7 @@ export const SEED_STAGES: Stage[] = [
   { id: 4, label: "Folding",    icon: "👕", color: "#8B5CF6", order: 3 },
   { id: 5, label: "Ready",      icon: "\u2705",        color: "#10B981", order: 4 },
   { id: 6, label: "Out for Delivery", icon: "🚚", color: "#F97316", order: 5 },
-  { id: 7, label: "Picked Up",        icon: "🎉", color: "#6B7280", order: 6 },
+  { id: 7, label: "Delivered",         icon: "🎉", color: "#6B7280", order: 6 },
 ];
 
 export const SEED_SMS_TEMPLATES: SmsTemplates = {

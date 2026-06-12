@@ -158,7 +158,8 @@ export function AppProvider({ children }: AppProviderProps) {
           );
           setStages(migrated);
         } else {
-          setStages(savedStages);
+          // Migration: rename "Picked Up" to "Delivered"
+          setStages(savedStages.map((s: any) => s.label === "Picked Up" ? { ...s, label: "Delivered" } : s));
         }
       }
       if (savedSmsTemplates) {
