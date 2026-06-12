@@ -88,7 +88,7 @@ function AddSupplyModal({ onSave, onClose }: { onSave: (item: any) => void; onCl
 }
 
 export function InventoryScreen() {
-  const { inventory, setInventory, notify, addAudit, fmt } = useApp();
+  const { inventory, setInventory, notify, addAudit, fmt, requirePin } = useApp();
   const [filter, setFilter] = useState("all");
   const [restockId, setRestockId] = useState<string | null>(null);
   const [restockQty, setRestockQty] = useState("");
@@ -131,7 +131,7 @@ export function InventoryScreen() {
     <div style={{ padding: 24 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20 }}>
         <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "var(--text)" }}>{"📦"} Inventory</h2>
-        <button onClick={() => setShowAdd(true)} style={{ padding: "8px 18px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, var(--accent), var(--accent2))", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+        <button onClick={() => requirePin("OWNER", () => setShowAdd(true), "Enter Owner PIN to add a supply")} style={{ padding: "8px 18px", borderRadius: 8, border: "none", background: "linear-gradient(135deg, var(--accent), var(--accent2))", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
           + Add Supply
         </button>
       </div>
