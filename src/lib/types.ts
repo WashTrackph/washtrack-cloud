@@ -71,6 +71,7 @@ export interface SmsTemplates {
   ready: string;
   reminder: string;
   promo: string;
+  delivery: string;
 }
 
 export interface Staff {
@@ -140,6 +141,7 @@ export interface Order {
   voidedBy?: string;
   pickedUpAt?: number;
   readySmsSent?: boolean;
+  deliverySmsSent?: boolean;
 }
 
 export interface InventoryItem {

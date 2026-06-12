@@ -167,7 +167,7 @@ export function OrdersScreen() {
     const stage = stages.find((s) => s.id === newStatusId);
     if (!stage) return;
     const order = orders.find((o) => o.id === orderId);
-    if (newStatusId === 6 && order && order.paid === false) {
+    if (newStatusId === 7 && order && order.paid === false) {
       setSelectedOrder(orderId);
       setShowCollectPay(true);
       notify("Payment required before pickup", "error");
@@ -180,7 +180,12 @@ export function OrdersScreen() {
       setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, readySmsSent: true } : o));
       notify(`SMS sent to ${order.customerName}`);
     }
-    if (newStatusId === 6 && order) {
+    if (newStatusId === 6 && order && order.customerPhone && !order.deliverySmsSent) {
+      sendSms(order.customerPhone, smsTemplates.delivery, { name: order.customerName, order: order.orderNum, shop: shop.name }, orderId);
+      setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, deliverySmsSent: true } : o));
+      notify(`Delivery SMS sent to ${order.customerName}`);
+    }
+    if (newStatusId === 7 && order) {
       setOrders((prev) => prev.map((o) => o.id === orderId ? { ...o, pickedUpAt: Date.now() } : o));
     }
     notify(`Status updated to ${stage.label}`);
