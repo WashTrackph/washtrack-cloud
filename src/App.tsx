@@ -4,7 +4,9 @@ import { LicenseGate } from "./components/LicenseGate";
 import { PinModalOverlay } from "./components/PinModalOverlay";
 import { LoginScreen } from "./screens/LoginScreen";
 import { MainLayout } from "./screens/MainLayout";
+import { CloudAuthScreen } from "./screens/CloudAuthScreen";
 import { isLegacyPin, verifyPin } from "./lib/crypto";
+import { supabase } from "./lib/supabase";
 
 const MAX_ATTEMPTS = 3;
 const LOCKOUT_SECONDS = 30;
@@ -130,10 +132,43 @@ function AppInner() {
   );
 }
 
+function CloudAuthGate({ children }: { children: React.ReactNode }) {
+  const [authState, setAuthState] = useState<"checking" | "authed" | "unauthed">("checking");
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setAuthState(data.session ? "authed" : "unauthed");
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAuthState(session ? "authed" : "unauthed");
+    });
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  if (authState === "checking") {
+    return (
+      <div style={{ background: "var(--bg)", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <div className="spin" style={{ width: 48, height: 48, border: "4px solid var(--border)", borderTopColor: "var(--accent)", borderRadius: "50%", margin: "0 auto 16px" }} />
+          <p style={{ color: "var(--subtext)", fontFamily: "monospace" }}>Connecting…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (authState === "unauthed") {
+    return <CloudAuthScreen onAuth={() => setAuthState("authed")} />;
+  }
+
+  return <>{children}</>;
+}
+
 export default function App() {
   return (
-    <AppProvider>
-      <AppInner />
-    </AppProvider>
+    <CloudAuthGate>
+      <AppProvider>
+        <AppInner />
+      </AppProvider>
+    </CloudAuthGate>
   );
 }

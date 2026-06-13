@@ -2,6 +2,11 @@ import { createContext, useContext, useState, useEffect, useCallback, useRef } f
 import { DB, initDatabase } from "../lib/db";
 import { genId, applyTheme, calcPrice, genOrderNum, formatCurrency } from "../lib/utils";
 import { isLegacyPin, createHashedPin } from "../lib/crypto";
+import { supabase } from "../lib/supabase";
+import {
+  fetchRemoteOrders, upsertOrders, subscribeOrders,
+  fetchRemoteCustomers, upsertCustomers, subscribeCustomers,
+} from "../lib/sync";
 import {
   SEED_SHOP, SEED_SERVICES, SEED_STAGES, SEED_SMS_TEMPLATES, SEED_STAFF,
   SEED_CUSTOMERS, SEED_INVENTORY, SEED_SUPPLY_RULES, SEED_PAYMETHODS,
@@ -12,6 +17,12 @@ import type {
   InventoryItem, SupplyRule, PayMethod, SmsLogEntry, AuditLogEntry, ThemePreset, EmailConfig, Promotion,
 } from "../lib/types";
 import { checkAndSendReports, sendReport, EMPTY_LAST_SENT, type LastEmailSent } from "../lib/emailScheduler";
+
+// Restore seed icons by ID to fix any encoding corruption in stored data
+function fixIcons<T extends { id: any; icon?: string }>(items: T[], seeds: T[]): T[] {
+  const seedMap = new Map(seeds.map(s => [s.id, s.icon]));
+  return items.map(item => seedMap.has(item.id) ? { ...item, icon: seedMap.get(item.id)! } : item);
+}
 
 interface AppContextValue {
   shop: Shop;
@@ -149,17 +160,19 @@ export function AppProvider({ children }: AppProviderProps) {
       if (savedShop) setShop({ ...SEED_SHOP, ...savedShop });
       if (savedServices) setServices(savedServices);
       if (savedStages) {
+        let stages = fixIcons(savedStages, SEED_STAGES);
+
         // Migration: ensure "Out for Delivery" stage exists
-        const hasDelivery = savedStages.some((s: any) => s.label === "Out for Delivery");
+        const hasDelivery = stages.some((s: any) => s.label === "Out for Delivery");
         if (!hasDelivery) {
-          const migrated = savedStages.map((s: any) => s.id === 6 ? { ...s, id: 7, order: 6 } : s);
+          const migrated = stages.map((s: any) => s.id === 6 ? { ...s, id: 7, order: 6 } : s);
           migrated.splice(migrated.findIndex((s: any) => s.id === 7), 0,
             { id: 6, label: "Out for Delivery", icon: "🚚", color: "#F97316", order: 5 }
           );
           setStages(migrated);
         } else {
           // Migration: rename "Picked Up" to "Delivered"
-          setStages(savedStages.map((s: any) => s.label === "Picked Up" ? { ...s, label: "Delivered" } : s));
+          setStages(stages.map((s: any) => s.label === "Picked Up" ? { ...s, label: "Delivered" } : s));
         }
       }
       if (savedSmsTemplates) {
@@ -170,8 +183,8 @@ export function AppProvider({ children }: AppProviderProps) {
       if (savedSms) setSmsLog(savedSms);
       if (savedAudit) setAuditLog(savedAudit);
       if (savedCounter) setOrderCounter(savedCounter);
-      if (savedInventory) setInventory(savedInventory);
-      if (savedPayMethods) setPayMethods(savedPayMethods);
+      if (savedInventory) setInventory(fixIcons(savedInventory, SEED_INVENTORY));
+      if (savedPayMethods) setPayMethods(fixIcons(savedPayMethods, SEED_PAYMETHODS));
       if (savedSupplyRules) setSupplyRules(savedSupplyRules);
       if (savedEmailConfig) setEmailConfig({ ...SEED_EMAIL_CONFIG, ...savedEmailConfig });
       if (savedPromotions) setPromotions(savedPromotions);
@@ -213,13 +226,83 @@ export function AppProvider({ children }: AppProviderProps) {
         await DB.set("wt:staff", migratedStaff);
       }
 
+      // ── Supabase cloud sync (load remote data, override local) ──
+      try {
+        const [remoteOrders, remoteCustomers] = await Promise.all([
+          fetchRemoteOrders(),
+          fetchRemoteCustomers(),
+        ]);
+        if (remoteOrders.length > 0) {
+          setOrders(remoteOrders);
+          await DB.set("wt:orders", remoteOrders);
+        } else if (savedOrders?.length) {
+          // First time connecting — push local data to cloud
+          await upsertOrders(savedOrders);
+        }
+        if (remoteCustomers.length > 0) {
+          setCustomers(remoteCustomers);
+          await DB.set("wt:customers", remoteCustomers);
+        } else if (savedCustomers?.length) {
+          await upsertCustomers(savedCustomers);
+        }
+      } catch {
+        // Offline — keep local data, sync later
+      }
+
       setInitialized(true);
     })();
   }, []);
 
-  // ── Persist ──
-  useEffect(() => { if (initialized) DB.set("wt:orders", orders); }, [orders, initialized]);
-  useEffect(() => { if (initialized) DB.set("wt:customers", customers); }, [customers, initialized]);
+  // ── Persist + Cloud Sync ──
+  const remoteUpdateRef = useRef(false); // true when change came from Supabase (skip re-upload)
+
+  useEffect(() => {
+    if (!initialized) return;
+    DB.set("wt:orders", orders);
+    if (!remoteUpdateRef.current) {
+      upsertOrders(orders).catch(() => {});
+    }
+    remoteUpdateRef.current = false;
+  }, [orders, initialized]);
+
+  useEffect(() => {
+    if (!initialized) return;
+    DB.set("wt:customers", customers);
+    if (!remoteUpdateRef.current) {
+      upsertCustomers(customers).catch(() => {});
+    }
+    remoteUpdateRef.current = false;
+  }, [customers, initialized]);
+
+  // ── Real-time subscriptions ──
+  useEffect(() => {
+    if (!initialized) return;
+    let orderChannel: any;
+    let customerChannel: any;
+
+    subscribeOrders((updatedOrder) => {
+      remoteUpdateRef.current = true;
+      setOrders((prev) => {
+        const idx = prev.findIndex((o) => o.id === updatedOrder.id);
+        if (idx === -1) return [...prev, updatedOrder];
+        return prev.map((o) => o.id === updatedOrder.id ? updatedOrder : o);
+      });
+    }).then((ch) => { orderChannel = ch; }).catch(() => {});
+
+    subscribeCustomers((updatedCustomer) => {
+      remoteUpdateRef.current = true;
+      setCustomers((prev) => {
+        const idx = prev.findIndex((c) => c.id === updatedCustomer.id);
+        if (idx === -1) return [...prev, updatedCustomer];
+        return prev.map((c) => c.id === updatedCustomer.id ? updatedCustomer : c);
+      });
+    }).then((ch) => { customerChannel = ch; }).catch(() => {});
+
+    return () => {
+      if (orderChannel) supabase.removeChannel(orderChannel);
+      if (customerChannel) supabase.removeChannel(customerChannel);
+    };
+  }, [initialized]);
   useEffect(() => { if (initialized) DB.set("wt:shop", shop); }, [shop, initialized]);
   useEffect(() => { if (initialized) DB.set("wt:services", services); }, [services, initialized]);
   useEffect(() => { if (initialized) DB.set("wt:stages", stages); }, [stages, initialized]);
