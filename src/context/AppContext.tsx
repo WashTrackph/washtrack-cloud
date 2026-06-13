@@ -228,6 +228,22 @@ export function AppProvider({ children }: AppProviderProps) {
 
       // ── Supabase cloud sync (load remote data, override local) ──
       try {
+        // Load license key from Supabase (works across devices/URLs)
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: meta } = await supabase.from("wt_shop_meta").select("license_key,trial_start_date").eq("user_id", user.id).single();
+          if (meta?.license_key) {
+            setLicenseKeyRaw(meta.license_key);
+            await DB.set("wt:licenseKey", meta.license_key);
+          } else if (savedLicenseKey) {
+            // Push local license key to cloud
+            await supabase.from("wt_shop_meta").upsert({ user_id: user.id, license_key: savedLicenseKey, trial_start_date: savedTrialStartDate || "" });
+          }
+          if (meta?.trial_start_date && !savedTrialStartDate) {
+            setTrialStartDateRaw(meta.trial_start_date);
+          }
+        }
+
         const [remoteOrders, remoteCustomers] = await Promise.all([
           fetchRemoteOrders(),
           fetchRemoteCustomers(),
@@ -480,6 +496,10 @@ export function AppProvider({ children }: AppProviderProps) {
   const setLicenseKey = useCallback((key: string) => {
     setLicenseKeyRaw(key);
     DB.set("wt:licenseKey", key);
+    // Also save to Supabase so it persists across devices
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) supabase.from("wt_shop_meta").upsert({ user_id: user.id, license_key: key }).then(() => {});
+    });
   }, []);
 
   const setTrialStartDate = useCallback((date: string) => {
